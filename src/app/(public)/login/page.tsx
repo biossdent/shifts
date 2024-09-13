@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
 
   const login = async () => {
     const res = await fetch('/api/login', {
@@ -15,7 +17,17 @@ export default function LoginPage() {
       body: JSON.stringify({ email, password }),
     });
     const data = await res.json();
-    console.log(data);
+    
+    if (data.token) {
+      // Guarda el token en localStorage o en una cookie aquí, si es necesario
+      localStorage.setItem('authToken', data.token);
+
+      // Redirige al usuario a la página de Mi Calendario
+      router.push('/calendario');
+    } else {
+      // Maneja el error de inicio de sesión aquí
+      console.error(data.error);
+    }
   };
 
   return (
