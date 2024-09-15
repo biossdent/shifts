@@ -1,10 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Inter } from 'next/font/google';
 import '../globals.css';
+
+import { useEffect, useState } from 'react';
+
+import { Inter } from 'next/font/google';
+import Modal from 'react-modal';
 import { publicPages } from '@/consts/pages';
+import { useRouter } from 'next/navigation';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -13,6 +16,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const [user, setUser] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    router.push('/login');
+  };
+
+  const menuOptions = [
+    {
+      label: "Mi Perfil",
+      action: () => router.push("/perfil")
+    },
+    {
+      label: "Cerrar Sesión",
+      action: handleLogout
+    }
+  ]
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -39,10 +58,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     checkAuth();
   }, [router]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    router.push('/login');
-  };
+  useEffect(() => {
+    // Configura el selector correcto aquí
+    Modal.setAppElement('body'); // Ajusta el selector si es necesario
+  }, []);
+
+
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -83,12 +104,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </button>
                 {isMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-gray-700 rounded-md shadow-lg z-50">
-                    <button
-                      onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-white hover:bg-gray-600 focus:outline-none"
-                    >
-                      Cerrar Sesión
-                    </button>
+                    {menuOptions.map(opt =>
+                      <button
+                        onClick={opt.action}
+                        className="block w-full text-left px-4 py-2 text-white hover:bg-gray-600 focus:outline-none"
+                      >
+                        {opt.label}
+                      </button>)}
                   </div>
                 )}
               </div>
