@@ -7,7 +7,7 @@ export interface IUser {
     lastName: string,
 }
 
-export interface INewUser extends IUser {
+export interface IUserNew extends IUser {
     password?: string,
 }
 

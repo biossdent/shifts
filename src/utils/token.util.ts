@@ -1,5 +1,4 @@
 import { IToken } from '@/interfaces/token.interface';
-import { IUserCreated } from '@/interfaces/user.interface';
 import { getById } from '@/services/user.service';
 import jwt from 'jsonwebtoken';
 
@@ -9,6 +8,7 @@ export async function verifyToken(token: string) {
     try {
         const decoded = jwt.verify(token, JWT_SECRET) as IToken;
         const _user = await getById(decoded.userId);
+        if (!_user) return null;
         const user = {
             id: _user?.id,
             email: _user?.email,
@@ -20,7 +20,7 @@ export async function verifyToken(token: string) {
         return user;
         
     } catch (error) {
-        throw new Error('Token no válido');
+        throw new Error('Token no valido');
     }
   }
   
