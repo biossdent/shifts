@@ -28,6 +28,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       action: () => router.push("/perfil")
     },
     {
+      label: "Usuarios",
+      action: () => router.push("/usuarios")
+    },
+    {
       label: "Cerrar Sesión",
       action: handleLogout
     }

@@ -1,5 +1,5 @@
-import { verifyToken } from '@/utils/token.util';
 import { NextResponse } from 'next/server';
+import { verifyToken } from '@/utils/token.util';
 
 export async function GET(request: Request) {
   const token = request.headers.get('Authorization')?.split(' ')[1];
@@ -15,10 +15,10 @@ export async function GET(request: Request) {
     if (user) {
       return NextResponse.json({ user });
     } else {
-      return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+      return NextResponse.json({ error: 'Token no valido' }, { status: 401 });
     }
   } catch (error) {
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ error: 'Error interno' }, { status: 500 });
   }
 }
 

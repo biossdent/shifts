@@ -22,3 +22,8 @@ model User {
   role      ROLE
   createdAt DateTime @default(now())
 }
+
+model Specialty {
+  id          Int @id @default(autoincrement())
+  label       String @unique
+}

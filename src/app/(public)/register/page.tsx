@@ -1,11 +1,12 @@
 'use client';
 
-import { ROLE } from '@/enums/role.enum';
-import { INewUser } from '@/interfaces/user.interface';
 import { ChangeEvent, useState } from 'react';
 
+import { IUserNew } from '@/interfaces/user.interface';
+import { ROLE } from '@/enums/role.enum';
+
 export default function RegisterPage() {
-  const [user, setUser] = useState<INewUser>({
+  const [user, setUser] = useState<IUserNew>({
     name: '',
     lastName: '',
     email: '',

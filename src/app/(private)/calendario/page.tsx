@@ -3,10 +3,10 @@
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { addHours, format, getDay, isSameDay, parse, startOfWeek } from 'date-fns';
 
-import Modal from 'react-modal';
+import ModalShiftForm from '@/app/components/ModalShiftForm';
 import { enUS } from 'date-fns/locale';
 
 const locales = {
@@ -41,10 +41,6 @@ export default function CalendarPage() {
     const [showModal, setShowModal] = useState(false);
     const [newEvent, setNewEvent] = useState({ title: '', start: new Date(), end: new Date() });
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-
-    useEffect(() => {
-        Modal.setAppElement('body'); // Asegúrate de que el selector sea correcto
-    }, []);
 
     const handleDateClick = (date: Date) => {
         setSelectedDate(date);
@@ -100,39 +96,8 @@ export default function CalendarPage() {
                     />
                 </div>
             </div>
-
-            {/* Modal para añadir evento */}
-            <Modal
-                isOpen={showModal}
-                onRequestClose={() => setShowModal(false)}
-                contentLabel="Añadir Nuevo Evento"
-                className="absolute inset-0 flex items-center justify-center z-50"
-                overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-40"
-            >
-                <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm mx-auto">
-                    <h2 className="text-xl font-bold mb-4">Añadir Nuevo Evento</h2>
-                    <input
-                        type="text"
-                        name="title"
-                        placeholder="Título del evento"
-                        value={newEvent.title}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md"
-                    />
-                    <button
-                        onClick={handleEventSubmit}
-                        className="w-full py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-500"
-                    >
-                        Guardar Evento
-                    </button>
-                    <button
-                        onClick={() => setShowModal(false)}
-                        className="w-full mt-2 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500"
-                    >
-                        Cancelar
-                    </button>
-                </div>
-            </Modal>
+            
+                <ModalShiftForm showModal={showModal} setShowModal={setShowModal} />
         </div>
     );
 }
