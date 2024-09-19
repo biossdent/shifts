@@ -6,7 +6,7 @@ import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import React, { useState } from 'react';
 import { addHours, format, getDay, isSameDay, parse, startOfWeek } from 'date-fns';
 
-import ModalShiftForm from '@/app/components/ModalShiftForm';
+import ModalShiftForm from '@/components/ModalShiftForm';
 import { enUS } from 'date-fns/locale';
 
 const locales = {
