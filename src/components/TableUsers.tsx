@@ -9,7 +9,7 @@ interface IUsersTableProps {
 const TableUsers = (props: IUsersTableProps) => {
   const { users } = props;
   return (
-    <div className="mb-6 w-3/5 p-2">
+    <div className="mb-6 w-3/5 p-4">
       <h2 className="text-xl font-bold mb-4 text-white">Usuarios Registrados</h2>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-300 rounded-md">
@@ -41,13 +41,6 @@ const TableUsers = (props: IUsersTableProps) => {
           </tbody>
         </table>
       </div>
-
-      {/* Botón similar al de guardar en el formulario */}
-      <button
-        className="w-full py-2 mt-6 bg-indigo-600 text-white rounded-md hover:bg-indigo-500"
-      >
-        Añadir Usuario
-      </button>
     </div>
   );
 };

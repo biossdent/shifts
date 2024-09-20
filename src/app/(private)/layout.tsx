@@ -5,6 +5,7 @@ import '../globals.css';
 import { useEffect, useState } from 'react';
 
 import { Inter } from 'next/font/google';
+import Link from 'next/link';
 import Modal from 'react-modal';
 import { publicPages } from '@/consts/pages';
 import { useRouter } from 'next/navigation';
@@ -87,7 +88,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <div className="min-h-screen bg-gray-900 text-white">
       <header className="bg-gray-800 p-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Gestión de turnos</h1>
+          <Link href='/calendario'>
+            <h1 className="text-2xl font-bold">Gestión de turnos</h1>
+          </Link>
           <div className="relative">
             {user ? (
               <div className="text-lg relative">
