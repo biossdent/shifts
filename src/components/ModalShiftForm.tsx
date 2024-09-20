@@ -129,17 +129,6 @@ export default function ModalShiftForm(props: IModalShiftFormProps) {
               <div className="mb-4">
                 <label className="block mb-1 font-medium text-gray-700">Especialidad</label>
                 <SpecialtySelect />
-                {/*  <select
-              name="specialty"
-              value={appointment.specialty}
-              onChange={handleInputChangeCita}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-700"
-            >
-              <option value="">Selecciona una especialidad</option>
-              <option value="Cardiología">Cardiología</option>
-              <option value="Dermatología">Dermatología</option>
-              <option value="Pediatría">Pediatría</option>
-            </select> */}
               </div>
               <div className="mb-4">
                 <label className="block mb-1 font-medium text-gray-700">Fecha de Inicio</label>
