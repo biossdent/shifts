@@ -21,9 +21,32 @@ model User {
   password  String
   role      ROLE
   createdAt DateTime @default(now())
+  appointments Appointment[]
 }
 
 model Specialty {
   id          Int @id @default(autoincrement())
   label       String @unique
+}
+
+model Patient {
+  id          Int @id @default(autoincrement())
+  fullName    String
+  ci          String @unique
+  phone       String
+  createdAt   DateTime @default(now())
+  appointments Appointment[]
+}
+
+model Appointment {
+  id          Int @id @default(autoincrement()) 
+  diagnostic  String
+  specialty   String
+  startDate   DateTime
+  endDate     DateTime
+  createdAt   DateTime @default(now())
+  patientId   Int
+  patient     Patient @relation(fields: [patientId], references: [id])
+  doctorId    Int
+  doctor      User @relation(fields: [doctorId], references: [id])
 }

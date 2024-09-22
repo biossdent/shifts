@@ -6,7 +6,7 @@ import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import React, { useState } from 'react';
 import { addHours, format, getDay, isSameDay, parse, startOfWeek } from 'date-fns';
 
-import ModalShiftForm from '@/components/ModalShiftForm';
+import ModalAppointmentForm from '@/components/ModalAppointmentForm';
 import { enUS } from 'date-fns/locale';
 
 const locales = {
@@ -97,7 +97,7 @@ export default function CalendarPage() {
                 </div>
             </div>
             
-                <ModalShiftForm showModal={showModal} setShowModal={setShowModal} />
+                <ModalAppointmentForm showModal={showModal} setShowModal={setShowModal} />
         </div>
     );
 }

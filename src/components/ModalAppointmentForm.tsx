@@ -7,7 +7,7 @@ import Modal from "react-modal";
 import SpecialtySelect from "./SpecialtySelect";
 import { getDoctors } from "@/api/doctors.api";
 
-interface IModalShiftFormProps {
+interface IModalAppointmentFormProps {
   showModal: boolean;
   setShowModal: Dispatch<SetStateAction<boolean>>;
 }
@@ -25,7 +25,7 @@ const INITIAL_APPOINTMENT = {
   endDate: "",
 };
 
-export default function ModalShiftForm(props: IModalShiftFormProps) {
+export default function ModalAppointmentForm(props: IModalAppointmentFormProps) {
   const { showModal, setShowModal } = props;
   const [doctors, setDoctors] = useState<IUserCreated[] | null>(null);
   const [patient, setPatient] = useState(INITIAL_PATIENT);
