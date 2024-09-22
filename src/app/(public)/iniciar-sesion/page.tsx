@@ -1,6 +1,8 @@
 'use client';
 
-import { KeyboardEvent, useState, useEffect } from 'react';
+import { KeyboardEvent, useEffect, useState } from 'react';
+
+import { PAGES } from '@/consts/pages';
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
@@ -55,7 +57,7 @@ export default function LoginPage() {
 
       if (res.ok && data.token) {
         localStorage.setItem('authToken', data.token);
-        router.push('/calendario');
+        router.push(PAGES.calendario);
       } else {
         setErrors(prevErrors => ({ ...prevErrors, login: data.error || 'Credenciales incorrectas.' }));
         setShowError(true);

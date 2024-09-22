@@ -2,12 +2,12 @@
 
 import '../globals.css';
 
+import { PAGES, PUBLIC_PAGES } from '@/consts/pages';
 import { useEffect, useState } from 'react';
 
 import { Inter } from 'next/font/google';
 import Link from 'next/link';
 import Modal from 'react-modal';
-import { publicPages } from '@/consts/pages';
 import { useRouter } from 'next/navigation';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -20,17 +20,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
-    router.push('/login');
+    router.push(PAGES.login);
   };
 
   const menuOptions = [
     {
       label: "Mi Perfil",
-      action: () => router.push("/perfil")
+      action: () => router.push(PAGES.perfil)
     },
     {
       label: "Usuarios",
-      action: () => router.push("/usuarios")
+      action: () => router.push(PAGES.usuarios)
     },
     {
       label: "Cerrar Sesión",
@@ -42,8 +42,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     const checkAuth = async () => {
       const token = localStorage.getItem('authToken');
 
-      if (!token && publicPages.includes(window.location.href)) {
-        router.push('/login');
+      if (!token && PUBLIC_PAGES.includes(window.location.href)) {
+        router.push(PAGES.login);
       } else {
         const res = await fetch('/api/me', {
           headers: {
@@ -54,7 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         if (data.user) {
           setUser(data.user.name);
         } else {
-          router.push('/login');
+          router.push(PAGES.login);
         }
         setLoading(false);
       }
@@ -88,7 +88,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <div className="min-h-screen bg-gray-900 text-white">
       <header className="bg-gray-800 p-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
-          <Link href='/calendario'>
+          <Link href={PAGES.calendario}>
             <h1 className="text-2xl font-bold">Gestión de turnos</h1>
           </Link>
           <div className="relative">
