@@ -21,6 +21,7 @@
     "react": "^18",
     "react-big-calendar": "^1.14.0",
     "react-dom": "^18",
+    "react-loading-indicators": "^1.0.0",
     "react-modal": "^3.16.1",
     "react-select": "^5.8.0",
     "zustand": "^5.0.0-rc.2"

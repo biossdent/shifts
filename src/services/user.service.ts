@@ -1,5 +1,6 @@
+import { PrismaClient, ROLE } from "@prisma/client";
+
 import { IUserNew } from "@/interfaces/user.interface";
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { isEmptyString } from "@/utils/string.util";
 
@@ -23,6 +24,19 @@ export const getByEmail = async (email: string) => {
 
 export const getById = async (id: number) => {
   return await prisma.user.findUnique({ where: { id } });
+};
+
+export const getByRole = async (role: ROLE) => {
+  return await prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      lastName: true,
+      email: true,
+      role: true,
+    },
+    where: { role },
+  });
 };
 
 export const create = async (user: IUserNew) => {

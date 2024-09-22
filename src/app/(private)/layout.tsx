@@ -6,6 +6,7 @@ import { PAGES, PUBLIC_PAGES } from '@/consts/pages';
 import { useEffect, useState } from 'react';
 
 import { Inter } from 'next/font/google';
+import { LifeLine } from 'react-loading-indicators';
 import Link from 'next/link';
 import Modal from 'react-modal';
 import { useRouter } from 'next/navigation';
@@ -78,7 +79,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
       <html lang="es">
         <body>
-          <div className="flex items-center justify-center h-screen bg-gray-900 text-white">Cargando...</div>
+          <div className="flex items-center justify-center h-screen bg-gray-900 text-white">
+          <LifeLine color="#FFF" size="medium" text="" textColor="" />
+          </div>
         </body>
       </html>
     );
