@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { addHours, format, getDay, isSameDay, parse, startOfWeek } from 'date-fns';
 
 import ModalAppointmentForm from '@/components/ModalAppointmentForm';
+import { ToastContainer } from 'react-toastify';
 import { enUS } from 'date-fns/locale';
 
 const locales = {
@@ -98,6 +99,7 @@ export default function CalendarPage() {
             </div>
             
                 <ModalAppointmentForm showModal={showModal} setShowModal={setShowModal} />
+                <ToastContainer />
         </div>
     );
 }

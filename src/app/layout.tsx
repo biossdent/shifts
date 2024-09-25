@@ -11,7 +11,9 @@ export const metadata = {
   }) {
     return (
       <html lang="es">
-        <body>{children}</body>
+        <body>
+          {children}
+          </body>
       </html>
     )
   }
