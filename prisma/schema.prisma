@@ -27,6 +27,7 @@ model User {
 model Specialty {
   id          Int @id @default(autoincrement())
   label       String @unique
+  appointments Appointment[]
 }
 
 model Patient {
@@ -41,10 +42,11 @@ model Patient {
 model Appointment {
   id          Int @id @default(autoincrement()) 
   diagnostic  String
-  specialty   String
   startDate   DateTime
   endDate     DateTime
   createdAt   DateTime @default(now())
+  specialtyId   Int
+  specialty     Specialty @relation(fields: [specialtyId], references: [id])
   patientId   Int
   patient     Patient @relation(fields: [patientId], references: [id])
   doctorId    Int

@@ -1,8 +1,10 @@
 export interface IAppointment {
     diagnostic: string
-    specialty: string
     startDate: string
     endDate: string
+    specialtyId: number
+    patientId: number
+    doctorId: number
 }
 
 export interface IAppointmentCreated extends IAppointment {

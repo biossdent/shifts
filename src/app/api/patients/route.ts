@@ -7,7 +7,7 @@ export async function POST(request: Request) {
   const token = request.headers.get("Authorization")?.split(" ")[1];
 
   if (!token) {
-    return NextResponse.json({ error: "No token provided" }, { status: 401 });
+    return NextResponse.json({ error: "Token no valido" }, { status: 401 });
   }
 
   try {
