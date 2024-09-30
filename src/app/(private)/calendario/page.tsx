@@ -1,105 +1,93 @@
-'use client';
+"use client";
 
-import 'react-big-calendar/lib/css/react-big-calendar.css';
+import "react-big-calendar/lib/css/react-big-calendar.css";
 
-import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
-import React, { useState } from 'react';
-import { addHours, format, getDay, isSameDay, parse, startOfWeek } from 'date-fns';
+import { Calendar, dateFnsLocalizer } from "react-big-calendar";
+import React, { useEffect, useState } from "react";
+import { format, getDay, isSameDay, parse, startOfWeek } from "date-fns";
 
-import ModalAppointmentForm from '@/components/ModalAppointmentForm';
-import { ToastContainer } from 'react-toastify';
-import { enUS } from 'date-fns/locale';
+import { IAppointmentCreated } from "@/interfaces/appointment.interface";
+import ModalAppointmentForm from "@/components/ModalAppointmentForm";
+import { enUS } from "date-fns/locale";
+import { getAppointments } from "@/api/appointment.api";
 
 const locales = {
-    'en-US': enUS,
+  "en-US": enUS,
 };
 
 const localizer = dateFnsLocalizer({
-    format,
-    parse,
-    startOfWeek: () => startOfWeek(new Date(), { weekStartsOn: 1 }),
-    getDay,
-    locales,
+  format,
+  parse,
+  startOfWeek: () => startOfWeek(new Date(), { weekStartsOn: 1 }),
+  getDay,
+  locales,
 });
 
-const initialEvents = [
-    {
-        title: 'Reunión con equipo',
-        start: new Date(2024, 8, 15, 10, 0),
-        end: new Date(2024, 8, 15, 11, 0),
-        allDay: false,
-    },
-    {
-        title: 'Evento todo el día',
-        start: new Date(2024, 9, 16),
-        end: new Date(2024, 9, 16),
-        allDay: true,
-    },
-];
-
 export default function CalendarPage() {
-    const [myEvents, setMyEvents] = useState(initialEvents);
-    const [showModal, setShowModal] = useState(false);
-    const [newEvent, setNewEvent] = useState({ title: '', start: new Date(), end: new Date() });
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [appointment, setAppointment] = useState<IAppointmentCreated[]>([]);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
 
-    const handleDateClick = (date: Date) => {
-        setSelectedDate(date);
-        setNewEvent({
-            title: '',
-            start: date,
-            end: addHours(date, 1),
-        });
-        setShowModal(true);
+  useEffect(() => {
+    const _getAppointments = async () => {
+      const appointments = await getAppointments();
+      setAppointment(appointments);
     };
+    _getAppointments();
+  }, []);
 
-    const handleEventSubmit = () => {
-        if (newEvent.title && selectedDate) {
-            setMyEvents([...myEvents, { ...newEvent, start: selectedDate, end: newEvent.end, allDay: false }]);
-            setShowModal(false);
-            setSelectedDate(null);
-        }
-    };
+  const handleDateClick = (date: string) => {
+    setSelectedDate(date);
+    setShowModal(true);
+  };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setNewEvent({ ...newEvent, [e.target.name]: e.target.value });
-    };
+  return (
+    <div className="flex h-screen bg-gray-900">
+      <div className="w-1/5 p-4 space-y-4 bg-gray-800 text-white">
+        <h2 className="text-2xl font-bold">Eventos del día</h2>
+        {appointment &&
+        appointment.filter((appointment) =>
+          isSameDay(appointment.startDate, new Date())
+        ).length > 0 ? (
+          appointment
+            .filter((event) => isSameDay(event.startDate, new Date()))
+            .map((event, index) => (
+              <div key={index} className="p-3 bg-gray-700 rounded-lg shadow-md">
+                <h3 className="font-semibold">holaaa</h3>
+                <p>
+                  {format(event.startDate, "hh:mm a")} -{" "}
+                  {format(event.endDate, "hh:mm a")}
+                </p>
+              </div>
+            ))
+        ) : (
+          <p>No hay eventos para hoy.</p>
+        )}
+      </div>
 
-    return (
-        <div className="flex h-screen bg-gray-900">
-            {/* Sidebar para eventos del día */}
-            <div className="w-1/5 p-4 space-y-4 bg-gray-800 text-white">
-                <h2 className="text-2xl font-bold">Eventos del día</h2>
-                {myEvents.filter(event => isSameDay(event.start, new Date())).length > 0 ? (
-                    myEvents.filter(event => isSameDay(event.start, new Date())).map((event, index) => (
-                        <div key={index} className="p-3 bg-gray-700 rounded-lg shadow-md">
-                            <h3 className="font-semibold">{event.title}</h3>
-                            <p>{format(event.start, 'hh:mm a')} - {format(event.end, 'hh:mm a')}</p>
-                        </div>
-                    ))
-                ) : (
-                    <p>No hay eventos para hoy.</p>
-                )}
-            </div>
-
-            {/* Calendario */}
-            <div className="w-4/5">
-                <div className="bg-white rounded-lg shadow-lg" style={{ height: '100%' }}>
-                    <Calendar
-                        localizer={localizer}
-                        events={myEvents}
-                        startAccessor="start"
-                        endAccessor="end"
-                        style={{ height: '100%' }}
-                        className="text-black"
-                        selectable
-                        onSelectSlot={({ start }) => handleDateClick(start)}
-                    />
-                </div>
-            </div>
-            
-                <ModalAppointmentForm showModal={showModal} setShowModal={setShowModal} />
-                <ToastContainer />
+      <div className="w-4/5">
+        <div
+          className="bg-white rounded-lg shadow-lg"
+          style={{ height: "100%" }}
+        >
+          <Calendar
+            localizer={localizer}
+            events={[]}
+            startAccessor="startDate"
+            endAccessor="endDate"
+            style={{ height: "100%" }}
+            className="text-black"
+            selectable
+            onSelectSlot={({ start }) => handleDateClick(start.toISOString())}
+          />
         </div>
-    );
+      </div>
+
+      <ModalAppointmentForm
+        showModal={showModal}
+        setShowModal={setShowModal}
+        date={selectedDate!}
+      />
+    </div>
+  );
 }

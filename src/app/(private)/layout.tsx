@@ -1,54 +1,57 @@
-'use client';
+"use client";
 
-import '../globals.css';
+import "../globals.css";
+import "react-toastify/dist/ReactToastify.css";
 
-import { PAGES, PUBLIC_PAGES } from '@/consts/pages';
-import { useEffect, useState } from 'react';
+import { PAGES, PUBLIC_PAGES } from "@/consts/pages";
+import { useEffect, useState } from "react";
 
-import { Inter } from 'next/font/google';
-import { LifeLine } from 'react-loading-indicators';
-import Link from 'next/link';
-import Modal from 'react-modal';
-import { useRouter } from 'next/navigation';
+import { LifeLine } from "react-loading-indicators";
+import Link from "next/link";
+import Modal from "react-modal";
+import { ToastContainer } from "react-toastify";
+import { useRouter } from "next/navigation";
 
-const inter = Inter({ subsets: ['latin'] });
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
 
   const handleLogout = () => {
-    localStorage.removeItem('authToken');
+    localStorage.removeItem("authToken");
     router.push(PAGES.login);
   };
 
   const menuOptions = [
     {
       label: "Mi Perfil",
-      action: () => router.push(PAGES.perfil)
+      action: () => router.push(PAGES.perfil),
     },
     {
       label: "Usuarios",
-      action: () => router.push(PAGES.usuarios)
+      action: () => router.push(PAGES.usuarios),
     },
     {
       label: "Cerrar Sesión",
-      action: handleLogout
-    }
-  ]
+      action: handleLogout,
+    },
+  ];
 
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem("authToken");
 
       if (!token && PUBLIC_PAGES.includes(window.location.href)) {
         router.push(PAGES.login);
       } else {
-        const res = await fetch('/api/me', {
+        const res = await fetch("/api/me", {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
         const data = await res.json();
@@ -65,11 +68,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   }, [router]);
 
   useEffect(() => {
-    // Configura el selector correcto aquí
-    Modal.setAppElement('body'); // Ajusta el selector si es necesario
+    Modal.setAppElement("body");
   }, []);
-
-
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -80,7 +80,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <html lang="es">
         <body>
           <div className="flex items-center justify-center h-screen bg-gray-900 text-white">
-          <LifeLine color="#FFF" size="medium" text="" textColor="" />
+            <LifeLine color="#FFF" size="medium" text="" textColor="" />
           </div>
         </body>
       </html>
@@ -109,31 +109,41 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 9l-7 7-7-7"
+                    ></path>
                   </svg>
                 </button>
                 {isMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-gray-700 rounded-md shadow-lg z-50">
-                    {menuOptions.map(opt =>
+                    {menuOptions.map((opt) => (
                       <button
                         onClick={opt.action}
                         className="block w-full text-left px-4 py-2 text-white hover:bg-gray-600 focus:outline-none"
                       >
                         {opt.label}
-                      </button>)}
+                      </button>
+                    ))}
                   </div>
                 )}
               </div>
             ) : (
-              'Cargando usuario...'
+              "Cargando usuario..."
             )}
           </div>
         </div>
       </header>
       <main className="container mx-auto p-4">{children}</main>
       <footer className="bg-gray-800 p-4 text-center">
-        <p>&copy; {new Date().getFullYear()} Mi Aplicación. Todos los derechos reservados.</p>
+        <p>
+          &copy; {new Date().getFullYear()} Mi Aplicación. Todos los derechos
+          reservados.
+        </p>
       </footer>
+      <ToastContainer />
     </div>
   );
 }

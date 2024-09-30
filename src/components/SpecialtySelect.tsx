@@ -5,14 +5,19 @@ import { createSpecialty, getSpecialties } from "@/api/specialty.api";
 
 import CreatableSelect from "react-select/creatable";
 import { ISpecialtyCreated } from "@/interfaces/specialty.interface";
-import { useField } from "formik";
+import { SingleValue } from "react-select";
 
 interface ISelectProps {
   name: string;
+  touched?: boolean;
+  error?: string;
+  onChange: (e: any) => void;
+  onBlur?: (e: any) => void;
 }
 
 const SpecialtySelect = (props: ISelectProps) => {
-  const [field, meta, helpers] = useField(props);
+  const { onChange, onBlur, touched, error, name } = props;
+  //const [field, meta, helpers] = useField(props);
   const [specialties, setSpecialties] = useState<ISpecialtyCreated[] | null>(
     null
   );
@@ -30,23 +35,36 @@ const SpecialtySelect = (props: ISelectProps) => {
     setSpecialties([...specialties!, newSpecialty]);
   };
 
+  const handleChange = (e: SingleValue<ISpecialtyCreated>) => {
+    const value = {
+      target: {
+        name,
+        value: e?.id,
+      },
+    }
+    onChange && onChange(value);
+  };
+
+  const handleBlur = (e: any) => {
+    console.log({ blur: e });
+    onBlur && onBlur(e);
+  };
+
   return (
     <>
       <CreatableSelect
-        {...props}
         isClearable
         options={specialties!}
+        name={name}
         onCreateOption={handleCreate}
         placeholder="Especialidad"
-        className="text-gray-700"
-        {...field}
-        value={specialties?.find(specialty => specialty.label === field.value)}
-        onChange={(specialty) => helpers.setValue(specialty ? specialty.id : "")}
-        onBlur={() => helpers.setTouched(true)}
+        className={`text-gray-700 ${
+          error ? "border-red-500" : "border-gray-300"
+        }`}
+        onChange={handleChange}
+        onBlur={handleBlur}
       />
-      {meta.touched && meta.error ? (
-        <div className="text-red-500">{meta.error}</div>
-      ) : null}
+      {error ? <div className="text-red-500">{error}</div> : null}
     </>
   );
 };
