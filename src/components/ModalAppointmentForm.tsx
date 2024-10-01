@@ -56,7 +56,6 @@ export default function ModalAppointmentForm(
   const { showModal, date, setShowModal } = props;
   const [doctors, setDoctors] = useState<IUserCreated[] | null>(null);
   const [patientId, setPatientId] = useState<number | null>(null);
-  console.log("date", date);
   useEffect(() => {
     const _getDoctors = async () => {
       const _doctors = await getDoctors();
@@ -99,7 +98,6 @@ export default function ModalAppointmentForm(
         endDate: DateTime.fromISO(values.endDate).toISO()!,
       };
       const { error } = await createAppointment(appointment);
-      console.log(error);
       if (error) toast.error(error.message);
     },
   });

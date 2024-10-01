@@ -1,3 +1,7 @@
+import "react-toastify/dist/ReactToastify.css";
+
+import { ToastContainer } from "react-toastify"
+
 export const metadata = {
   title: 'Iniciar Sesion',
 }
@@ -10,6 +14,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body>{children}</body>
+      <ToastContainer />
     </html>
   )
 }

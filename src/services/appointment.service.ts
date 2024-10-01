@@ -7,7 +7,12 @@ import { getById as getDoctorById } from "./user.service";
 const prisma = new PrismaClient();
 
 export const get = async () => {
-  return await prisma.appointment.findMany();
+  return await prisma.appointment.findMany({
+    include: {
+      patient: true,
+      doctor: true,
+    },
+  });
 };
 
 export const create = async (appointment: IAppointment) => {

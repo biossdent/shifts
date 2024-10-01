@@ -3,7 +3,6 @@ import { IAppointment } from "@/interfaces/appointment.interface";
 export const createAppointment = async (appointment: IAppointment) => {
     const token = localStorage.getItem("authToken");
     if (!token) throw new Error("Token no valido");
-console.log({token})
     const res = await fetch("/api/appointment", {
         method: "POST",
         headers: {
@@ -24,5 +23,12 @@ export const getAppointments = async () => {
             'Authorization': `Bearer ${token}`,
         },
     });
-    return await res.json();
+    const _appointments = await res.json();
+    return _appointments.map((appointment: IAppointment) => {
+        return {
+            ...appointment,
+            startDate: new Date(appointment.startDate),
+            endDate: new Date(appointment.endDate),
+        };
+    });
 }

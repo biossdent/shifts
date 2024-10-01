@@ -17,7 +17,6 @@ export const InputWithError = (props: IInputWithErrorProps) => {
   
   const _onChange = (e: any) => {
     onChange(e);
-    console.log({value: e.target.value})
   };
 
   return (

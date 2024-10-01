@@ -1,13 +1,11 @@
 "use client";
 
-import "react-toastify/dist/ReactToastify.css";
-
 import { KeyboardEvent, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
 
 import { PAGES } from "@/consts/pages";
 import { emailRegex } from "@/regex/validate.reg";
 import { loginApi } from "@/api/login.api";
+import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
 const INITIAL_ERRORS = {
@@ -132,7 +130,6 @@ export default function LoginPage() {
           </a>
         </div>
       </div>
-      <ToastContainer />
     </div>
   );
 }

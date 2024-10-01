@@ -8,11 +8,11 @@ import { format, getDay, isSameDay, parse, startOfWeek } from "date-fns";
 
 import { IAppointmentCreated } from "@/interfaces/appointment.interface";
 import ModalAppointmentForm from "@/components/ModalAppointmentForm";
-import { enUS } from "date-fns/locale";
+import { es } from "date-fns/locale";
 import { getAppointments } from "@/api/appointment.api";
 
 const locales = {
-  "en-US": enUS,
+  "es": es, 
 };
 
 const localizer = dateFnsLocalizer({
@@ -72,9 +72,10 @@ export default function CalendarPage() {
         >
           <Calendar
             localizer={localizer}
-            events={[]}
+            events={appointment}
             startAccessor="startDate"
             endAccessor="endDate"
+            titleAccessor={(event) => event.patient.fullName} 
             style={{ height: "100%" }}
             className="text-black"
             selectable
