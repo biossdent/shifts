@@ -17,7 +17,6 @@ interface ISelectProps {
 
 const SpecialtySelect = (props: ISelectProps) => {
   const { onChange, onBlur, touched, error, name } = props;
-  //const [field, meta, helpers] = useField(props);
   const [specialties, setSpecialties] = useState<ISpecialtyCreated[] | null>(
     null
   );
@@ -46,8 +45,13 @@ const SpecialtySelect = (props: ISelectProps) => {
   };
 
   const handleBlur = (e: any) => {
-    console.log({ blur: e });
-    onBlur && onBlur(e);
+    const value = {
+      target: {
+        ...e.target,
+        name,
+      },
+    }
+    onBlur && onBlur(value);
   };
 
   return (
@@ -58,13 +62,16 @@ const SpecialtySelect = (props: ISelectProps) => {
         name={name}
         onCreateOption={handleCreate}
         placeholder="Especialidad"
-        className={`text-gray-700 ${
-          error ? "border-red-500" : "border-gray-300"
-        }`}
+        classNames={{
+          container: () => "text-gray-700",
+          control: () => touched && error ? "!border-2 !border-red-500" : "!border-gray-300",
+          indicatorSeparator: () => touched && error ? "border !border-red-500" : "!border-gray-300",
+          indicatorsContainer: () => touched && error ? "!bg-red-500" : "!border-gray-300"
+        }}
         onChange={handleChange}
         onBlur={handleBlur}
       />
-      {error ? <div className="text-red-500">{error}</div> : null}
+      {touched && error ? <div className="text-red-500">{error}</div> : null}
     </>
   );
 };
