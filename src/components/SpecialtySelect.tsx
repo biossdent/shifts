@@ -15,6 +15,9 @@ interface ISelectProps {
   onBlur?: (e: any) => void;
 }
 
+const errorBorder = "!border-red-500";
+const normalBorder = "!border-gray-300";
+
 const SpecialtySelect = (props: ISelectProps) => {
   const { onChange, onBlur, touched, error, name } = props;
   const [specialties, setSpecialties] = useState<ISpecialtyCreated[] | null>(
@@ -64,9 +67,9 @@ const SpecialtySelect = (props: ISelectProps) => {
         placeholder="Especialidad"
         classNames={{
           container: () => "text-gray-700",
-          control: () => touched && error ? "!border-2 !border-red-500" : "!border-gray-300",
-          indicatorSeparator: () => touched && error ? "border !border-red-500" : "!border-gray-300",
-          indicatorsContainer: () => touched && error ? "!bg-red-500" : "!border-gray-300"
+          control: () => touched && error ? `!border-2 ${errorBorder}` : normalBorder, 
+          indicatorSeparator: () => touched && error ? `border ${errorBorder}` : normalBorder, 
+          indicatorsContainer: () => touched && error ? "!bg-red-500" : "",
         }}
         onChange={handleChange}
         onBlur={handleBlur}

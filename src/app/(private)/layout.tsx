@@ -55,7 +55,6 @@ export default function RootLayout({
           },
         });
         const data = await res.json();
-        console.log("data", data);
         if (!data.user) return router.push(PAGES.login);
         setUser(data.user.name);
         setLoading(false);

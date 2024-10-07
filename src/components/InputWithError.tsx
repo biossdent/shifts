@@ -1,4 +1,5 @@
-import { HTMLInputTypeAttribute } from "react";
+import { ChangeEvent, HTMLInputTypeAttribute } from "react";
+import { add, formatDate, parseISO } from "date-fns";
 
 interface IInputWithErrorProps {
   label: string;
@@ -15,8 +16,22 @@ interface IInputWithErrorProps {
 export const InputWithError = (props: IInputWithErrorProps) => {
   const { label, name, value, touched, error, type, placeholder, onChange, onBlur } = props;
   
-  const _onChange = (e: any) => {
+  const _onChange = (e: ChangeEvent<HTMLInputElement>) => {
     onChange(e);
+    if (name !== 'startDate') return;
+    setEndDate(e);
+  };
+
+  const setEndDate = (e: ChangeEvent<HTMLInputElement>) => {
+    const startDate = parseISO(e.target.value);
+    const endDate = add(startDate, { hours: 1 });
+    const formatEndDate = formatDate(endDate, "yyyy-MM-dd'T'HH:mm");
+    onChange({
+      target: {
+        name: "endDate",
+        value: formatEndDate,
+      },
+    });
   };
 
   return (

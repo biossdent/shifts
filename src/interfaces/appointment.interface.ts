@@ -3,8 +3,8 @@ import { IUserCreated } from "./user.interface"
 
 export interface IAppointment {
     diagnostic: string
-    startDate: string
-    endDate: string
+    startDate: Date
+    endDate: Date
     specialtyId: number
     patientId: number
     doctorId: number

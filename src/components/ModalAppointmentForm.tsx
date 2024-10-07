@@ -6,13 +6,13 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { ciRegex, phoneRegex } from "@/regex/validate.reg";
 import { createPatient, getPatientByCI } from "@/api/patient.api";
 
-import { DateTime } from "luxon";
 import { IUserCreated } from "@/interfaces/user.interface";
 import { InputWithError } from "./InputWithError";
 import Modal from "react-modal";
 import SpecialtySelect from "./SpecialtySelect";
 import { createAppointment } from "@/api/appointment.api";
 import { getDoctors } from "@/api/doctors.api";
+import { parseISO } from "date-fns";
 import { toast } from "react-toastify";
 import { useFormik } from "formik";
 
@@ -56,6 +56,7 @@ export default function ModalAppointmentForm(
   const { showModal, date, setShowModal } = props;
   const [doctors, setDoctors] = useState<IUserCreated[] | null>(null);
   const [patientId, setPatientId] = useState<number | null>(null);
+
   useEffect(() => {
     const _getDoctors = async () => {
       const _doctors = await getDoctors();
@@ -94,11 +95,12 @@ export default function ModalAppointmentForm(
         doctorId: Number(values.doctorId),
         diagnostic: values.diagnostic,
         specialtyId: Number(values.specialtyId),
-        startDate: DateTime.fromISO(values.startDate).toISO()!,
-        endDate: DateTime.fromISO(values.endDate).toISO()!,
+        startDate: parseISO(values.startDate!),
+        endDate: parseISO(values.endDate!),
       };
       const { error } = await createAppointment(appointment);
-      if (error) toast.error(error.message);
+      if (error) toast.error(error);
+      toast.success("Cita creada con éxito");
     },
   });
 
@@ -180,6 +182,7 @@ export default function ModalAppointmentForm(
                 label="Fecha de Inicio"
                 {...formik.getFieldProps("startDate")}
                 {...formik.getFieldMeta("startDate")}
+                value={date}
                 type="datetime-local"
               />
               <InputWithError

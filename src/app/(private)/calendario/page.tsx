@@ -4,7 +4,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import React, { useEffect, useState } from "react";
-import { format, getDay, isSameDay, parse, startOfWeek } from "date-fns";
+import { format, formatDate, getDay, isSameDay, parse, parseISO, startOfWeek } from "date-fns";
 
 import { IAppointmentCreated } from "@/interfaces/appointment.interface";
 import ModalAppointmentForm from "@/components/ModalAppointmentForm";
@@ -37,14 +37,16 @@ export default function CalendarPage() {
   }, []);
 
   const handleDateClick = (date: string) => {
-    setSelectedDate(date);
+    const _date = parseISO(date);
+    const _formatDate = formatDate(_date, "yyyy-MM-dd'T'HH:mm");
+    setSelectedDate(_formatDate);
     setShowModal(true);
   };
 
   return (
     <div className="flex h-screen bg-gray-900">
       <div className="w-1/5 p-4 space-y-4 bg-gray-800 text-white">
-        <h2 className="text-2xl font-bold">Eventos del día</h2>
+        <h2 className="text-2xl font-bold">Citas del día</h2>
         {appointment &&
         appointment.filter((appointment) =>
           isSameDay(appointment.startDate, new Date())
@@ -61,7 +63,7 @@ export default function CalendarPage() {
               </div>
             ))
         ) : (
-          <p>No hay eventos para hoy.</p>
+          <p>No hay citas para hoy.</p>
         )}
       </div>
 
