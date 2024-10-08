@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { PAGES, PUBLIC_PAGES } from "@/consts/pages";
 import { useEffect, useState } from "react";
 
+import Image from "next/image";
 import { LifeLine } from "react-loading-indicators";
 import Link from "next/link";
 import Modal from "react-modal";
@@ -46,7 +47,7 @@ export default function RootLayout({
     const checkAuth = async () => {
       const token = localStorage.getItem("authToken");
 
-      if (!token && PUBLIC_PAGES.includes(window.location.href)) {
+      if (!token && PUBLIC_PAGES.includes(window.location.pathname)) {
         router.push(PAGES.login);
       } else {
         const res = await fetch("/api/me", {
@@ -88,7 +89,8 @@ export default function RootLayout({
     <div className="min-h-screen bg-gray-900 text-white">
       <header className="bg-gray-800 p-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
-          <Link href={PAGES.calendario}>
+          <Link href={PAGES.calendar} className="flex flex-row">
+            <Image className="pr-2" src="/images/BiossDent.png" alt="logo" width={45} height={45} />
             <h1 className="text-2xl font-bold">Gestión de turnos</h1>
           </Link>
           <div className="relative">

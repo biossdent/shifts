@@ -52,7 +52,7 @@ export default function LoginPage() {
       const { data, ok } = await loginApi(email, password);
       if (ok && data.token) {
         localStorage.setItem("authToken", data.token);
-        router.push(PAGES.calendario);
+        router.push(PAGES.calendar);
       } else {
         setErrors((prevErrors) => ({
           ...prevErrors,

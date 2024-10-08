@@ -22,23 +22,23 @@ export default function RootLayout(props: IProps) {
 
   useEffect(() => {
     const checkAuth = async () => {
-      console.log("user", user);
-      if (user) return router.push(PAGES.calendario);
+      if (user) return router.push(PAGES.calendar);
       
       const token = localStorage.getItem("authToken");
-      if (!token) return;
+      if (!token) return router.push(PAGES.login);
       const res = await fetch("/api/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       const data = await res.json();
+      if (data.error && window.location.pathname !== PAGES.login) router.push(PAGES.login);
       if (!data.user) return setLoading(false);
       setUser(data.user);
-      router.push(PAGES.calendario);
+      router.push(PAGES.calendar);
     };
     checkAuth();
-  }, []);
+  }, [router]);
 
   if (loading) {
     return (

@@ -2,7 +2,7 @@
 export const PAGES = {
     login: "/iniciar-sesion",
     register: "/registrar",
-    calendario: "/calendario",
+    calendar: "/calendario",
     perfil: "/perfil",
     usuarios: "/usuarios",
 };
