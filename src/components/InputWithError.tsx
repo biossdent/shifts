@@ -24,7 +24,7 @@ export const InputWithError = (props: IInputWithErrorProps) => {
 
   const setEndDate = (e: ChangeEvent<HTMLInputElement>) => {
     const startDate = parseISO(e.target.value);
-    const endDate = add(startDate, { hours: 1 });
+    const endDate = add(startDate, { minutes: 30 });
     const formatEndDate = formatDate(endDate, "yyyy-MM-dd'T'HH:mm");
     onChange({
       target: {

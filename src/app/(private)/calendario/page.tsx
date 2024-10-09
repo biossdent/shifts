@@ -6,8 +6,8 @@ import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import React, { useEffect, useState } from "react";
 import { format, formatDate, getDay, isSameDay, parse, parseISO, startOfWeek } from "date-fns";
 
-import { IAppointmentCreated } from "@/interfaces/appointment.interface";
 import ModalAppointmentForm from "@/components/ModalAppointmentForm";
+import { appointmentsStore } from "@/stores/appointiments";
 import { es } from "date-fns/locale";
 import { getAppointments } from "@/api/appointment.api";
 
@@ -24,14 +24,14 @@ const localizer = dateFnsLocalizer({
 });
 
 export default function CalendarPage() {
-  const [appointment, setAppointment] = useState<IAppointmentCreated[]>([]);
+  const {appointments, myAppointments, setAppointments, setMyAppointments} = appointmentsStore();
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const _getAppointments = async () => {
       const appointments = await getAppointments();
-      setAppointment(appointments);
+      setAppointments(appointments);
     };
     _getAppointments();
   }, []);
@@ -47,18 +47,18 @@ export default function CalendarPage() {
     <div className="flex h-screen bg-gray-900">
       <div className="w-1/5 p-4 space-y-4 bg-gray-800 text-white">
         <h2 className="text-2xl font-bold">Citas del día</h2>
-        {appointment &&
-        appointment.filter((appointment) =>
+        {appointments &&
+        appointments.filter((appointment) =>
           isSameDay(appointment.startDate, new Date())
         ).length > 0 ? (
-          appointment
-            .filter((event) => isSameDay(event.startDate, new Date()))
-            .map((event, index) => (
+          appointments
+            .filter((appointment) => isSameDay(appointment.startDate, new Date()))
+            .map((appointment, index) => (
               <div key={index} className="p-3 bg-gray-700 rounded-lg shadow-md">
                 <h3 className="font-semibold">holaaa</h3>
                 <p>
-                  {format(event.startDate, "hh:mm a")} -{" "}
-                  {format(event.endDate, "hh:mm a")}
+                  {format(appointment.startDate, "hh:mm a")} -{" "}
+                  {format(appointment.endDate, "hh:mm a")}
                 </p>
               </div>
             ))
@@ -74,7 +74,7 @@ export default function CalendarPage() {
         >
           <Calendar
             localizer={localizer}
-            events={appointment}
+            events={appointments}
             startAccessor="startDate"
             endAccessor="endDate"
             titleAccessor={(event) => event.patient.fullName} 
