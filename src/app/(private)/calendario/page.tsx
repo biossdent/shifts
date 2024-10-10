@@ -64,8 +64,8 @@ export default function CalendarPage() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-900">
-      <div className="w-1/5 p-4 space-y-4 bg-gray-800 text-white">
+    <div className="flex h-screen bg-gray-900 flex-col md:flex-row">
+      <div className="w-full md:basis-1/5  order-2 md:order-1 p-4 space-y-4 bg-gray-800 text-white mt-8 md:mt-0">
         <h2 className="text-2xl font-bold">Citas del día</h2>
         {appointments &&
         appointments.filter((appointment) =>
@@ -89,7 +89,7 @@ export default function CalendarPage() {
         )}
       </div>
 
-      <div className="w-4/5">
+      <div className="w-full h-full md:basis-4/5 order-1 md:order-2">
         <div
           className="bg-white rounded-lg shadow-lg"
           style={{ height: "100%" }}
