@@ -12,6 +12,7 @@ export const get = async () => {
     include: {
       patient: true,
       doctor: true,
+      specialty: true
     },
   });
 };

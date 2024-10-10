@@ -1,4 +1,5 @@
 import { IPatientCreated } from "./patient.interface"
+import { ISpecialty } from "./specialty.interface"
 import { IUserCreated } from "./user.interface"
 
 export interface IAppointment {
@@ -15,4 +16,5 @@ export interface IAppointmentCreated extends IAppointment {
     createdAt: string
     patient: IPatientCreated,
     doctor: IUserCreated
+    specialty: ISpecialty
 }

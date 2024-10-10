@@ -4,15 +4,26 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import React, { useEffect, useState } from "react";
-import { format, formatDate, getDay, isSameDay, parse, parseISO, startOfWeek } from "date-fns";
+import {
+  format,
+  formatDate,
+  getDay,
+  isSameDay,
+  parse,
+  parseISO,
+  set,
+  startOfWeek,
+} from "date-fns";
 
+import { IAppointmentCreated } from "@/interfaces/appointment.interface";
 import ModalAppointmentForm from "@/components/ModalAppointmentForm";
+import PreviewAppointmentModal from "@/components/ModalAppointmentPreview";
 import { appointmentsStore } from "@/stores/appointiments";
 import { es } from "date-fns/locale";
 import { getAppointments } from "@/api/appointment.api";
 
 const locales = {
-  "es": es, 
+  es: es,
 };
 
 const localizer = dateFnsLocalizer({
@@ -24,9 +35,13 @@ const localizer = dateFnsLocalizer({
 });
 
 export default function CalendarPage() {
-  const {appointments, myAppointments, setAppointments, setMyAppointments} = appointmentsStore();
+  const { appointments, myAppointments, setAppointments, setMyAppointments } =
+    appointmentsStore();
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] =
+    useState<IAppointmentCreated | null>(null);
 
   useEffect(() => {
     const _getAppointments = async () => {
@@ -43,6 +58,11 @@ export default function CalendarPage() {
     setShowModal(true);
   };
 
+  const handleEventClick = (appointment: IAppointmentCreated) => {
+    setSelectedEvent(appointment);
+    setIsPreviewOpen(true);
+  };
+
   return (
     <div className="flex h-screen bg-gray-900">
       <div className="w-1/5 p-4 space-y-4 bg-gray-800 text-white">
@@ -52,7 +72,9 @@ export default function CalendarPage() {
           isSameDay(appointment.startDate, new Date())
         ).length > 0 ? (
           appointments
-            .filter((appointment) => isSameDay(appointment.startDate, new Date()))
+            .filter((appointment) =>
+              isSameDay(appointment.startDate, new Date())
+            )
             .map((appointment, index) => (
               <div key={index} className="p-3 bg-gray-700 rounded-lg shadow-md">
                 <h3 className="font-semibold">holaaa</h3>
@@ -77,20 +99,28 @@ export default function CalendarPage() {
             events={appointments}
             startAccessor="startDate"
             endAccessor="endDate"
-            titleAccessor={(event) => event.patient.fullName} 
+            titleAccessor={(event) => event.patient.fullName}
             style={{ height: "100%" }}
             className="text-black"
             selectable
             onSelectSlot={({ start }) => handleDateClick(start.toISOString())}
+            onSelectEvent={handleEventClick}
           />
         </div>
       </div>
-
       <ModalAppointmentForm
         showModal={showModal}
         setShowModal={setShowModal}
         date={selectedDate!}
       />
+
+      {selectedEvent && (
+        <PreviewAppointmentModal
+          showModal={isPreviewOpen}
+          setShowModal={setIsPreviewOpen}
+          appointment={selectedEvent}
+        />
+      )}
     </div>
   );
 }
