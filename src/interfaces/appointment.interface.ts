@@ -4,8 +4,8 @@ import { IUserCreated } from "./user.interface"
 
 export interface IAppointment {
     diagnostic: string
-    startDate: Date | string
-    endDate: Date | string
+    startDate: string
+    endDate: string
     specialtyId: number
     patientId: number
     doctorId: number

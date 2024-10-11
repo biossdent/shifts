@@ -100,11 +100,11 @@ export default function ModalAppointmentForm(
         doctorId: Number(values.doctorId),
         diagnostic: values.diagnostic,
         specialtyId: Number(values.specialtyId),
-        startDate: parseISO(values.startDate!),
-        endDate: parseISO(values.endDate!),
+        startDate: values.startDate,
+        endDate: values.endDate,
       };
       const { error } = await createAppointment(appointment);
-      if (error) toast.error(error);
+      if (error) return toast.error(error);
       toast.success("Cita creada con éxito");
     },
   });

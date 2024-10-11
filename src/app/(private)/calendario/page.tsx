@@ -76,7 +76,7 @@ export default function CalendarPage() {
               isSameDay(appointment.startDate, new Date())
             )
             .map((appointment, index) => (
-              <div key={index} className="p-3 bg-gray-700 rounded-lg shadow-md">
+              <div onClick={() => handleEventClick(appointment)} key={index} className="p-3 bg-gray-700 rounded-lg shadow-md">
                 <h3 className="font-semibold">
                   {appointment.patient.fullName}
                 </h3>

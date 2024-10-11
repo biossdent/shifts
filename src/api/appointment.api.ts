@@ -1,4 +1,5 @@
 import { IAppointment } from "@/interfaces/appointment.interface";
+import { parseISO } from "date-fns";
 
 export const createAppointment = async (appointment: IAppointment) => {
     const token = localStorage.getItem("authToken");
@@ -9,7 +10,11 @@ export const createAppointment = async (appointment: IAppointment) => {
             'Authorization': `Bearer ${token}`,
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(appointment),
+        body: JSON.stringify({
+            ...appointment,
+            startDate: parseISO(appointment.startDate),
+            endDate: parseISO(appointment.endDate),
+        }),
     });
     return await res.json();
 }
