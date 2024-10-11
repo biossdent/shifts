@@ -1,4 +1,3 @@
-import React, { Dispatch, SetStateAction } from "react";
 import {
   faCalendarDays,
   faIdCard,
@@ -10,29 +9,27 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IAppointmentCreated } from "@/interfaces/appointment.interface";
 import Modal from "react-modal";
+import React from "react";
+import { appointmentsStore } from "@/stores/appointiments.store";
 import { format } from "date-fns";
 
-interface ModalAppointmentPreviewProps {
-  showModal: boolean;
-  setShowModal: Dispatch<SetStateAction<boolean>>;
-  appointment: IAppointmentCreated;
-}
+const PreviewAppointmentModal = () => {
+  const { appointmentSelected, setAppointmentSelected } = appointmentsStore();
+  
+  if (!appointmentSelected) return null;
 
-const PreviewAppointmentModal = (props: ModalAppointmentPreviewProps) => {
-  const { showModal, appointment, setShowModal } = props;
   return (
     <Modal
-      isOpen={showModal}
-      onRequestClose={() => setShowModal(false)}
+      isOpen={Boolean(appointmentSelected)}
+      onRequestClose={() => setAppointmentSelected(null)}
       contentLabel="Vista Previa de Cita Médica"
       className="absolute inset-0 flex items-center justify-center z-50"
       overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-40"
     >
       <div className="relative max-w-xl w-full bg-white p-6 rounded-lg shadow-lg text-gray-600">
         <button
-          onClick={() => setShowModal(false)}
+          onClick={() => setAppointmentSelected(null)}
           className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
         >
           &times;
@@ -49,7 +46,7 @@ const PreviewAppointmentModal = (props: ModalAppointmentPreviewProps) => {
               <div className="flex flex-col pl-2">
                 <p className="font-semibold">Nombre</p>{" "}
                 <p className="font-medium text-gray-400">
-                  {appointment.patient.fullName}
+                  {appointmentSelected.patient.fullName}
                 </p>
               </div>
             </div>
@@ -59,7 +56,7 @@ const PreviewAppointmentModal = (props: ModalAppointmentPreviewProps) => {
               <div className="flex flex-col pl-2">
                 <p className="font-semibold">Número de Cédula</p>{" "}
                 <p className="font-medium text-gray-400">
-                  {appointment.patient.ci}
+                  {appointmentSelected.patient.ci}
                 </p>
               </div>
             </div>
@@ -70,7 +67,7 @@ const PreviewAppointmentModal = (props: ModalAppointmentPreviewProps) => {
               <div className="flex flex-col pl-2">
                 <p className="font-semibold">Teléfono</p>{" "}
                 <p className="font-medium text-gray-400">
-                  {appointment.patient.phone}
+                  {appointmentSelected.patient.phone}
                 </p>
               </div>
             </div>
@@ -88,10 +85,10 @@ const PreviewAppointmentModal = (props: ModalAppointmentPreviewProps) => {
                 <div className="flex flex-col pl-2">
                   <p className="font-semibold">Fecha de Inicio</p>{" "}
                   <p className="font-medium text-gray-400">
-                    {format(appointment.startDate, "dd/MM/yyyy")}
+                    {format(appointmentSelected.startDate, "dd/MM/yyyy")}
                   </p>
                   <p className="font-medium text-gray-400">
-                    {format(appointment.startDate, "hh:mm aa	")}
+                    {format(appointmentSelected.startDate, "hh:mm aa	")}
                   </p>
                 </div>
               </div>
@@ -105,10 +102,10 @@ const PreviewAppointmentModal = (props: ModalAppointmentPreviewProps) => {
                 <div className="flex flex-col pl-2">
                   <p className="font-semibold">Fecha de Finalización</p>{" "}
                   <p className="font-medium text-gray-400">
-                    {format(appointment.endDate, "dd/MM/yyyy")}
+                    {format(appointmentSelected.endDate, "dd/MM/yyyy")}
                   </p>
                   <p className="font-medium text-gray-400">
-                    {format(appointment.endDate, "hh:mm aa	")}
+                    {format(appointmentSelected.endDate, "hh:mm aa	")}
                   </p>
                 </div>
               </div>
@@ -120,7 +117,7 @@ const PreviewAppointmentModal = (props: ModalAppointmentPreviewProps) => {
               <div className="flex flex-col pl-2">
                 <p className="font-semibold">Especialidad</p>{" "}
                 <p className="font-medium text-gray-400">
-                  {appointment.specialty.label}
+                  {appointmentSelected.specialty.label}
                 </p>
               </div>
             </div>
@@ -135,7 +132,7 @@ const PreviewAppointmentModal = (props: ModalAppointmentPreviewProps) => {
                 <p className="font-semibold text-center">Diagnóstico</p>{" "}
               </div>
               <p className="font-medium text-gray-400">
-                {appointment.diagnostic}
+                {appointmentSelected.diagnostic}
               </p>
             </div>
           </div>
@@ -152,20 +149,18 @@ const PreviewAppointmentModal = (props: ModalAppointmentPreviewProps) => {
                 <p className="font-semibold text-center">Doctor</p>{" "}
               </div>
               <p className="font-medium text-gray-400">
-                {appointment.doctor.name + " " + appointment.doctor.lastName}
+                {appointmentSelected.doctor.name + " " + appointmentSelected.doctor.lastName}
               </p>
             </div>
           </div>
         </div>
 
-        <button
-          className="mt-6 w-full py-2 bg-red-600 text-white rounded-md hover:bg-red-500"
-        >
+        <button className="mt-6 w-full py-2 bg-red-600 text-white rounded-md hover:bg-red-500">
           Cancelar Cita
         </button>
 
         <button
-          onClick={() => setShowModal(false)}
+          onClick={() => setAppointmentSelected(null)}
           className="mt-1 w-full py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-500"
         >
           Cerrar

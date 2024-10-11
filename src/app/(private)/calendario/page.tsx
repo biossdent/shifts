@@ -18,7 +18,7 @@ import {
 import { IAppointmentCreated } from "@/interfaces/appointment.interface";
 import ModalAppointmentForm from "@/components/ModalAppointmentForm";
 import PreviewAppointmentModal from "@/components/ModalAppointmentPreview";
-import { appointmentsStore } from "@/stores/appointiments";
+import { appointmentsStore } from "@/stores/appointiments.store";
 import { es } from "date-fns/locale";
 import { getAppointments } from "@/api/appointment.api";
 
@@ -35,13 +35,17 @@ const localizer = dateFnsLocalizer({
 });
 
 export default function CalendarPage() {
-  const { appointments, myAppointments, setAppointments, setMyAppointments } =
-    appointmentsStore();
+  const {
+    appointments,
+    myAppointments,
+    setAppointments,
+    setMyAppointments,
+    appointmentSelected,
+    setAppointmentSelected,
+  } = appointmentsStore();
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] =
-    useState<IAppointmentCreated | null>(null);
 
   useEffect(() => {
     const _getAppointments = async () => {
@@ -59,7 +63,7 @@ export default function CalendarPage() {
   };
 
   const handleEventClick = (appointment: IAppointmentCreated) => {
-    setSelectedEvent(appointment);
+    setAppointmentSelected(appointment);
     setIsPreviewOpen(true);
   };
 
@@ -76,7 +80,11 @@ export default function CalendarPage() {
               isSameDay(appointment.startDate, new Date())
             )
             .map((appointment, index) => (
-              <div onClick={() => handleEventClick(appointment)} key={index} className="p-3 bg-gray-700 rounded-lg shadow-md cursor-pointer">
+              <div
+                onClick={() => handleEventClick(appointment)}
+                key={index}
+                className="p-3 bg-gray-700 rounded-lg shadow-md cursor-pointer"
+              >
                 <h3 className="font-semibold">
                   {appointment.patient.fullName}
                 </h3>
@@ -98,7 +106,7 @@ export default function CalendarPage() {
           style={{ height: "100%" }}
         >
           <Calendar
-          culture="es"
+            culture="es"
             localizer={localizer}
             events={appointments}
             startAccessor="startDate"
@@ -118,13 +126,7 @@ export default function CalendarPage() {
         date={selectedDate!}
       />
 
-      {selectedEvent && (
-        <PreviewAppointmentModal
-          showModal={isPreviewOpen}
-          setShowModal={setIsPreviewOpen}
-          appointment={selectedEvent}
-        />
-      )}
+      <PreviewAppointmentModal />
     </div>
   );
 }
