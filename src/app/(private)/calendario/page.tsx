@@ -29,7 +29,7 @@ const locales = {
 const localizer = dateFnsLocalizer({
   format,
   parse,
-  startOfWeek: () => startOfWeek(new Date(), { weekStartsOn: 1 }),
+  startOfWeek,
   getDay,
   locales,
 });
@@ -77,7 +77,10 @@ export default function CalendarPage() {
             )
             .map((appointment, index) => (
               <div key={index} className="p-3 bg-gray-700 rounded-lg shadow-md">
-                <h3 className="font-semibold">holaaa</h3>
+                <h3 className="font-semibold">
+                  {appointment.patient.fullName}
+                </h3>
+                <p>{appointment.diagnostic}</p>
                 <p>
                   {format(appointment.startDate, "hh:mm a")} -{" "}
                   {format(appointment.endDate, "hh:mm a")}

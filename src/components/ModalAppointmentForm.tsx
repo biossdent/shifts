@@ -63,7 +63,13 @@ export default function ModalAppointmentForm(
       setDoctors(_doctors);
     };
     _getDoctors();
+    
   }, []);
+
+  useEffect(() => {
+    formik.setFieldValue("startDate", date);
+  }, [date])
+  
 
   useEffect(() => {
     Modal.setAppElement("body");
@@ -73,7 +79,6 @@ export default function ModalAppointmentForm(
     initialValues: {
       ...INITIAL_PATIENT,
       ...INITIAL_APPOINTMENT,
-      startDate: new Date(date).toISOString(),
       doctorId: "",
     },
     validationSchema,
@@ -124,7 +129,7 @@ export default function ModalAppointmentForm(
       className="absolute inset-0 flex items-center justify-center z-50"
       overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-40"
     >
-      <div className="relative max-w-full mx-auto bg-white p-6 rounded-lg shadow-lg">
+      <div className="relative max-w-xl w-full mx-auto bg-white p-6 rounded-lg shadow-lg">
         <button
           onClick={() => setShowModal(false)}
           className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
@@ -182,7 +187,6 @@ export default function ModalAppointmentForm(
                 label="Fecha de Inicio"
                 {...formik.getFieldProps("startDate")}
                 {...formik.getFieldMeta("startDate")}
-                value={date}
                 type="datetime-local"
               />
               <InputWithError

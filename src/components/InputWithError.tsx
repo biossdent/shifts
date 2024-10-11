@@ -18,7 +18,7 @@ export const InputWithError = (props: IInputWithErrorProps) => {
   
   const _onChange = (e: ChangeEvent<HTMLInputElement>) => {
     onChange(e);
-    if (name !== 'startDate') return;
+    if (name !== "startDate") return;
     setEndDate(e);
   };
 

@@ -30,15 +30,12 @@ export const create = async (appointment: IAppointment) => {
 
   if (isValid(startDate) && isValid(endDate)) {
     if (getTime(startDate) > getTime(endDate)) {
-      console.log('if 1');
       throw new Error("La fecha de inicio no puede ser mayor a la de fin");
     }
     if (isBefore(startDate, now)) {
-      console.log('if 2');
       throw new Error("La fecha de inicio no puede ser anterior a la fecha actual");
     }
     if (isBefore(endDate, now)) {
-      console.log('if 3');
       throw new Error("La fecha de fin no puede ser anterior a la fecha actual");
     }
   } else {
