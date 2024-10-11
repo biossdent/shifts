@@ -80,4 +80,12 @@ export const getAppointmentsByRangeAndDoctorId = async (startDate: string, endDa
       specialty: true,
     },
   })
-}
+};
+
+export const deleteAppointment = async (appointmentId: number) => {
+  return await prisma.appointment.delete({
+    where: {
+      id: appointmentId,
+    },
+  });
+};
