@@ -159,8 +159,14 @@ const PreviewAppointmentModal = (props: ModalAppointmentPreviewProps) => {
         </div>
 
         <button
+          className="mt-6 w-full py-2 bg-red-600 text-white rounded-md hover:bg-red-500"
+        >
+          Cancelar Cita
+        </button>
+
+        <button
           onClick={() => setShowModal(false)}
-          className="mt-6 w-full py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-500"
+          className="mt-1 w-full py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-500"
         >
           Cerrar
         </button>

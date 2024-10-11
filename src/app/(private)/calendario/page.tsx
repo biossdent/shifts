@@ -76,7 +76,7 @@ export default function CalendarPage() {
               isSameDay(appointment.startDate, new Date())
             )
             .map((appointment, index) => (
-              <div onClick={() => handleEventClick(appointment)} key={index} className="p-3 bg-gray-700 rounded-lg shadow-md">
+              <div onClick={() => handleEventClick(appointment)} key={index} className="p-3 bg-gray-700 rounded-lg shadow-md cursor-pointer">
                 <h3 className="font-semibold">
                   {appointment.patient.fullName}
                 </h3>
@@ -98,12 +98,13 @@ export default function CalendarPage() {
           style={{ height: "100%" }}
         >
           <Calendar
+          culture="es"
             localizer={localizer}
             events={appointments}
             startAccessor="startDate"
             endAccessor="endDate"
             titleAccessor={(event) => event.patient.fullName}
-            style={{ height: "100%" }}
+            style={{ height: "500" }}
             className="text-black"
             selectable
             onSelectSlot={({ start }) => handleDateClick(start.toISOString())}
