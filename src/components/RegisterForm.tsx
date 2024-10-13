@@ -2,32 +2,19 @@
 
 import { ChangeEvent, useState } from 'react';
 
-import { IUserNew } from '@/interfaces/user.interface';
-import { ROLE } from '@/enums/role.enum';
 import { ROLES } from '@/consts/role';
+import { registerUser } from '@/api/users.api';
+import { userStore } from '@/stores/user.store';
 
 const RegisterForm = () => {
-    const [user, setUser] = useState<IUserNew>({
-        name: '',
-        lastName: '',
-        email: '',
-        role: ROLE.DOCTOR,
-        password: ''
-    })
+    const { userSelected, setUserSelected } = userStore();
 
     const register = async () => {
-        const res = await fetch('/api/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(user),
-        });
-        const data = await res.json();
+        registerUser(userSelected);
     };
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        setUser({ ...user, [e.target.name]: e.target.value })
+        setUserSelected({ ...userSelected, [e.target.name]: e.target.value })
     }
 
     return (
@@ -39,7 +26,7 @@ const RegisterForm = () => {
                         type="text"
                         className="w-full px-4 py-2 text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         placeholder="Nombre"
-                        value={user.name}
+                        value={userSelected.name}
                         onChange={handleChange}
                         name='name'
                     />
@@ -47,7 +34,7 @@ const RegisterForm = () => {
                         type="text"
                         className="w-full px-4 py-2 text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         placeholder="Apellido"
-                        value={user.lastName}
+                        value={userSelected.lastName}
                         onChange={handleChange}
                         name='lastName'
                     />
@@ -55,25 +42,25 @@ const RegisterForm = () => {
                         type="email"
                         className="w-full px-4 py-2 text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         placeholder="Correo electrónico"
-                        value={user.email}
+                        value={userSelected.email}
                         onChange={handleChange}
                         name='email'
                     />
-                    <input
+                    {/* <input
                         type="password"
                         className="w-full px-4 py-2 text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         placeholder="Contraseña"
-                        value={user.password}
+                        value={userSelected.password}
                         onChange={handleChange}
                         name='password'
-                    />
+                    /> */}
                     <div>
                         <label htmlFor="role" className="block text-sm font-medium text-gray-200">
                             Rol
                         </label>
                         <select
                             id="role"
-                            value={user.role}
+                            value={userSelected.role}
                             onChange={handleChange}
                             className="mt-1 w-full p-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
                             required

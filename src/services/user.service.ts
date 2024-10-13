@@ -40,6 +40,8 @@ export const getByRole = async (role: ROLE) => {
 };
 
 export const create = async (user: IUserNew) => {
+  // TODO: Validar que el Email no exista
+  // TODO: refactorizar para que la contraseña de un nuevo usuario sea enviada por EMAIL
   if (
     !user.password ||
     isEmptyString(user.password) ||
