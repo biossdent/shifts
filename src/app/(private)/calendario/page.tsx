@@ -92,9 +92,7 @@ export default function CalendarPage() {
 
       <div className="w-full h-full md:basis-4/5 order-1 md:order-2">
         <div
-          className="bg-white rounded-lg shadow-lg"
-          style={{ height: "100%" }}
-        >
+          className="bg-white rounded-lg shadow-lg h-full">
           <Calendar
             culture="es"
             localizer={localizer}

@@ -4,6 +4,7 @@ import { ChangeEvent, useState } from 'react';
 
 import { IUserNew } from '@/interfaces/user.interface';
 import { ROLE } from '@/enums/role.enum';
+import { ROLES } from '@/consts/role';
 
 const RegisterForm = () => {
     const [user, setUser] = useState<IUserNew>({
@@ -30,8 +31,8 @@ const RegisterForm = () => {
     }
 
     return (
-        <div className="flex justify-center h-screen w-2/5 p-4 space-y-4 bg-gray-800 text-white">
-            <div className="w-full max-w-md space-y-6 bg-gray-800 rounded-lg shadow-md">
+        <div className="flex justify-center h-screen w-full md:basis-2/5 p-4 space-y-4 bg-gray-800 text-white md:flex-row order-2 md:order-1 md:mr-4">
+            <div className="w-full space-y-6 bg-gray-800 rounded-lg shadow-md">
                 <h2 className="text-2xl font-bold text-center text-white">Registrar nuevo usuario</h2>
                 <div className="space-y-4">
                     <input
@@ -81,7 +82,7 @@ const RegisterForm = () => {
                             <option value="" disabled>
                                 Selecciona un rol
                             </option>
-                            {Object.values(ROLE).map((rol) => <option key={rol} value={rol}>{rol}</option>
+                            {ROLES.map((rol) => <option key={rol.id} value={rol.value}>{rol.label}</option>
                             )}
                         </select>
                     </div>

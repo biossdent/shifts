@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { IUser, IUserCreated } from "@/interfaces/user.interface";
 import { useEffect, useState } from "react";
@@ -9,13 +9,13 @@ import TableUsers from "@/components/TableUsers";
 import { getUsers } from "@/api/users.api";
 
 export default function UsersPage() {
-  const [users, setUsers] = useState<IUserCreated[] | null>(null)
+  const [users, setUsers] = useState<IUserCreated[] | null>(null);
   const [user, setUser] = useState<IUser>({
-    email: '',
-    name: '',
-    lastName: '',
-    role: ROLE.DOCTOR
-  })
+    email: "",
+    name: "",
+    lastName: "",
+    role: ROLE.DOCTOR,
+  });
 
   useEffect(() => {
     const _getUsers = async () => {
@@ -23,16 +23,13 @@ export default function UsersPage() {
       setUsers(_users);
     };
     _getUsers();
-  }, [])
+  }, []);
 
-
-  const handleSubmit = () => {
-
-  }
+  const handleSubmit = () => {};
   return (
-    <div className="flex h-screen bg-gray-900">
+    <div className="flex h-screen bg-gray-900 flex-col lg:flex-row">
       <RegisterForm />
       <TableUsers users={users} />
     </div>
-  )
+  );
 }

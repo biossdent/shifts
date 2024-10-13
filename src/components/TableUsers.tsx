@@ -9,7 +9,7 @@ interface IUsersTableProps {
 const TableUsers = (props: IUsersTableProps) => {
   const { users } = props;
   return (
-    <div className="mb-6 w-3/5 p-4">
+    <div className="mb-6 w-full md:basis-3/5 order-1 md:order-2">
       <h2 className="text-xl font-bold mb-4 text-white">Usuarios Registrados</h2>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-300 rounded-md">
@@ -24,7 +24,6 @@ const TableUsers = (props: IUsersTableProps) => {
             {users && users.length > 0 ? (
               users.map((user) => (
                 <tr key={user.id} className="even:bg-gray-50">
-                  <td className="px-4 py-2 border-b text-gray-700">{user.id}</td>
                   <td className="px-4 py-2 border-b text-gray-700">{user.name}</td>
                   <td className="px-4 py-2 border-b text-gray-700">{user.lastName}</td>
                   <td className="px-4 py-2 border-b text-gray-700">{user.email}</td>

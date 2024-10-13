@@ -4,7 +4,7 @@ import "../globals.css";
 import "react-toastify/dist/ReactToastify.css";
 
 import { PAGES, PUBLIC_PAGES } from "@/consts/pages";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import Image from "next/image";
 import { LifeLine } from "react-loading-indicators";
@@ -22,6 +22,7 @@ export default function RootLayout({
   const [user, setUser] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
@@ -73,6 +74,19 @@ export default function RootLayout({
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      setIsMenuOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   if (loading) {
     return (
       <html lang="es">
@@ -90,10 +104,16 @@ export default function RootLayout({
       <header className="bg-gray-800 p-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
           <Link href={PAGES.calendar} className="flex flex-row">
-            <Image className="pr-2" src="/images/BiossDent.png" alt="logo" width={45} height={45} />
+            <Image
+              className="pr-2"
+              src="/images/BiossDent.png"
+              alt="logo"
+              width={45}
+              height={45}
+            />
             <h1 className="text-2xl font-bold">Gestión de turnos</h1>
           </Link>
-          <div className="relative">
+          <div className="relative" ref={menuRef}>
             {user ? (
               <div className="text-lg relative">
                 <button
@@ -118,8 +138,9 @@ export default function RootLayout({
                 </button>
                 {isMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-gray-700 rounded-md shadow-lg z-50">
-                    {menuOptions.map((opt) => (
+                    {menuOptions.map((opt, index) => (
                       <button
+                        key={index}
                         onClick={opt.action}
                         className="block w-full text-left px-4 py-2 text-white hover:bg-gray-600 focus:outline-none"
                       >
