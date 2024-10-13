@@ -1,9 +1,10 @@
 import { IAppointment } from "@/interfaces/appointment.interface";
-import { parseISO } from "date-fns";
+import moment from "moment";
 
 export const createAppointment = async (appointment: IAppointment) => {
     const token = localStorage.getItem("authToken");
     if (!token) throw new Error("Token no valido");
+
     const res = await fetch("/api/appointment", {
         method: "POST",
         headers: {
@@ -12,9 +13,22 @@ export const createAppointment = async (appointment: IAppointment) => {
         },
         body: JSON.stringify({
             ...appointment,
-            startDate: parseISO(appointment.startDate),
-            endDate: parseISO(appointment.endDate),
+            startDate: moment(appointment.startDate).toISOString(),
+            endDate: moment(appointment.endDate).toISOString(),
         }),
+    });
+    return await res.json();
+}
+
+export const deleteAppointment = async (id: number) => {
+    const token = localStorage.getItem("authToken");
+    if (!token) throw new Error("Token no valido");
+
+    const res = await fetch(`/api/appointment/${id}`, {
+        method: "DELETE",
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
     });
     return await res.json();
 }
@@ -32,8 +46,8 @@ export const getAppointments = async () => {
     return _appointments.map((appointment: IAppointment) => {
         return {
             ...appointment,
-            startDate: new Date(appointment.startDate),
-            endDate: new Date(appointment.endDate),
+            startDate: moment(appointment.startDate).toDate(),
+            endDate: moment(appointment.endDate).toDate(),
         };
     });
 }

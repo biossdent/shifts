@@ -1,5 +1,6 @@
 import { ChangeEvent, HTMLInputTypeAttribute } from "react";
-import { add, formatDate, parseISO } from "date-fns";
+
+import moment from "moment";
 
 interface IInputWithErrorProps {
   label: string;
@@ -23,9 +24,9 @@ export const InputWithError = (props: IInputWithErrorProps) => {
   };
 
   const setEndDate = (e: ChangeEvent<HTMLInputElement>) => {
-    const startDate = parseISO(e.target.value);
-    const endDate = add(startDate, { minutes: 30 });
-    const formatEndDate = formatDate(endDate, "yyyy-MM-dd'T'HH:mm");
+    const startDate = moment(e.target.value);
+    const endDate = startDate.clone().add(30, "minutes");
+    const formatEndDate = endDate.format("YYYY-MM-DDTHH:mm");
     onChange({
       target: {
         name: "endDate",

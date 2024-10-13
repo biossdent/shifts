@@ -1,9 +1,8 @@
-import { getTime, isBefore, isValid, parseISO } from "date-fns";
-
 import { IAppointment } from "@/interfaces/appointment.interface";
 import { PrismaClient } from "@prisma/client";
 import { getById } from "./patient.service";
 import { getById as getDoctorById } from "./user.service";
+import moment from "moment"; // Importar Moment.js
 
 const prisma = new PrismaClient();
 
@@ -12,7 +11,7 @@ export const get = async () => {
     include: {
       patient: true,
       doctor: true,
-      specialty: true
+      specialty: true,
     },
   });
 };
@@ -24,22 +23,27 @@ export const create = async (appointment: IAppointment) => {
   const existDoctor = await getDoctorById(appointment.doctorId);
   if (!existDoctor) throw new Error("El doctor no existe");
 
-  const startDate = parseISO(String(appointment.startDate));
-  const endDate = parseISO(String(appointment.endDate));
-  const now = new Date();
+  const startDate = moment(appointment.startDate);
+  const endDate = moment(appointment.endDate);
+  const now = moment();
 
-  if (isValid(startDate) && isValid(endDate)) {
-    if (getTime(startDate) > getTime(endDate)) {
+  if (startDate.isValid() && endDate.isValid()) {
+    if (startDate.isAfter(endDate)) {
       throw new Error("La fecha de inicio no puede ser después a la de fin");
     }
-    if (isBefore(startDate, now)) {
+    if (startDate.isBefore(now)) {
       throw new Error("La fecha de inicio no puede ser anterior a la fecha actual");
     }
-    if (isBefore(endDate, now)) {
+    if (endDate.isBefore(now)) {
       throw new Error("La fecha de fin no puede ser anterior a la fecha actual");
     }
-    const appointmentByDoctor = await getAppointmentsByRangeAndDoctorId(appointment.startDate, appointment.endDate, appointment.doctorId);
-    if(appointmentByDoctor.length > 0) {
+
+    const appointmentByDoctor = await getAppointmentsByRangeAndDoctorId(
+      appointment.startDate,
+      appointment.endDate,
+      appointment.doctorId
+    );
+    if (appointmentByDoctor.length > 0) {
       throw new Error("Ya existe una cita entre las fechas introducidas");
     }
 
@@ -79,13 +83,17 @@ export const getAppointmentsByRangeAndDoctorId = async (startDate: string, endDa
       doctor: true,
       specialty: true,
     },
-  })
+  });
 };
 
 export const deleteAppointment = async (appointmentId: number) => {
-  return await prisma.appointment.delete({
-    where: {
-      id: appointmentId,
-    },
-  });
+  try {
+    return await prisma.appointment.delete({
+      where: {
+        id: appointmentId,
+      },
+    });
+  } catch (error) {
+    throw error;
+  }
 };

@@ -1,51 +1,43 @@
 "use client";
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import "moment/locale/es";
 
-import { Calendar, dateFnsLocalizer } from "react-big-calendar";
+import { Calendar, View, Views, momentLocalizer } from "react-big-calendar";
 import React, { useEffect, useState } from "react";
-import {
-  format,
-  formatDate,
-  getDay,
-  isSameDay,
-  parse,
-  parseISO,
-  set,
-  startOfWeek,
-} from "date-fns";
 
+import DeleteAppointmentConfirmationModal from "@/components/ModalDeleteConfirmation";
 import { IAppointmentCreated } from "@/interfaces/appointment.interface";
 import ModalAppointmentForm from "@/components/ModalAppointmentForm";
 import PreviewAppointmentModal from "@/components/ModalAppointmentPreview";
-import { appointmentsStore } from "@/stores/appointiments.store";
-import { es } from "date-fns/locale";
+import { appointmentsStore } from "@/stores/appointments.store";
 import { getAppointments } from "@/api/appointment.api";
+import moment from "moment";
 
-const locales = {
-  es: es,
+const messages = {
+  today: "Hoy",
+  previous: "Atrás",
+  next: "Siguiente",
+  month: "Mes",
+  week: "Semana",
+  day: "Día",
+  agenda: "Agenda",
+  date: "Fecha",
+  time: "Hora",
+  event: "Evento",
+  allDay: "Todo el día",
+  noEventsInRange: "No hay eventos en este rango",
 };
 
-const localizer = dateFnsLocalizer({
-  format,
-  parse,
-  startOfWeek,
-  getDay,
-  locales,
-});
+const localizer = momentLocalizer(moment);
 
 export default function CalendarPage() {
-  const {
-    appointments,
-    myAppointments,
-    setAppointments,
-    setMyAppointments,
-    appointmentSelected,
-    setAppointmentSelected,
-  } = appointmentsStore();
+  const { appointments, setAppointments, setAppointmentSelected } =
+    appointmentsStore();
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [view, setView] = useState<View>(Views.WEEK);
+  const [date, setDate] = useState(new Date());
 
   useEffect(() => {
     const _getAppointments = async () => {
@@ -55,29 +47,27 @@ export default function CalendarPage() {
     _getAppointments();
   }, []);
 
-  const handleDateClick = (date: string) => {
-    const _date = parseISO(date);
-    const _formatDate = formatDate(_date, "yyyy-MM-dd'T'HH:mm");
+  const handleDateClick = (date: Date) => {
+    const _formatDate = moment(date).format("YYYY-MM-DD[T]HH:mm");
     setSelectedDate(_formatDate);
     setShowModal(true);
   };
 
   const handleEventClick = (appointment: IAppointmentCreated) => {
     setAppointmentSelected(appointment);
-    setIsPreviewOpen(true);
   };
 
   return (
     <div className="flex h-screen bg-gray-900 flex-col md:flex-row">
-      <div className="w-full md:basis-1/5  order-2 md:order-1 p-4 space-y-4 bg-gray-800 text-white mt-8 md:mt-0">
+      <div className="w-full md:basis-1/5 order-2 md:order-1 p-4 space-y-4 bg-gray-800 text-white mt-8 md:mt-0">
         <h2 className="text-2xl font-bold">Citas del día</h2>
         {appointments &&
         appointments.filter((appointment) =>
-          isSameDay(appointment.startDate, new Date())
+          moment(appointment.startDate).isSame(new Date(), "day")
         ).length > 0 ? (
           appointments
             .filter((appointment) =>
-              isSameDay(appointment.startDate, new Date())
+              moment(appointment.startDate).isSame(new Date(), "day")
             )
             .map((appointment, index) => (
               <div
@@ -90,8 +80,8 @@ export default function CalendarPage() {
                 </h3>
                 <p>{appointment.diagnostic}</p>
                 <p>
-                  {format(appointment.startDate, "hh:mm a")} -{" "}
-                  {format(appointment.endDate, "hh:mm a")}
+                  {moment(appointment.startDate).format("hh:mm A")} -{" "}
+                  {moment(appointment.endDate).format("hh:mm A")}
                 </p>
               </div>
             ))
@@ -115,8 +105,17 @@ export default function CalendarPage() {
             style={{ height: "500" }}
             className="text-black"
             selectable
-            onSelectSlot={({ start }) => handleDateClick(start.toISOString())}
+            onSelectSlot={({ start }) => handleDateClick(start)}
             onSelectEvent={handleEventClick}
+            messages={messages}
+            views={[Views.MONTH, Views.WEEK, Views.DAY]}
+            defaultView={view}
+            view={view}
+            date={date}
+            onView={(view) => setView(view)}
+            onNavigate={(date) => {
+              setDate(new Date(date));
+            }}
           />
         </div>
       </div>
@@ -125,6 +124,7 @@ export default function CalendarPage() {
         setShowModal={setShowModal}
         date={selectedDate!}
       />
+      <DeleteAppointmentConfirmationModal />
 
       <PreviewAppointmentModal />
     </div>

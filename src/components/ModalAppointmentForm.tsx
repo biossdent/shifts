@@ -12,7 +12,6 @@ import Modal from "react-modal";
 import SpecialtySelect from "./SpecialtySelect";
 import { createAppointment } from "@/api/appointment.api";
 import { getDoctors } from "@/api/doctors.api";
-import { parseISO } from "date-fns";
 import { toast } from "react-toastify";
 import { useFormik } from "formik";
 

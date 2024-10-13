@@ -12,7 +12,7 @@ export interface IAppointment {
 }
 
 export interface IAppointmentCreated extends IAppointment {
-    id: string
+    id: number
     createdAt: string
     patient: IPatientCreated,
     doctor: IUserCreated

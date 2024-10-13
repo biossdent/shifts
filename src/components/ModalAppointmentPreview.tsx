@@ -11,13 +11,18 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "react-modal";
 import React from "react";
-import { appointmentsStore } from "@/stores/appointiments.store";
-import { format } from "date-fns";
+import { appointmentsStore } from "@/stores/appointments.store";
+import moment from "moment";
 
 const PreviewAppointmentModal = () => {
-  const { appointmentSelected, setAppointmentSelected } = appointmentsStore();
-  
+  const { appointmentSelected, setAppointmentSelected, setAppointmentIdForDelete } = appointmentsStore();
+
   if (!appointmentSelected) return null;
+
+  const handleDelete = async () => {
+    setAppointmentSelected(null);
+    setAppointmentIdForDelete(null);
+  };
 
   return (
     <Modal
@@ -25,7 +30,7 @@ const PreviewAppointmentModal = () => {
       onRequestClose={() => setAppointmentSelected(null)}
       contentLabel="Vista Previa de Cita Médica"
       className="absolute inset-0 flex items-center justify-center z-50"
-      overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-40"
+      overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-30"
     >
       <div className="relative max-w-xl w-full bg-white p-6 rounded-lg shadow-lg text-gray-600">
         <button
@@ -85,10 +90,10 @@ const PreviewAppointmentModal = () => {
                 <div className="flex flex-col pl-2">
                   <p className="font-semibold">Fecha de Inicio</p>{" "}
                   <p className="font-medium text-gray-400">
-                    {format(appointmentSelected.startDate, "dd/MM/yyyy")}
+                    {moment(appointmentSelected.startDate).format("DD/MM/YYYY")}
                   </p>
                   <p className="font-medium text-gray-400">
-                    {format(appointmentSelected.startDate, "hh:mm aa	")}
+                    {moment(appointmentSelected.startDate).format("hh:mm A")}
                   </p>
                 </div>
               </div>
@@ -102,10 +107,10 @@ const PreviewAppointmentModal = () => {
                 <div className="flex flex-col pl-2">
                   <p className="font-semibold">Fecha de Finalización</p>{" "}
                   <p className="font-medium text-gray-400">
-                    {format(appointmentSelected.endDate, "dd/MM/yyyy")}
+                    {moment(appointmentSelected.endDate).format("DD/MM/YYYY")}
                   </p>
                   <p className="font-medium text-gray-400">
-                    {format(appointmentSelected.endDate, "hh:mm aa	")}
+                    {moment(appointmentSelected.endDate).format("hh:mm A")}
                   </p>
                 </div>
               </div>
@@ -155,7 +160,7 @@ const PreviewAppointmentModal = () => {
           </div>
         </div>
 
-        <button className="mt-6 w-full py-2 bg-red-600 text-white rounded-md hover:bg-red-500">
+        <button onClick={() => setAppointmentIdForDelete(appointmentSelected.id)} className="mt-6 w-full py-2 bg-red-600 text-white rounded-md hover:bg-red-500">
           Cancelar Cita
         </button>
 
