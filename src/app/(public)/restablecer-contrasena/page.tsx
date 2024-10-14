@@ -4,28 +4,27 @@ import { ChangeEvent, KeyboardEvent, useState } from "react";
 
 import PasswordInput from "@/components/InputPassword";
 import { toast } from "react-toastify";
-import { validateEmail } from "@/utils/validations.util";
+import { updatePasswordByReset } from "@/api/users.api";
+import { useSearchParams } from 'next/navigation';
 
 export default function ResetPasswordPage() {
+  const searchParams = useSearchParams();
   const [resetPassword, setResetPassword] = useState({
     password: "",
     confirmPassword: "",
   });
 
-  const handleResetRequest = async () => {
-    const response = await fetch("/api/send-reset-email", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ newPassword: resetPassword.password }),
-    });
-    const data = await response.json();
+  const handleResetPassword = async () => {
+    const token = searchParams.get('token');
+    if (!isValidPassword()) return toast.error("Las contraseñas no coinciden");
+    const data = await updatePasswordByReset(resetPassword.password, token!);
     if (data.error) return toast.error(data.error);
     if (data.message) return toast.success(data.message);
   };
 
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      handleResetRequest();
+      handleResetPassword();
     }
   };
 
@@ -60,13 +59,8 @@ export default function ResetPasswordPage() {
           />
         </div>
         <button
-          onClick={handleResetRequest}
-          disabled={!isValidPassword()}
-          className={`w-full py-2 mt-4 text-white rounded-lg focus:outline-none ${
-            !isValidPassword()
-              ? "bg-gray-600 cursor-not-allowed"
-              : "bg-indigo-600 hover:bg-indigo-500"
-          }`}
+          onClick={handleResetPassword}
+          className="w-full py-2 mt-4 text-white rounded-lg focus:outline-none bg-indigo-600 hover:bg-indigo-500"
         >
           Enviar
         </button>

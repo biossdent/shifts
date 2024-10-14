@@ -65,6 +65,16 @@ export const create = async (user: IUserNew) => {
   return userCreated;
 };
 
+export const updatePassword = async (id: number, password: string) => {
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const userUpdated = await prisma.user.update({
+    where: { id },
+    data: { password: hashedPassword },
+  });
+  if (!userUpdated) throw new Error("Error al actualizar contraseña");
+  return userUpdated;
+};
+
 export const remove = async (id: number) => {
   return await prisma.user.delete({ where: { id } });
 };

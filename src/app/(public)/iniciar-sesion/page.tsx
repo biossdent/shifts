@@ -113,7 +113,7 @@ export default function LoginPage() {
         </button>
         <div className="flex justify-between mt-4">
           <a
-            href={PAGES.resetPassword}
+            href={PAGES.forgotPassword}
             className="text-sm text-indigo-400 hover:underline"
           >
             ¿Olvidaste tu contraseña?
