@@ -8,17 +8,21 @@ interface IUserStore {
   userSelected: IUser;
   setUsers: (users: IUserCreated[]) => void;
   setUserSelected: (user: IUser) => void;
+  setInitialUserSelected: () => void;
+}
+
+const INITIAL_USER_SELECTED = {
+  name: '',
+  lastName: '',
+  email: '',
+  role: ROLE.DOCTOR,
+  password: ''
 }
 
 export const userStore = create<IUserStore>((set) => ({
   users: [],
-  userSelected: {
-    name: '',
-    lastName: '',
-    email: '',
-    role: ROLE.DOCTOR,
-    password: ''
-  },
+  userSelected: INITIAL_USER_SELECTED,
   setUsers: (users: IUserCreated[]) => set({ users }),
   setUserSelected: (user: IUser) => set({ userSelected: user }),
+  setInitialUserSelected: () => set({ userSelected: INITIAL_USER_SELECTED }),
 }));

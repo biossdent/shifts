@@ -3,10 +3,10 @@
 import { KeyboardEvent, useState } from "react";
 
 import { PAGES } from "@/consts/pages";
-import { emailRegex } from "@/regex/validate.reg";
 import { loginApi } from "@/api/login.api";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { validateEmail } from "@/utils/validations.util";
 
 const INITIAL_ERRORS = {
   email: "",
@@ -19,10 +19,6 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState(INITIAL_ERRORS);
   const router = useRouter();
-
-  const validateEmail = (email: string) => {
-    return emailRegex.test(String(email).toLowerCase());
-  };
 
   const validateFields = () => {
     let emailError = "";
@@ -117,16 +113,10 @@ export default function LoginPage() {
         </button>
         <div className="flex justify-between mt-4">
           <a
-            href="/forgot-password"
+            href={PAGES.resetPassword}
             className="text-sm text-indigo-400 hover:underline"
           >
             ¿Olvidaste tu contraseña?
-          </a>
-          <a
-            href="/register"
-            className="text-sm text-indigo-400 hover:underline"
-          >
-            Crear una cuenta
           </a>
         </div>
       </div>

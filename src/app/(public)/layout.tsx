@@ -2,13 +2,13 @@
 
 import "react-toastify/dist/ReactToastify.css";
 
+import { PAGES, PUBLIC_PAGES } from "@/consts/pages";
 import { useEffect, useState } from "react";
 
 import { LifeLine } from "react-loading-indicators";
-import { PAGES } from "@/consts/pages";
 import { ToastContainer } from "react-toastify";
+import { sessionStore } from "@/stores/session.store";
 import { useRouter } from "next/navigation";
-import { userStore } from "@/stores/user.store";
 
 interface IProps {
   children: React.ReactNode;
@@ -16,11 +16,12 @@ interface IProps {
 
 export default function RootLayout(props: IProps) {
   const { children } = props;
-  const { user, setUser } = userStore();
+  const { user, setUser } = sessionStore();
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
+    if  (PUBLIC_PAGES.includes(window.location.pathname)) return setLoading(false);
     const checkAuth = async () => {
       if (user) return router.push(PAGES.calendar);
       

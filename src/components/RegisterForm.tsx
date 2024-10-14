@@ -1,16 +1,20 @@
 'use client';
 
-import { ChangeEvent, useState } from 'react';
-
+import { ChangeEvent } from 'react';
 import { ROLES } from '@/consts/role';
 import { registerUser } from '@/api/users.api';
+import { toast } from 'react-toastify';
 import { userStore } from '@/stores/user.store';
 
 const RegisterForm = () => {
-    const { userSelected, setUserSelected } = userStore();
+    const { userSelected, setUserSelected, setUsers, users, setInitialUserSelected } = userStore();
 
     const register = async () => {
-        registerUser(userSelected);
+        const createdUser = await registerUser(userSelected);
+        if (createdUser.error) return toast.error(createdUser.error);
+        toast.success('Usuario creado exitosamente');
+        setUsers([...users, createdUser]);
+        setInitialUserSelected();
     };
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {

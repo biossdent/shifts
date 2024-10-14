@@ -2,7 +2,9 @@ import { PrismaClient, ROLE } from "@prisma/client";
 
 import { IUserNew } from "@/interfaces/user.interface";
 import bcrypt from "bcryptjs";
+import { generateTemporallyPassword } from "@/utils/password.util";
 import { isEmptyString } from "@/utils/string.util";
+import { sendFirsTemporaryPasswordEmail } from "@/utils/sendEmail.util";
 
 const prisma = new PrismaClient();
 
@@ -40,8 +42,8 @@ export const getByRole = async (role: ROLE) => {
 };
 
 export const create = async (user: IUserNew) => {
-  // TODO: Validar que el Email no exista
-  // TODO: refactorizar para que la contraseña de un nuevo usuario sea enviada por EMAIL
+  const generatePassword = generateTemporallyPassword(10);
+  user.password = generatePassword;
   if (
     !user.password ||
     isEmptyString(user.password) ||
@@ -52,12 +54,15 @@ export const create = async (user: IUserNew) => {
   const existUser = await getByEmail(user.email);
   if (existUser) throw new Error("Ya existe un usuario con este Email");
   const hashedPassword = await bcrypt.hash(user.password!, 10);
-  return await prisma.user.create({
+  const userCreated = await prisma.user.create({
     data: {
       ...user,
       password: hashedPassword,
     },
   });
+  if (!userCreated) throw new Error("Error al crear usuario");
+  sendFirsTemporaryPasswordEmail(userCreated.email, generatePassword);
+  return userCreated;
 };
 
 export const remove = async (id: number) => {

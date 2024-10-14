@@ -6,7 +6,7 @@ import moment from "moment";
 import { toast } from "react-toastify";
 
 const DeleteAppointmentConfirmationModal = () => {
-  const { appointmentSelected, appointmentIdForDelete, setAppointmentSelected, setConfirmationDeleteId } =
+  const { appointmentSelected, appointmentIdForDelete, setAppointmentSelected, setConfirmationDeleteId, setAppointmentIdForDelete } =
     appointmentsStore();
 
   const handleDelete = async () => {
@@ -64,7 +64,7 @@ const DeleteAppointmentConfirmationModal = () => {
             Eliminar
           </button>
           <button
-            onClick={() => setAppointmentSelected(null)}
+            onClick={() => setAppointmentIdForDelete(null)}
             className="w-full py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
           >
             Cancelar

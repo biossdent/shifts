@@ -19,6 +19,7 @@ model User {
   name      String
   lastName  String
   password  String
+  updateTemporalyPassword  Boolean @default(false)
   role      ROLE
   createdAt DateTime @default(now())
   appointments Appointment[]
