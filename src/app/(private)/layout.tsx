@@ -157,12 +157,6 @@ export default function RootLayout({
         </div>
       </header>
       <main className="container mx-auto p-4">{children}</main>
-      <footer className="bg-gray-800 p-4 text-center">
-        <p>
-          &copy; {new Date().getFullYear()} Mi Aplicación. Todos los derechos
-          reservados.
-        </p>
-      </footer>
       <ToastContainer />
     </div>
   );
