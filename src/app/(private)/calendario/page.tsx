@@ -6,9 +6,9 @@ import "moment/locale/es";
 import { Calendar, View, Views, momentLocalizer } from "react-big-calendar";
 import React, { useEffect, useState } from "react";
 
-import DeleteAppointmentConfirmationModal from "@/components/ModalDeleteConfirmation";
 import { IAppointmentCreated } from "@/interfaces/appointment.interface";
 import ModalAppointmentForm from "@/components/ModalAppointmentForm";
+import ModalDeleteAppointmentConfirmation from "@/components/ModalDeleteAppointmentConfirmation";
 import PreviewAppointmentModal from "@/components/ModalAppointmentPreview";
 import { appointmentsStore } from "@/stores/appointments.store";
 import { getAppointments } from "@/api/appointment.api";
@@ -91,8 +91,7 @@ export default function CalendarPage() {
       </div>
 
       <div className="w-full h-full md:basis-4/5 order-1 md:order-2">
-        <div
-          className="bg-white rounded-lg shadow-lg h-full">
+        <div className="bg-white rounded-lg shadow-lg h-full">
           <Calendar
             culture="es"
             localizer={localizer}
@@ -122,7 +121,7 @@ export default function CalendarPage() {
         setShowModal={setShowModal}
         date={selectedDate!}
       />
-      <DeleteAppointmentConfirmationModal />
+      <ModalDeleteAppointmentConfirmation />
 
       <PreviewAppointmentModal />
     </div>

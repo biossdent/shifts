@@ -5,7 +5,7 @@ import { deleteAppointment } from "@/api/appointment.api";
 import moment from "moment";
 import { toast } from "react-toastify";
 
-const DeleteAppointmentConfirmationModal = () => {
+const ModalDeleteAppointmentConfirmation = () => {
   const { appointmentSelected, appointmentIdForDelete, setAppointmentSelected, setConfirmationDeleteId, setAppointmentIdForDelete } =
     appointmentsStore();
 
@@ -75,4 +75,4 @@ const DeleteAppointmentConfirmationModal = () => {
   );
 };
 
-export default DeleteAppointmentConfirmationModal;
+export default ModalDeleteAppointmentConfirmation;

@@ -7,7 +7,6 @@ interface IParams {
 }
 export async function DELETE(req: Request, { params }: { params: IParams }) {
     const token = req.headers.get("Authorization")?.split(" ")[1];
-    console.log('TOKEN', token)
     const { id } = params;
   if (!token) {
     return NextResponse.json({ error: "Token no valido" }, { status: 401 });
