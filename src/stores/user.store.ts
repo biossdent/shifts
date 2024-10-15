@@ -5,7 +5,7 @@ import { create } from "zustand";
 
 interface IUserStore {
   users: IUserCreated[];
-  userSelected: IUser;
+  userSelected: IUser | IUserCreated;
   userForDelete: IUserCreated | null;
   setUsers: (users: IUserCreated[]) => void;
   setUserSelected: (user: IUser) => void;
@@ -15,24 +15,26 @@ interface IUserStore {
 }
 
 export const INITIAL_USER_SELECTED = {
-  name: '',
-  lastName: '',
-  email: '',
+  name: "",
+  lastName: "",
+  email: "",
   role: ROLE.DOCTOR,
-  password: ''
-}
+  password: "",
+};
 
 export const userStore = create<IUserStore>((set) => ({
   users: [],
   userSelected: INITIAL_USER_SELECTED,
   userForDelete: null,
   setUsers: (users: IUserCreated[]) => set({ users }),
-  setUserSelected: (user: IUser) => set({ userSelected: user }),
+  setUserSelected: (user: IUser | IUserCreated) => set({ userSelected: user }),
   setInitialUserSelected: () => set({ userSelected: INITIAL_USER_SELECTED }),
   setUserForDelete: (user: IUserCreated | null) => set({ userForDelete: user }),
   setUserConfirmationDeleteId(id: number) {
-    const newUsers  = userStore.getState().users.filter((user) => user.id !== id);
+    const newUsers = userStore
+      .getState()
+      .users.filter((user) => user.id !== id);
     set({ users: newUsers });
     set({ userForDelete: null });
-  }
+  },
 }));

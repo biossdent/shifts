@@ -1,3 +1,5 @@
+import { IUser, IUserCreated } from "@/interfaces/user.interface";
+
 export const getUsers = async () => {
   const token = localStorage.getItem("authToken");
   const res = await fetch("/api/users", {
@@ -8,11 +10,24 @@ export const getUsers = async () => {
   return await res.json();
 };
 
-export const registerUser = async (user: any) => {
+export const registerUser = async (user: IUser) => {
   const res = await fetch("/api/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+    },
+    body: JSON.stringify(user),
+  });
+  return await res.json();
+};
+
+export const updateUser = async (user: IUserCreated) => {
+  const token = localStorage.getItem("authToken");
+  const res = await fetch("/api/users", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(user),
   });

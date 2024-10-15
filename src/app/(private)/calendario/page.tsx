@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react";
 
 import { IAppointmentCreated } from "@/interfaces/appointment.interface";
 import ModalAppointmentForm from "@/components/ModalAppointmentForm";
-import ModalDeleteAppointmentConfirmation from "@/components/ModalDeleteAppointmentConfirmation";
+import { ModalDeleteAppointmentConfirmation } from "@/components/ModalDeleteAppointmentConfirmation";
 import PreviewAppointmentModal from "@/components/ModalAppointmentPreview";
 import { appointmentsStore } from "@/stores/appointments.store";
 import { getAppointments } from "@/api/appointment.api";

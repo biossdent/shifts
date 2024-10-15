@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import { deleteUser } from "@/services/user.service";
 import { verifyToken } from "@/utils/token.util";
 
-interface IParams {
+interface IDeleteParams {
   id: number;
 }
-export async function DELETE(req: Request, { params }: { params: IParams }) {
+export async function DELETE(req: Request, { params }: { params: IDeleteParams }) {
     const token = req.headers.get("Authorization")?.split(" ")[1];
     const { id } = params;
   if (!token) {

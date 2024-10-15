@@ -2,13 +2,22 @@ import React, { useEffect } from "react";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ROLE } from "@/enums/role.enum";
+import { ROLES } from "@/consts/role";
 import { TableHeadUsers } from "@/consts/table";
 import { Tooltip } from "react-tooltip";
 import { getUsers } from "@/api/users.api";
 import { userStore } from "@/stores/user.store";
 
 const TableUsers = () => {
-  const { users, setUsers, setUserSelected, setUserForDelete } = userStore();
+  const {
+    users,
+    userSelected,
+    setUsers,
+    setUserSelected,
+    setUserForDelete,
+    setInitialUserSelected,
+  } = userStore();
 
   useEffect(() => {
     const _getUsers = async () => {
@@ -17,6 +26,12 @@ const TableUsers = () => {
     };
     _getUsers();
   }, []);
+
+  const isUserSelected = (idSelected: number) =>
+    idSelected === userSelected?.id;
+
+  const getLabelRole = (role: ROLE) =>
+    ROLES.map((rol) => (rol.value === role ? rol.label : null));
 
   return (
     <div className="mb-6 w-full md:basis-3/5 order-1 md:order-2">
@@ -51,15 +66,23 @@ const TableUsers = () => {
                     {user.email}
                   </td>
                   <td className="px-4 py-2 border-b text-gray-700">
-                    {user.role}
+                    {getLabelRole(user.role)}
                   </td>
                   <td className="px-4 py-2 border-b text-gray-700">
                     <FontAwesomeIcon
                       data-tooltip-id="edit"
                       data-tooltip-content="Editar"
-                      className="mr-4 ml-4 text-yellow-500 cursor-pointer outline-none"
+                      className={`mr-4 ml-4 cursor-pointer outline-none ${
+                        isUserSelected(user.id)
+                          ? "text-green-500 outline"
+                          : "text-yellow-500"
+                      }`}
                       icon={faPenToSquare}
-                      onClick={() => setUserSelected(user)}
+                      onClick={
+                        isUserSelected(user.id)
+                          ? () => setInitialUserSelected()
+                          : () => setUserSelected(user)
+                      }
                     />
                     <FontAwesomeIcon
                       data-tooltip-id="delete"

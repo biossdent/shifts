@@ -1,6 +1,6 @@
+import { IUser, IUserNew } from "@/interfaces/user.interface";
 import { PrismaClient, ROLE } from "@prisma/client";
 
-import { IUserNew } from "@/interfaces/user.interface";
 import bcrypt from "bcryptjs";
 import { generateTemporallyPassword } from "@/utils/password.util";
 import { isEmptyString } from "@/utils/string.util";
@@ -8,7 +8,7 @@ import { sendFirsTemporaryPasswordEmail } from "@/utils/sendEmail.util";
 
 const prisma = new PrismaClient();
 
-export const get = async () => {
+export const get = async (myId: number) => {
   return await prisma.user.findMany({
     select: {
       id: true,
@@ -17,6 +17,7 @@ export const get = async () => {
       email: true,
       role: true,
     },
+    where: { id: { not: myId }, role: { not: ROLE.SUPERADMIN } },
   });
 };
 
@@ -74,6 +75,15 @@ export const updatePassword = async (id: number, password: string) => {
   if (!userUpdated) throw new Error("Error al actualizar contraseña");
   return userUpdated;
 };
+
+export const updateUser = async (user: IUser) => {
+  const userUpdated = await prisma.user.update({
+    where: { id: user.id },
+    data: user,
+  });
+  if (!userUpdated) throw new Error("Error al actualizar usuario");
+  return userUpdated;
+}
 
 export const deleteUser = async (id: number) => {
   return await prisma.user.delete({ where: { id } });
