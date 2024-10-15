@@ -75,6 +75,6 @@ export const updatePassword = async (id: number, password: string) => {
   return userUpdated;
 };
 
-export const remove = async (id: number) => {
+export const deleteUser = async (id: number) => {
   return await prisma.user.delete({ where: { id } });
 };

@@ -5,13 +5,13 @@ import { deleteAppointment } from "@/api/appointment.api";
 import moment from "moment";
 import { toast } from "react-toastify";
 
-const ModalDeleteAppointmentConfirmation = () => {
+export const ModalDeleteAppointmentConfirmation = () => {
   const { appointmentSelected, appointmentIdForDelete, setAppointmentSelected, setConfirmationDeleteId, setAppointmentIdForDelete } =
     appointmentsStore();
 
   const handleDelete = async () => {
     const _delete = await deleteAppointment(appointmentIdForDelete!);
-    if (!_delete) return toast.error("Error al eliminar cita");
+    if (_delete.error) return toast.error("Error al eliminar cita");
     setConfirmationDeleteId(appointmentIdForDelete!);
     toast.success("Cita eliminada con éxito");
     setAppointmentSelected(null);
@@ -74,5 +74,3 @@ const ModalDeleteAppointmentConfirmation = () => {
     </Modal>
   );
 };
-
-export default ModalDeleteAppointmentConfirmation;

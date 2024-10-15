@@ -6,12 +6,15 @@ import { create } from "zustand";
 interface IUserStore {
   users: IUserCreated[];
   userSelected: IUser;
+  userForDelete: IUserCreated | null;
   setUsers: (users: IUserCreated[]) => void;
   setUserSelected: (user: IUser) => void;
   setInitialUserSelected: () => void;
+  setUserForDelete: (user: IUserCreated | null) => void;
+  setUserConfirmationDeleteId: (id: number) => void;
 }
 
-const INITIAL_USER_SELECTED = {
+export const INITIAL_USER_SELECTED = {
   name: '',
   lastName: '',
   email: '',
@@ -22,7 +25,14 @@ const INITIAL_USER_SELECTED = {
 export const userStore = create<IUserStore>((set) => ({
   users: [],
   userSelected: INITIAL_USER_SELECTED,
+  userForDelete: null,
   setUsers: (users: IUserCreated[]) => set({ users }),
   setUserSelected: (user: IUser) => set({ userSelected: user }),
   setInitialUserSelected: () => set({ userSelected: INITIAL_USER_SELECTED }),
+  setUserForDelete: (user: IUserCreated | null) => set({ userForDelete: user }),
+  setUserConfirmationDeleteId(id: number) {
+    const newUsers  = userStore.getState().users.filter((user) => user.id !== id);
+    set({ users: newUsers });
+    set({ userForDelete: null });
+  }
 }));

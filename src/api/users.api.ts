@@ -30,3 +30,16 @@ export const updatePasswordByReset = async (password: string, token: string) => 
   });
   return await response.json();
 };
+
+export const deleteUser = async (id: number) => {
+  const token = localStorage.getItem("authToken");
+  if (!token) throw new Error("Token no valido");
+
+  const res = await fetch(`/api/users/${id}`, {
+      method: "DELETE",
+      headers: {
+          'Authorization': `Bearer ${token}`,
+      },
+  });
+  return await res.json();
+}

@@ -8,7 +8,7 @@ import { getUsers } from "@/api/users.api";
 import { userStore } from "@/stores/user.store";
 
 const TableUsers = () => {
-  const { users, setUsers, setUserSelected } = userStore();
+  const { users, setUsers, setUserSelected, setUserForDelete } = userStore();
 
   useEffect(() => {
     const _getUsers = async () => {
@@ -66,6 +66,7 @@ const TableUsers = () => {
                       data-tooltip-content="Eliminar"
                       className="text-red-500 cursor-pointer outline-none"
                       icon={faTrash}
+                      onClick={() => setUserForDelete(user)}
                     />
                   </td>
                 </tr>
