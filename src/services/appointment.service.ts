@@ -49,6 +49,35 @@ export const create = async (appointment: IAppointment) => {
 
     return await prisma.appointment.create({
       data: appointment,
+      select: {
+        id: true,
+        patientId: true,
+        doctorId: true,
+        diagnostic: true,
+        specialtyId: true,
+        startDate: true,
+        endDate: true,
+        patient: {
+          select: {
+            id: true,
+            fullName: true,
+            phone: true,
+          },
+        },
+        doctor: {
+          select: {
+            id: true,
+            name: true,
+            lastName: true,
+          },
+        },
+        specialty: {
+          select: {
+            id: true,
+            label: true,
+          },
+        },
+      },
     });
     
   } else {

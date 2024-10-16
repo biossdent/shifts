@@ -10,6 +10,7 @@ import { IUserCreated } from "@/interfaces/user.interface";
 import { InputWithError } from "./InputWithError";
 import Modal from "react-modal";
 import SpecialtySelect from "./SpecialtySelect";
+import { appointmentsStore } from "@/stores/appointments.store";
 import { createAppointment } from "@/api/appointment.api";
 import { getDoctors } from "@/api/doctors.api";
 import { toast } from "react-toastify";
@@ -55,6 +56,7 @@ export default function ModalAppointmentForm(
   const { showModal, date, setShowModal } = props;
   const [doctors, setDoctors] = useState<IUserCreated[] | null>(null);
   const [patientId, setPatientId] = useState<number | null>(null);
+  const {appointments, setAppointments} = appointmentsStore();
 
   useEffect(() => {
     const _getDoctors = async () => {
@@ -102,9 +104,12 @@ export default function ModalAppointmentForm(
         startDate: values.startDate,
         endDate: values.endDate,
       };
-      const { error } = await createAppointment(appointment);
-      if (error) return toast.error(error);
+      const appointmentCreated = await createAppointment(appointment);
+      if (appointmentCreated.error) return toast.error(appointmentCreated.error);
       toast.success("Cita creada con éxito");
+      setAppointments([...appointments, appointmentCreated]);
+      formik.resetForm();
+      setShowModal(false);
     },
   });
 
