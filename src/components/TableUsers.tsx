@@ -34,8 +34,8 @@ const TableUsers = () => {
     ROLES.map((rol) => (rol.value === role ? rol.label : null));
 
   return (
-    <div className="mb-6 w-full md:basis-3/5 order-1 md:order-2">
-      <h2 className="text-xl font-bold mb-4 text-white">
+    <div className="mb-6 p-4  w-full md:basis-3/5 order-1 md:order-2">
+      <h2 className="text-2xl font-bold mb-4 text-white">
         Usuarios Registrados
       </h2>
       <div className="overflow-x-auto">
@@ -44,7 +44,7 @@ const TableUsers = () => {
             <tr>
               {TableHeadUsers.map((header) => (
                 <th
-                  className="px-4 py-2 border-b text-left text-gray-700 font-medium"
+                  className="px-4 py-2 border-b text-left font-bold bg-gray-800 text-white"
                   key={header.id}
                 >
                   {header.label}
@@ -55,20 +55,20 @@ const TableUsers = () => {
           <tbody>
             {users && users.length > 0 ? (
               users.map((user) => (
-                <tr key={user.id} className="even:bg-gray-50">
-                  <td className="px-4 py-2 border-b text-gray-700">
+                <tr key={user.id} className={`${isUserSelected(user.id) ? 'bg-indigo-600 text-white' : 'even:bg-gray-50  text-gray-700'}`}> 
+                  <td className="px-4 py-2 border-b">
                     {user.name}
                   </td>
-                  <td className="px-4 py-2 border-b text-gray-700">
+                  <td className="px-4 py-2 border-b">
                     {user.lastName}
                   </td>
-                  <td className="px-4 py-2 border-b text-gray-700">
+                  <td className="px-4 py-2 border-b">
                     {user.email}
                   </td>
-                  <td className="px-4 py-2 border-b text-gray-700">
+                  <td className="px-4 py-2 border-b">
                     {getLabelRole(user.role)}
                   </td>
-                  <td className="px-4 py-2 border-b text-gray-700">
+                  <td className="px-4 py-2 border-b">
                     <FontAwesomeIcon
                       data-tooltip-id="edit"
                       data-tooltip-content="Editar"

@@ -1,14 +1,14 @@
-import { IUser, IUserCreated } from "@/interfaces/user.interface";
+import { IUser, IUserCreated, IUserNew } from "@/interfaces/user.interface";
 
 import { ROLE } from "@/enums/role.enum";
 import { create } from "zustand";
 
 interface IUserStore {
   users: IUserCreated[];
-  userSelected: IUser | IUserCreated;
+  userSelected: IUserNew;
   userForDelete: IUserCreated | null;
   setUsers: (users: IUserCreated[]) => void;
-  setUserSelected: (user: IUser) => void;
+  setUserSelected: (user: IUserNew) => void;
   setInitialUserSelected: () => void;
   setUserForDelete: (user: IUserCreated | null) => void;
   setUserConfirmationDeleteId: (id: number) => void;
@@ -27,7 +27,7 @@ export const userStore = create<IUserStore>((set) => ({
   userSelected: INITIAL_USER_SELECTED,
   userForDelete: null,
   setUsers: (users: IUserCreated[]) => set({ users }),
-  setUserSelected: (user: IUser | IUserCreated) => set({ userSelected: user }),
+  setUserSelected: (user: IUserNew) => set({ userSelected: user }),
   setInitialUserSelected: () => set({ userSelected: INITIAL_USER_SELECTED }),
   setUserForDelete: (user: IUserCreated | null) => set({ userForDelete: user }),
   setUserConfirmationDeleteId(id: number) {

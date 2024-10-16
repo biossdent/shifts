@@ -2,9 +2,6 @@ import { IUser, IUserNew } from "@/interfaces/user.interface";
 import { PrismaClient, ROLE } from "@prisma/client";
 
 import bcrypt from "bcryptjs";
-import { generateTemporallyPassword } from "@/utils/password.util";
-import { isEmptyString } from "@/utils/string.util";
-import { sendFirsTemporaryPasswordEmail } from "@/utils/sendEmail.util";
 
 const prisma = new PrismaClient();
 
@@ -43,15 +40,6 @@ export const getByRole = async (role: ROLE) => {
 };
 
 export const create = async (user: IUserNew) => {
-  const generatePassword = generateTemporallyPassword(10);
-  user.password = generatePassword;
-  if (
-    !user.password ||
-    isEmptyString(user.password) ||
-    !user.email ||
-    isEmptyString(user.email)
-  )
-    throw new Error("Usuario no valido");
   const existUser = await getByEmail(user.email);
   if (existUser) throw new Error("Ya existe un usuario con este Email");
   const hashedPassword = await bcrypt.hash(user.password!, 10);
@@ -60,9 +48,15 @@ export const create = async (user: IUserNew) => {
       ...user,
       password: hashedPassword,
     },
+    select: {
+      id: true,
+      name: true,
+      lastName: true,
+      email: true,
+      role: true,
+    }
   });
   if (!userCreated) throw new Error("Error al crear usuario");
-  sendFirsTemporaryPasswordEmail(userCreated.email, generatePassword);
   return userCreated;
 };
 
@@ -71,6 +65,13 @@ export const updatePassword = async (id: number, password: string) => {
   const userUpdated = await prisma.user.update({
     where: { id },
     data: { password: hashedPassword },
+    select: {
+      id: true,
+      name: true,
+      lastName: true,
+      email: true,
+      role: true,
+    }
   });
   if (!userUpdated) throw new Error("Error al actualizar contraseña");
   return userUpdated;
@@ -80,6 +81,13 @@ export const updateUser = async (user: IUser) => {
   const userUpdated = await prisma.user.update({
     where: { id: user.id },
     data: user,
+    select: {
+      id: true,
+      name: true,
+      lastName: true,
+      email: true,
+      role: true,
+    }
   });
   if (!userUpdated) throw new Error("Error al actualizar usuario");
   return userUpdated;

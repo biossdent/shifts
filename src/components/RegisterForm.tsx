@@ -4,6 +4,7 @@ import { registerUser, updateUser } from "@/api/users.api";
 
 import { ChangeEvent } from "react";
 import { IUserCreated } from "@/interfaces/user.interface";
+import PasswordInput from "./InputPassword";
 import { ROLES } from "@/consts/role";
 import { toast } from "react-toastify";
 import { userStore } from "@/stores/user.store";
@@ -18,7 +19,7 @@ const RegisterForm = () => {
   } = userStore();
   const isEditing = userSelected.id !== undefined;
 
-  const register = async () => {
+  const createOrUpdateUser = async () => {
     if (isEditing) {
       const updatedUser = await updateUser(userSelected as IUserCreated);
       if (updatedUser.error) return toast.error(updatedUser.error);
@@ -46,7 +47,7 @@ const RegisterForm = () => {
     <div className="flex justify-center h-screen w-full md:basis-2/5 p-4 space-y-4 bg-gray-800 text-white md:flex-row order-2 lg:order-1 md:mr-4">
       <div className="w-full space-y-6 bg-gray-800 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center text-white">
-          Registrar nuevo usuario
+          {isEditing ? "Actualizar Usuario": "Registrar Nuevo Usuario"}  
         </h2>
         <div className="space-y-4">
           <input
@@ -72,6 +73,12 @@ const RegisterForm = () => {
             value={userSelected.email}
             onChange={handleChange}
             name="email"
+          />
+          <PasswordInput
+            name="password"
+            value={userSelected.password ?? ""}
+            onChange={handleChange}
+            placeholder="Contraseña"
           />
           <div>
             <label
@@ -100,7 +107,7 @@ const RegisterForm = () => {
           </div>
         </div>
         <button
-          onClick={register}
+          onClick={createOrUpdateUser}
           className="w-full py-2 mt-4 text-white bg-indigo-600 rounded-lg hover:bg-indigo-500 focus:outline-none"
         >
           {isEditing ? "Actualizar" : "Registrar"}

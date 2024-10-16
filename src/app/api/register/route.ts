@@ -3,7 +3,7 @@ import { create } from "@/services/user.service";
 
 export async function POST(request: Request) {
   const user = await request.json();
-  if (!user)
+  if (!user || !user.email || !user.password || !user.name)
     return NextResponse.json({ error: "Usuario no valido" }, { status: 400 });
   try {
     const userCreated = await create(user);
