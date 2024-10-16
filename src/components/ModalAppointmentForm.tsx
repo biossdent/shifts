@@ -56,7 +56,7 @@ export default function ModalAppointmentForm(
   const { showModal, date, setShowModal } = props;
   const [doctors, setDoctors] = useState<IUserCreated[] | null>(null);
   const [patientId, setPatientId] = useState<number | null>(null);
-  const {appointments, setAppointments} = appointmentsStore();
+  const { appointments, setAppointments } = appointmentsStore();
 
   useEffect(() => {
     const _getDoctors = async () => {
@@ -64,13 +64,11 @@ export default function ModalAppointmentForm(
       setDoctors(_doctors);
     };
     _getDoctors();
-    
   }, []);
 
   useEffect(() => {
     formik.setFieldValue("startDate", date);
-  }, [date])
-  
+  }, [date]);
 
   useEffect(() => {
     Modal.setAppElement("body");
@@ -105,7 +103,8 @@ export default function ModalAppointmentForm(
         endDate: values.endDate,
       };
       const appointmentCreated = await createAppointment(appointment);
-      if (appointmentCreated.error) return toast.error(appointmentCreated.error);
+      if (appointmentCreated.error)
+        return toast.error(appointmentCreated.error);
       toast.success("Cita creada con éxito");
       setAppointments([...appointments, appointmentCreated]);
       formik.resetForm();
@@ -129,11 +128,12 @@ export default function ModalAppointmentForm(
     <Modal
       isOpen={showModal}
       onRequestClose={() => setShowModal(false)}
-      contentLabel="Añadir Nuevo Evento"
-      className="absolute inset-0 flex items-center justify-center z-50"
+      shouldCloseOnOverlayClick={true}
+      contentLabel="Añadir Nueva Cita"
+      className="fixed inset-0 flex items-center justify-center z-50 overflow-y-auto"
       overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-40"
     >
-      <div className="relative max-w-xl w-full mx-auto bg-white p-6 rounded-lg shadow-lg">
+      <div className="relative w-full max-w-md sm:max-w-lg lg:max-w-xl bg-white p-6 rounded-lg shadow-lg max-h-screen overflow-y-auto">
         <button
           onClick={() => setShowModal(false)}
           className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
@@ -237,6 +237,12 @@ export default function ModalAppointmentForm(
             className="w-full py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-500"
           >
             Guardar Cita
+          </button>
+          <button
+            onClick={() => setShowModal(false)}
+            className={`mt-4 w-full py-2 bg-red-600 text-white rounded-md hover:bg-red-500 md:hidden`}
+          >
+            Cerrar
           </button>
         </form>
       </div>

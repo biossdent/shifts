@@ -103,14 +103,14 @@ export default function RootLayout({
     <div className="min-h-screen bg-gray-900 text-white">
       <header className="bg-gray-800 p-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
-          <Link href={PAGES.calendar} className="flex flex-row">
+          <Link href={PAGES.calendar} className="flex flex-row h-auto">
             <Image
-              className="pr-2"
+              className="pr-2 w-auto h-auto"
               src="/images/BiossDent.png"
               alt="logo"
               width={45}
               height={45}
-            />
+              />
             <h1 className="text-2xl font-bold">Gestión de turnos</h1>
           </Link>
           <div className="relative" ref={menuRef}>
