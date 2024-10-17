@@ -19,11 +19,6 @@ const PreviewAppointmentModal = () => {
 
   if (!appointmentSelected) return null;
 
-  const handleDelete = async () => {
-    setAppointmentSelected(null);
-    setAppointmentIdForDelete(null);
-  };
-
   return (
     <Modal
       isOpen={Boolean(appointmentSelected)}

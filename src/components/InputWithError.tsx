@@ -1,4 +1,4 @@
-import { ChangeEvent, HTMLInputTypeAttribute } from "react";
+import { ChangeEvent, FocusEventHandler, HTMLInputTypeAttribute } from "react";
 
 import moment from "moment";
 
@@ -11,7 +11,7 @@ interface IInputWithErrorProps {
   type?: HTMLInputTypeAttribute;
   placeholder?: string;
   onChange: (e: any) => void;
-  onBlur?: (e: any) => void;
+  onBlur?: FocusEventHandler<HTMLInputElement>;
 }
 
 export const InputWithError = (props: IInputWithErrorProps) => {

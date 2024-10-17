@@ -39,7 +39,7 @@ export default function RootLayout(props: IProps) {
       router.push(PAGES.calendar);
     };
     checkAuth();
-  }, [router]);
+  }, [router, user]);
 
   if (loading) {
     return (

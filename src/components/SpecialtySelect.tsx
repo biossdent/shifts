@@ -1,5 +1,3 @@
-import * as Yup from "yup";
-
 import React, { useEffect, useState } from "react";
 import { createSpecialty, getSpecialties } from "@/api/specialty.api";
 

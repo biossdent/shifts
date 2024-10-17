@@ -1,4 +1,4 @@
-import { IUser, IUserCreated, IUserNew } from "@/interfaces/user.interface";
+import { IUserCreated, IUserNew } from "@/interfaces/user.interface";
 
 import { ROLE } from "@/enums/role.enum";
 import { create } from "zustand";
