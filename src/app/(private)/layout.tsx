@@ -31,6 +31,10 @@ export default function RootLayout({
 
   const menuOptions = [
     {
+      label: "Calendario",
+      action: () => router.push(PAGES.calendar),
+    },
+    {
       label: "Mi Perfil",
       action: () => router.push(PAGES.perfil),
     },
