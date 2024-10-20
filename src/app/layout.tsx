@@ -22,6 +22,7 @@ export default function RootLayout({
           name="apple-mobile-web-app-status-bar-style"
           content="black-translucent"
         />
+      <link rel="icon" href="images/favicon.ico" />
       </head>
       <body>{children}</body>
     </html>
