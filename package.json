@@ -2,13 +2,15 @@
   "name": "shifts",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "npm run prisma-migrate && npm run prisma-generate && next build",
+    "build": "npm run prisma-migrate && npm run prisma-generate && npm run seed && next build ",
     "start": "next start",
     "lint": "next lint",
     "prisma-migrate": "npx prisma migrate dev --name init",
-    "prisma-generate": "npx prisma generate"
+    "prisma-generate": "npx prisma generate",
+    "seed": "node src/prisma/seed.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
