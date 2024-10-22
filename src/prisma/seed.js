@@ -1,4 +1,5 @@
-import { PrismaClient, ROLE } from '@prisma/client';
+import { PrismaClient, ROLE } from "@prisma/client";
+
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
@@ -11,19 +12,19 @@ async function main() {
     where: {
       email,
     },
-  })
+  });
   if (existUser.length > 0) return;
   await prisma.user.create({
     data: {
-      name: 'Jair',
-      lastName: 'Balcazar',
+      name: "Jair",
+      lastName: "Balcazar",
       role: ROLE.SUPERADMIN,
       email,
-      password,
+      password: hashedPassword,
     },
   });
 
-  console.log('Data seeded successfully!');
+  console.log("Data seeded successfully!");
 }
 
 main()
