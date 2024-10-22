@@ -8,7 +8,7 @@
     "build": "npm run prisma-migrate-prod && npm run prisma-generate && npm run seed && next build ",
     "start": "next start",
     "lint": "next lint",
-    "prisma-migrate-prod": "npx prisma migrate deploy --name init",
+    "prisma-migrate-prod": "npx prisma migrate deploy --schema=./prisma/schema.prisma",
     "prisma-migrate": "npx prisma migrate dev --name init",
     "prisma-generate": "npx prisma generate",
     "seed": "node src/prisma/seed.js"
