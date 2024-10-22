@@ -12,6 +12,7 @@ import Modal from "react-modal";
 import SpecialtySelect from "./SpecialtySelect";
 import { appointmentsStore } from "@/stores/appointments.store";
 import { createAppointment } from "@/api/appointment.api";
+import { devNull } from "os";
 import { getDoctors } from "@/api/doctors.api";
 import { toast } from "react-toastify";
 import { useFormik } from "formik";
@@ -221,7 +222,7 @@ export default function ModalAppointmentForm(
                 onChange={formik.handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-700"
               >
-                <option value={0} disabled>
+                <option value={''} selected>
                   Selecciona un doctor
                 </option>
                 {doctors &&
