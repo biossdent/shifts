@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "npm run prisma-migrate && npm run prisma-generate-prod && npm run seed && next build ",
+    "build": "npm run prisma-migrate-prod && npm run prisma-generate && npm run seed && next build ",
     "start": "next start",
     "lint": "next lint",
     "prisma-migrate-prod": "npx prisma migrate deploy --name init",
