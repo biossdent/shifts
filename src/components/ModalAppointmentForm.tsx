@@ -124,10 +124,15 @@ export default function ModalAppointmentForm(
     }
   };
 
+  const handleClose = () => {
+    setShowModal(false);
+    formik.resetForm();
+  }
+
   return (
     <Modal
       isOpen={showModal}
-      onRequestClose={() => setShowModal(false)}
+      onRequestClose={handleClose}
       shouldCloseOnOverlayClick={true}
       contentLabel="Añadir Nueva Cita"
       className="fixed inset-0 flex items-center justify-center z-50 overflow-y-auto"
@@ -135,7 +140,7 @@ export default function ModalAppointmentForm(
     >
       <div className="relative w-full max-w-md sm:max-w-lg lg:max-w-xl bg-white p-6 rounded-lg shadow-lg max-h-screen overflow-y-auto">
         <button
-          onClick={() => setShowModal(false)}
+          onClick={handleClose}
           className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
         >
           &times;
@@ -239,7 +244,7 @@ export default function ModalAppointmentForm(
             Guardar Cita
           </button>
           <button
-            onClick={() => setShowModal(false)}
+            onClick={handleClose}
             className={`mt-4 w-full py-2 bg-red-600 text-white rounded-md hover:bg-red-500 md:hidden`}
           >
             Cerrar

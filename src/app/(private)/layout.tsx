@@ -35,10 +35,6 @@ export default function RootLayout({
       action: () => router.push(PAGES.calendar),
     },
     {
-      label: "Mi Perfil",
-      action: () => router.push(PAGES.perfil),
-    },
-    {
       label: "Usuarios",
       action: () => router.push(PAGES.usuarios),
     },
@@ -114,7 +110,7 @@ export default function RootLayout({
               alt="logo"
               width={45}
               height={45}
-              />
+            />
             <h1 className="text-2xl font-bold">Gestión de turnos</h1>
           </Link>
           <div className="relative" ref={menuRef}>
