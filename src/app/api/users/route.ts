@@ -33,6 +33,10 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
+  if (userDataForUpdate.password) {
+    userDataForUpdate.password = await userDataForUpdate.password;
+  }
+
   try {
     const user = await verifyToken(token);
     if (!user)

@@ -1,6 +1,7 @@
-import { create, get } from "@/services/appointment.service";
+import { create, get, getAppointmentsByDoctorId } from "@/services/appointment.service";
 
 import { NextResponse } from "next/server";
+import { ROLE } from "@/enums/role.enum";
 import { verifyToken } from "@/utils/token.util";
 
 export async function POST(req: Request) {
@@ -32,7 +33,9 @@ export async function GET(req: Request) {
     const user = await verifyToken(token);
     if (!user)
       return NextResponse.json({ error: "Token no valido" }, { status: 401 });
-    const appointments = await get();
+    let appointments = []
+    if (user.role === ROLE.DOCTOR) appointments = await getAppointmentsByDoctorId(user.id); 
+    else appointments = await get();
     return NextResponse.json(appointments);
   } catch (error) {
     return NextResponse.json({ error: "Token no valido" }, { status: 401 });
