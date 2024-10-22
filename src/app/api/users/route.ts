@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     const user = await verifyToken(token);
     if (!user)
       return NextResponse.json({ error: "Token no valido" }, { status: 401 });
-    const users = await get(user.id);
+    const users = await get(user.id, user.role);
     return NextResponse.json(users);
   } catch (error) {
     return NextResponse.json({ error: "Token no valido" }, { status: 401 });

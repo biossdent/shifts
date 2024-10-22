@@ -5,17 +5,31 @@ import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
-export const get = async (myId: number) => {
-  return await prisma.user.findMany({
-    select: {
-      id: true,
-      name: true,
-      lastName: true,
-      email: true,
-      role: true,
-    },
-    where: { id: { not: myId }, role: { not: ROLE.SUPERADMIN } },
-  });
+export const get = async (myId: number, role: ROLE) => {
+  if (role === ROLE.DOCTOR) {
+    return await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        lastName: true,
+        email: true,
+        role: true,
+      },
+      where: { id:  myId  },
+    });
+  } else {
+    return await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        lastName: true,
+        email: true,
+        role: true,
+      },
+      where: { id: { not: myId }, role: { not: ROLE.SUPERADMIN } },
+    });
+  }
+  
 };
 
 export const getByEmail = async (email: string) => {
