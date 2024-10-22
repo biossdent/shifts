@@ -111,14 +111,14 @@ export default function LoginPage() {
         >
           Iniciar sesión
         </button>
-        <div className="flex justify-between mt-4">
+        {/* <div className="flex justify-between mt-4">
           <a
             href={PAGES.forgotPassword}
             className="text-sm text-indigo-400 hover:underline"
           >
             ¿Olvidaste tu contraseña?
           </a>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -77,7 +77,10 @@ export const updatePassword = async (id: number, password: string) => {
   return userUpdated;
 };
 
-export const updateUser = async (user: IUser) => {
+export const updateUser = async (user: IUserNew) => {
+  if (user.password) {
+    user.password = await bcrypt.hash(user.password, 10);;
+  }
   const userUpdated = await prisma.user.update({
     where: { id: user.id },
     data: user,
