@@ -3,7 +3,7 @@
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "moment/locale/es";
 
-import { Calendar, DateCellWrapperProps, View, Views, momentLocalizer } from "react-big-calendar";
+import { Calendar, View, Views, momentLocalizer } from "react-big-calendar";
 import React, { useEffect, useState } from "react";
 
 import { IAppointmentCreated } from "@/interfaces/appointment.interface";
@@ -31,15 +31,6 @@ const messages = {
 };
 
 const localizer = momentLocalizer(moment);
-
-interface IOnSelectSlotProps {
-  action: string;
-  slots: Date[];
-}
-
-interface ITouchCellWrapperProps extends DateCellWrapperProps {
-  onSelectSlot: (props: IOnSelectSlotProps) => void;
-}
 
 export default function CalendarPage() {
   const { appointments, setAppointments, setAppointmentSelected } =
