@@ -4,12 +4,13 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "moment/locale/es";
 
 import { Calendar, DateCellWrapperProps, View, Views, momentLocalizer } from "react-big-calendar";
-import React, { Children, cloneElement, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { IAppointmentCreated } from "@/interfaces/appointment.interface";
 import ModalAppointmentForm from "@/components/ModalAppointmentForm";
 import { ModalDeleteAppointmentConfirmation } from "@/components/ModalDeleteAppointmentConfirmation";
 import PreviewAppointmentModal from "@/components/ModalAppointmentPreview";
+import { UiStore } from "@/stores/ui.store";
 import { appointmentsStore } from "@/stores/appointments.store";
 import { getAppointments } from "@/api/appointment.api";
 import moment from "moment";
@@ -40,14 +41,6 @@ interface ITouchCellWrapperProps extends DateCellWrapperProps {
   onSelectSlot: (props: IOnSelectSlotProps) => void;
 }
 
-const TouchCellWrapper = ({ children, value, onSelectSlot }: ITouchCellWrapperProps) =>
-  cloneElement(Children.only(children), {
-    onTouchEnd: () => onSelectSlot({ action: "click", slots: [value] }),
-    style: {
-      className: `${children}`,
-    },
-  });
-
 export default function CalendarPage() {
   const { appointments, setAppointments, setAppointmentSelected } =
     appointmentsStore();
@@ -55,6 +48,8 @@ export default function CalendarPage() {
   const [showModal, setShowModal] = useState(false);
   const [view, setView] = useState<View>(Views.MONTH);
   const [date, setDate] = useState(new Date());
+  const { setIsMenuOpen } = UiStore();
+
 
   useEffect(() => {
     const _getAppointments = async () => {
@@ -68,17 +63,11 @@ export default function CalendarPage() {
     const _formatDate = moment(date).format("YYYY-MM-DD[T]HH:mm");
     setSelectedDate(_formatDate);
     setShowModal(true);
+    setIsMenuOpen(false);
   };
 
   const handleEventClick = (appointment: IAppointmentCreated) => {
     setAppointmentSelected(appointment);
-  };
-
-  const onSelectSlot = ({ action, slots }: IOnSelectSlotProps) => {
-    if (action === "click") {
-      handleDateClick(slots[0]);
-    }
-    return false;
   };
 
   return (
@@ -117,11 +106,6 @@ export default function CalendarPage() {
       <div className="w-full h-full md:basis-4/5 order-1 md:order-2">
         <div className="bg-white rounded-lg shadow-lg h-full">
           <Calendar
-            components={{
-              dateCellWrapper: (props) => (
-                <TouchCellWrapper {...props} onSelectSlot={onSelectSlot} />
-              ),
-            }}
             culture="es"
             localizer={localizer}
             events={appointments}

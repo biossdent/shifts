@@ -11,6 +11,7 @@ import { LifeLine } from "react-loading-indicators";
 import Link from "next/link";
 import Modal from "react-modal";
 import { ToastContainer } from "react-toastify";
+import { UiStore } from "@/stores/ui.store";
 import { useRouter } from "next/navigation";
 
 export default function RootLayout({
@@ -20,9 +21,9 @@ export default function RootLayout({
 }) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<string | null>(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const { isMenuOpen, setIsMenuOpen } = UiStore();
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
