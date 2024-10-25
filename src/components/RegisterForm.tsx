@@ -1,13 +1,21 @@
 "use client";
 
+import { ChangeEvent, useState } from "react";
 import { registerUser, updateUser } from "@/api/users.api";
 
-import { ChangeEvent } from "react";
 import { IUserCreated } from "@/interfaces/user.interface";
 import PasswordInput from "./InputPassword";
 import { ROLES } from "@/consts/role";
 import { toast } from "react-toastify";
 import { userStore } from "@/stores/user.store";
+import { validateEmail } from "@/utils/validations.util";
+
+const INITIAL_ERRORS = {
+  name: "",
+  email: "",
+  password: "",
+  rol: ""
+};
 
 const RegisterForm = () => {
   const {
@@ -18,8 +26,47 @@ const RegisterForm = () => {
     setInitialUserSelected,
   } = userStore();
   const isEditing = userSelected.id !== undefined;
+  const [errors, setErrors] = useState(INITIAL_ERRORS);
+
+  const validateFields = () => {
+    let nameError = "";
+    let emailError = "";
+    let passwordError = "";
+    let rolError = "";
+
+    if (!userSelected.name) {
+      nameError = "El nombre no puede estar vacío.";
+    }
+
+    if (!validateEmail(userSelected.email)) {
+      emailError = "El correo electrónico no es válido.";
+    }
+
+    if (!userSelected.password) {
+      passwordError = "La contraseña no puede estar vacía.";
+    }
+
+    if (userSelected.password?.length! < 6) {
+      passwordError = "La contraseña debe tener al menos 6 caracteres.";
+    }
+
+    if (!userSelected.role) {
+      rolError = "Debe seleccionar un rol.";
+    }
+
+    setErrors({ name: nameError, email: emailError, password: passwordError, rol: rolError });
+
+    return !emailError && !passwordError;
+  };
 
   const createOrUpdateUser = async () => {
+    if (!validateFields()) {
+      if (errors.name) toast.error(errors.name);
+      if (errors.email) toast.error(errors.email);
+      if (errors.password) toast.error(errors.password);
+      if (errors.rol) toast.error(errors.rol);
+      return;
+    }
     if (isEditing) {
       const updatedUser = await updateUser(userSelected as IUserCreated);
       if (updatedUser.error) return toast.error(updatedUser.error);
