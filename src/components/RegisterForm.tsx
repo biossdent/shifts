@@ -56,7 +56,7 @@ const RegisterForm = () => {
 
     setErrors({ name: nameError, email: emailError, password: passwordError, rol: rolError });
 
-    return !emailError && !passwordError;
+    return !nameError && !emailError && !passwordError && !rolError;
   };
 
   const createOrUpdateUser = async () => {
