@@ -26,7 +26,7 @@ export const get = async (myId: number, role: ROLE) => {
         email: true,
         role: true,
       },
-      where: { id: { not: myId }, role: { not: ROLE.SUPERADMIN } },
+      where: { role: { not: ROLE.SUPERADMIN } },
     });
   }
   

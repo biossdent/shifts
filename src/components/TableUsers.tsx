@@ -55,16 +55,17 @@ const TableUsers = () => {
           <tbody>
             {users && users.length > 0 ? (
               users.map((user) => (
-                <tr key={user.id} className={`${isUserSelected(user.id) ? 'bg-indigo-600 text-white' : 'even:bg-gray-50  text-gray-700'}`}> 
-                  <td className="px-4 py-2 border-b">
-                    {user.name}
-                  </td>
-                  <td className="px-4 py-2 border-b">
-                    {user.lastName}
-                  </td>
-                  <td className="px-4 py-2 border-b">
-                    {user.email}
-                  </td>
+                <tr
+                  key={user.id}
+                  className={`${
+                    isUserSelected(user.id)
+                      ? "bg-indigo-600 text-white"
+                      : "even:bg-gray-50  text-gray-700"
+                  }`}
+                >
+                  <td className="px-4 py-2 border-b">{user.name}</td>
+                  <td className="px-4 py-2 border-b">{user.lastName}</td>
+                  <td className="px-4 py-2 border-b">{user.email}</td>
                   <td className="px-4 py-2 border-b">
                     {getLabelRole(user.role)}
                   </td>

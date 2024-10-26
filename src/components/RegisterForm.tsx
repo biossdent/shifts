@@ -14,7 +14,7 @@ const INITIAL_ERRORS = {
   name: "",
   email: "",
   password: "",
-  rol: ""
+  rol: "",
 };
 
 const RegisterForm = () => {
@@ -54,7 +54,12 @@ const RegisterForm = () => {
       rolError = "Debe seleccionar un rol.";
     }
 
-    setErrors({ name: nameError, email: emailError, password: passwordError, rol: rolError });
+    setErrors({
+      name: nameError,
+      email: emailError,
+      password: passwordError,
+      rol: rolError,
+    });
 
     return !nameError && !emailError && !passwordError && !rolError;
   };
@@ -94,7 +99,7 @@ const RegisterForm = () => {
     <div className="flex justify-center h-screen w-full md:basis-2/5 p-4 space-y-4 bg-gray-800 text-white md:flex-row order-2 lg:order-1 md:mr-4">
       <div className="w-full space-y-6 bg-gray-800 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center text-white">
-          {isEditing ? "Actualizar Usuario": "Registrar Nuevo Usuario"}  
+          {isEditing ? "Actualizar Usuario" : "Registrar Nuevo Usuario"}
         </h2>
         <div className="space-y-4">
           <input
