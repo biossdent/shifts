@@ -12,6 +12,7 @@ import Link from "next/link";
 import Modal from "react-modal";
 import { ToastContainer } from "react-toastify";
 import { UiStore } from "@/stores/ui.store";
+import { sessionStore } from "@/stores/session.store";
 import { useRouter } from "next/navigation";
 
 export default function RootLayout({
@@ -20,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<string | null>(null);
+  const { user, setUser } = sessionStore();
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement | null>(null);
   const { isMenuOpen, setIsMenuOpen } = UiStore();
@@ -59,7 +60,7 @@ export default function RootLayout({
         });
         const data = await res.json();
         if (!data.user) return router.push(PAGES.login);
-        setUser(data.user.name);
+        setUser(data.user);
         setLoading(false);
       }
     };
@@ -121,7 +122,7 @@ export default function RootLayout({
                   onClick={toggleMenu}
                   className="flex items-center space-x-2 focus:outline-none"
                 >
-                  <span>Bienvenido, {user}</span>
+                  <span>Bienvenido, {`${user.name} ${user.lastName}`}</span>
                   <svg
                     className="w-5 h-5 text-white"
                     fill="none"
