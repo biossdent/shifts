@@ -5,7 +5,6 @@ import "moment/locale/es";
 
 import { Calendar, View, Views, momentLocalizer } from "react-big-calendar";
 import React, { useEffect, useState } from "react";
-import Select, { SingleValueProps, components } from "react-select";
 
 import { IAppointmentCreated } from "@/interfaces/appointment.interface";
 import { IUserCreated } from "@/interfaces/user.interface";
@@ -13,6 +12,7 @@ import ModalAppointmentForm from "@/components/ModalAppointmentForm";
 import { ModalDeleteAppointmentConfirmation } from "@/components/ModalDeleteAppointmentConfirmation";
 import PreviewAppointmentModal from "@/components/ModalAppointmentPreview";
 import { ROLE } from "@/enums/role.enum";
+import Select from "react-select";
 import { UiStore } from "@/stores/ui.store";
 import { appointmentsStore } from "@/stores/appointments.store";
 import { getAppointments } from "@/api/appointment.api";
