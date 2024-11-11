@@ -72,10 +72,12 @@ export default function CalendarPage() {
   }, []);
 
   const handleDateClick = (date: Date) => {
-    const _formatDate = moment(date).format("YYYY-MM-DD[T]HH:mm");
-    setSelectedDate(_formatDate);
-    setShowModal(true);
-    setIsMenuOpen(false);
+    if (user && (user.role === ROLE.RECEPTIONIST || user.role === ROLE.SUPERADMIN)) {
+      const _formatDate = moment(date).format("YYYY-MM-DD[T]HH:mm");
+      setSelectedDate(_formatDate);
+      setShowModal(true);
+      setIsMenuOpen(false);
+    }
   };
 
   const handleEventClick = (appointment: IAppointmentCreated) => {
