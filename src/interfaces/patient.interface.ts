@@ -1,10 +1,8 @@
 export interface IPatient {
     fullName: string
+    clinicalHistory: string
     ci: string
     phone: string
-}
-
-export interface IPatientCreated extends IPatient {
-    id: string,
-    createdAt: string
+    id?: number,
+    createdAt?: string
 }

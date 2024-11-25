@@ -4,7 +4,6 @@ import * as Yup from "yup";
 
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { ciRegex, phoneRegex } from "@/regex/validate.reg";
-import { createPatient, getPatientByCI } from "@/api/patient.api";
 
 import { IUserCreated } from "@/interfaces/user.interface";
 import { InputWithError } from "./InputWithError";
@@ -13,6 +12,7 @@ import SpecialtySelect from "./SpecialtySelect";
 import { appointmentsStore } from "@/stores/appointments.store";
 import { createAppointment } from "@/api/appointment.api";
 import { getDoctors } from "@/api/doctors.api";
+import { getPatientByValue } from "@/api/patient.api";
 import { toast } from "react-toastify";
 import { useFormik } from "formik";
 
@@ -23,31 +23,39 @@ interface IModalAppointmentFormProps {
 }
 
 const INITIAL_PATIENT = {
+  id: undefined,
   fullName: "",
+  clinicalHistory: "",
   ci: "",
   phone: "",
 };
 
 const INITIAL_APPOINTMENT = {
   diagnostic: "",
-  specialtyId: "",
+  specialtyId: undefined,
   startDate: "",
   endDate: "",
+  doctorId: undefined,
 };
 
 const validationSchema = Yup.object({
-  fullName: Yup.string().required("Nombre completo obligatorio"),
-  ci: Yup.string()
-    .required("Número de cédula obligatorio")
-    .matches(ciRegex, "Número de cédula inválido"),
-  phone: Yup.string()
-    .required("Número de celular obligatorio")
-    .matches(phoneRegex, "Número de celular inválido"),
-  diagnostic: Yup.string(),
-  specialtyId: Yup.number().required("Especialidad obligatoria"),
-  startDate: Yup.date().required("Fecha de inicio obligatoria"),
-  endDate: Yup.date().required("Fecha de fin obligatoria"),
-  doctorId: Yup.number().required("Selecciona un doctor"),
+  patient: Yup.object({
+    fullName: Yup.string().required("Nombre completo obligatorio"),
+    clinicalHistory: Yup.string().required("Historia Clinica obligatoria"),
+    ci: Yup.string()
+      .required("Número de cédula obligatorio")
+      .matches(ciRegex, "Número de cédula inválido"),
+    phone: Yup.string()
+      .required("Número de celular obligatorio")
+      .matches(phoneRegex, "Número de celular inválido"),
+  }),
+  appointment: Yup.object({
+    diagnostic: Yup.string(),
+    specialtyId: Yup.number().required("Especialidad obligatoria"),
+    startDate: Yup.date().required("Fecha de inicio obligatoria"),
+    endDate: Yup.date().required("Fecha de fin obligatoria"),
+    doctorId: Yup.number().required("Selecciona un doctor"),
+  }),
 });
 
 export default function ModalAppointmentForm(
@@ -55,19 +63,27 @@ export default function ModalAppointmentForm(
 ) {
   const { showModal, date, setShowModal } = props;
   const [doctors, setDoctors] = useState<IUserCreated[] | null>(null);
-  const [patientId, setPatientId] = useState<number | null>(null);
   const { appointments, setAppointments } = appointmentsStore();
 
   useEffect(() => {
     const _getDoctors = async () => {
-      const _doctors = await getDoctors();
-      setDoctors(_doctors);
+      try {
+        const _doctors = await getDoctors();
+        setDoctors(_doctors);
+      } catch (error) {
+        toast.error(
+          "Error al cargar doctores, la página se recargará en unos instantes"
+        );
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      }
     };
     _getDoctors();
   }, []);
 
   useEffect(() => {
-    formik.setFieldValue("startDate", date);
+    formik.setFieldValue("appointment.startDate", date);
   }, [date]);
 
   useEffect(() => {
@@ -76,32 +92,11 @@ export default function ModalAppointmentForm(
 
   const formik = useFormik({
     initialValues: {
-      ...INITIAL_PATIENT,
-      ...INITIAL_APPOINTMENT,
-      doctorId: "",
+      patient: INITIAL_PATIENT,
+      appointment: INITIAL_APPOINTMENT,
     },
     validationSchema,
-    onSubmit: async (values) => {
-      let _patientId = patientId;
-      if (!patientId) {
-        const patient = {
-          ci: values.ci,
-          fullName: values.fullName,
-          phone: values.phone,
-        };
-        const createdPatient = await createPatient(patient);
-        if (!createdPatient) return;
-        _patientId = createdPatient.id;
-      }
-
-      const appointment = {
-        patientId: _patientId!,
-        doctorId: Number(values.doctorId),
-        diagnostic: values.diagnostic,
-        specialtyId: Number(values.specialtyId),
-        startDate: values.startDate,
-        endDate: values.endDate,
-      };
+    onSubmit: async (appointment) => {
       const appointmentCreated = await createAppointment(appointment);
       if (appointmentCreated.error)
         return toast.error(appointmentCreated.error);
@@ -112,22 +107,44 @@ export default function ModalAppointmentForm(
     },
   });
 
-  const handleCIChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFieldForSearchPatientChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: "CH" | "CI"
+  ) => {
+    cleanPatientFields(type)
     formik.handleChange(e);
-    if (e.target.value.length === 10) {
-      const patient = await getPatientByCI(e.target.value);
+    if (
+      (type === "CI" && e.target.value.length === 10) ||
+      (type === "CH" && e.target.value.length > 1)
+    ) {
+      const patient = await getPatientByValue(e.target.value);
       if (!patient) return;
 
-      setPatientId(patient.id);
-      formik.setFieldValue("fullName", patient.fullName);
-      formik.setFieldValue("phone", patient.phone);
+      if (type === "CI")
+        formik.setFieldValue(
+          "patient.clinicalHistory",
+          patient.clinicalHistory
+        );
+      else formik.setFieldValue("patient.ci", patient.ci);
+      formik.setFieldValue("patient.id", patient.id);
+      formik.setFieldValue("patient.fullName", patient.fullName);
+      formik.setFieldValue("patient.phone", patient.phone);
     }
+  };
+
+  const cleanPatientFields = (type: "CH" | "CI") => {
+    if (type === "CI")
+      formik.setFieldValue("patient.clinicalHistory", "");
+    else formik.setFieldValue("patient.ci", "");
+    formik.setFieldValue("patient.id", undefined);
+    formik.setFieldValue("patient.fullName", "");
+    formik.setFieldValue("patient.phone", "");
   };
 
   const handleClose = () => {
     setShowModal(false);
     formik.resetForm();
-  }
+  };
 
   return (
     <Modal
@@ -153,23 +170,30 @@ export default function ModalAppointmentForm(
                 Información del Paciente
               </h2>
               <InputWithError
+                label="Número de Historica Clinica"
+                placeholder="Ingresa la Historica Clinica"
+                {...formik.getFieldProps("patient.clinicalHistory")}
+                {...formik.getFieldMeta("patient.clinicalHistory")}
+                onChange={(e) => handleFieldForSearchPatientChange(e, "CH")}
+              />
+              <InputWithError
                 label="Número de Cédula"
                 placeholder="Ingresa el número de cédula"
-                {...formik.getFieldProps("ci")}
-                {...formik.getFieldMeta("ci")}
-                onChange={handleCIChange}
+                {...formik.getFieldProps("patient.ci")}
+                {...formik.getFieldMeta("patient.ci")}
+                onChange={(e) => handleFieldForSearchPatientChange(e, "CI")}
               />
               <InputWithError
                 label="Nombre Completo"
                 placeholder="Ingresa el nombre completo"
-                {...formik.getFieldProps("fullName")}
-                {...formik.getFieldMeta("fullName")}
+                {...formik.getFieldProps("patient.fullName")}
+                {...formik.getFieldMeta("patient.fullName")}
               />
               <InputWithError
                 label="Número de Celular"
                 placeholder="Ingresa el número de celular"
-                {...formik.getFieldProps("phone")}
-                {...formik.getFieldMeta("phone")}
+                {...formik.getFieldProps("patient.phone")}
+                {...formik.getFieldMeta("patient.phone")}
               />
             </div>
 
@@ -180,28 +204,28 @@ export default function ModalAppointmentForm(
               <InputWithError
                 label="Diagnóstico"
                 placeholder="Ingresa el diagnóstico"
-                {...formik.getFieldProps("diagnostic")}
-                {...formik.getFieldMeta("diagnostic")}
+                {...formik.getFieldProps("appointment.diagnostic")}
+                {...formik.getFieldMeta("appointment.diagnostic")}
               />
               <div className="mb-4">
                 <label className="block mb-1 font-medium text-gray-700">
                   Especialidad
                 </label>
                 <SpecialtySelect
-                  {...formik.getFieldProps("specialtyId")}
-                  {...formik.getFieldMeta("specialtyId")}
+                  {...formik.getFieldProps("appointment.specialtyId")}
+                  {...formik.getFieldMeta("appointment.specialtyId")}
                 />
               </div>
               <InputWithError
                 label="Fecha de Inicio"
-                {...formik.getFieldProps("startDate")}
-                {...formik.getFieldMeta("startDate")}
+                {...formik.getFieldProps("appointment.startDate")}
+                {...formik.getFieldMeta("appointment.startDate")}
                 type="datetime-local"
               />
               <InputWithError
                 label="Fecha de Fin"
-                {...formik.getFieldProps("endDate")}
-                {...formik.getFieldMeta("endDate")}
+                {...formik.getFieldProps("appointment.endDate")}
+                {...formik.getFieldMeta("appointment.endDate")}
                 type="datetime-local"
               />
             </div>
@@ -216,23 +240,25 @@ export default function ModalAppointmentForm(
                 Doctor
               </label>
               <select
-                name="doctorId"
-                value={formik.values.doctorId}
-                onChange={formik.handleChange}
+                name="appointment.doctorId"
+                value={formik.values.appointment.doctorId}
+                onChange={(e) =>
+                  formik.setFieldValue("appointment.doctorId", +e.target.value)
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-700"
               >
-                <option value={''} selected>
-                  Selecciona un doctor
-                </option>
-                {doctors &&
-                  doctors.map((doctor: IUserCreated) => (
-                    <option key={doctor.id} value={Number(doctor.id)}>
-                      Dr. {doctor.name} {doctor.lastName}
-                    </option>
-                  ))}
+                <option>Selecciona un doctor</option>
+                {doctors?.map((doctor: IUserCreated) => (
+                  <option key={doctor.id} value={doctor.id}>
+                    Dr. {doctor.name} {doctor.lastName}
+                  </option>
+                )) || <option disabled>Cargando doctores...</option>}
               </select>
-              {formik.touched.doctorId && formik.errors.doctorId ? (
-                <div className="text-red-500">{formik.errors.doctorId}</div>
+              {formik.touched.appointment?.doctorId &&
+              formik.errors.appointment?.doctorId ? (
+                <div className="text-red-500">
+                  {formik.errors.appointment?.doctorId}
+                </div>
               ) : null}
             </div>
           </div>

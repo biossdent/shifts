@@ -19,7 +19,7 @@ export const InputWithError = (props: IInputWithErrorProps) => {
   
   const _onChange = (e: ChangeEvent<HTMLInputElement>) => {
     onChange(e);
-    if (name !== "startDate") return;
+    if (name !== "appointment.startDate") return;
     setEndDate(e);
   };
 
@@ -29,7 +29,7 @@ export const InputWithError = (props: IInputWithErrorProps) => {
     const formatEndDate = endDate.format("YYYY-MM-DDTHH:mm");
     onChange({
       target: {
-        name: "endDate",
+        name: "appointment.endDate",
         value: formatEndDate,
       },
     });

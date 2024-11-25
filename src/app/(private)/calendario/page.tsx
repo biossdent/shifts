@@ -72,7 +72,7 @@ export default function CalendarPage() {
   }, []);
 
   const handleDateClick = (date: Date) => {
-    if (user && (user.role === ROLE.RECEPTIONIST || user.role === ROLE.SUPERADMIN)) {
+    if (user && (user.role === ROLE.RECEPTIONIST || user.role === ROLE.SUPERADMIN || user.role === ROLE.ADMIN)) {
       const _formatDate = moment(date).format("YYYY-MM-DD[T]HH:mm");
       setSelectedDate(_formatDate);
       setShowModal(true);

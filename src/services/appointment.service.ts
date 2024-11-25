@@ -1,8 +1,8 @@
 import { IAppointment } from "@/interfaces/appointment.interface";
 import { PrismaClient } from "@prisma/client";
-import { getById } from "./patient.service";
 import { getById as getDoctorById } from "./user.service";
-import moment from "moment"; // Importar Moment.js
+import { getPatientById } from "./patient.service";
+import moment from "moment";
 
 const prisma = new PrismaClient();
 
@@ -17,9 +17,10 @@ export const get = async () => {
 };
 
 export const create = async (appointment: IAppointment) => {
-  const existPatient = await getById(appointment.patientId);
+  const existPatient = await getPatientById(appointment.patientId);
   if (!existPatient) throw new Error("El paciente no existe");
 
+  if (!appointment.doctorId) throw new Error("El doctor no existe");
   const existDoctor = await getDoctorById(appointment.doctorId);
   if (!existDoctor) throw new Error("El doctor no existe");
 
@@ -88,7 +89,7 @@ export const create = async (appointment: IAppointment) => {
 export const getAppointmentsByDoctorId = async (doctorId: number) => {
   return await prisma.appointment.findMany({
     where: {
-      doctorId: doctorId,
+      doctorId: doctorId, 
     },
     include: {
       patient: true,
@@ -101,7 +102,7 @@ export const getAppointmentsByDoctorId = async (doctorId: number) => {
 export const getAppointmentsByRangeAndDoctorId = async (startDate: string, endDate: string, doctorId: number) => {
   return await prisma.appointment.findMany({
     where: {
-      doctorId: doctorId,
+      doctorId: doctorId, 
       startDate: {
         lte: endDate,
         gte: startDate,
@@ -119,7 +120,7 @@ export const deleteAppointment = async (appointmentId: number) => {
   try {
     return await prisma.appointment.delete({
       where: {
-        id: appointmentId,
+        id: appointmentId, 
       },
     });
   } catch (error) {

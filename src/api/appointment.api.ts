@@ -1,7 +1,8 @@
-import { IAppointment } from "@/interfaces/appointment.interface";
+import { IAppointment, IAppointmentNew } from "@/interfaces/appointment.interface";
+
 import moment from "moment";
 
-export const createAppointment = async (appointment: IAppointment) => {
+export const createAppointment = async (data: IAppointmentNew) => {
     const token = localStorage.getItem("authToken");
     if (!token) throw new Error("Token no valido");
 
@@ -12,9 +13,12 @@ export const createAppointment = async (appointment: IAppointment) => {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            ...appointment,
-            startDate: moment(appointment.startDate).toISOString(),
-            endDate: moment(appointment.endDate).toISOString(),
+            ...data,
+            appointment: {
+                ...data.appointment,
+                startDate: moment(data.appointment.startDate).toISOString(),
+                endDate: moment(data.appointment.endDate).toISOString(),
+            }
         }),
     });
     return await res.json();

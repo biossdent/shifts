@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { createSpecialty, getSpecialties } from "@/api/specialty.api";
 
 import CreatableSelect from "react-select/creatable";
-import { ISpecialtyCreated } from "@/interfaces/specialty.interface";
+import { ISpecialty } from "@/interfaces/specialty.interface";
 import { SingleValue } from "react-select";
 
 interface ISelectProps {
@@ -18,7 +18,7 @@ const normalBorder = "!border-gray-300";
 
 const SpecialtySelect = (props: ISelectProps) => {
   const { onChange, onBlur, touched, error, name } = props;
-  const [specialties, setSpecialties] = useState<ISpecialtyCreated[] | null>(
+  const [specialties, setSpecialties] = useState<ISpecialty[] | null>(
     null
   );
 
@@ -35,7 +35,7 @@ const SpecialtySelect = (props: ISelectProps) => {
     setSpecialties([...specialties!, newSpecialty]);
   };
 
-  const handleChange = (e: SingleValue<ISpecialtyCreated>) => {
+  const handleChange = (e: SingleValue<ISpecialty>) => {
     const value = {
       target: {
         name,

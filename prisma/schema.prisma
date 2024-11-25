@@ -36,6 +36,7 @@ model Patient {
   fullName    String
   ci          String @unique
   phone       String
+  clinicalHistory String @default("")
   createdAt   DateTime @default(now())
   appointments Appointment[]
 }

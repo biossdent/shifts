@@ -1,5 +1,6 @@
 import {
   faCalendarDays,
+  faCircleH,
   faIdCard,
   faPhone,
   faStethoscope,
@@ -17,7 +18,11 @@ import moment from "moment";
 import { sessionStore } from "@/stores/session.store";
 
 const PreviewAppointmentModal = () => {
-  const { appointmentSelected, setAppointmentSelected, setAppointmentIdForDelete } = appointmentsStore();
+  const {
+    appointmentSelected,
+    setAppointmentSelected,
+    setAppointmentIdForDelete,
+  } = appointmentsStore();
   const { user } = sessionStore();
 
   if (!appointmentSelected) return null;
@@ -53,7 +58,6 @@ const PreviewAppointmentModal = () => {
                 </p>
               </div>
             </div>
-
             <div className="flex flex-row items-center">
               <FontAwesomeIcon icon={faIdCard} className="text-indigo-600" />
               <div className="flex flex-col pl-2">
@@ -65,7 +69,7 @@ const PreviewAppointmentModal = () => {
             </div>
           </div>
           <div className="basis-1/2">
-            <div className="flex flex-row items-center">
+            <div className="flex flex-row items-center mb-2">
               <FontAwesomeIcon icon={faPhone} className="text-indigo-600" />
               <div className="flex flex-col pl-2">
                 <p className="font-semibold">Teléfono</p>{" "}
@@ -74,6 +78,17 @@ const PreviewAppointmentModal = () => {
                 </p>
               </div>
             </div>
+            <div className="basis-1/2">
+            <div className="flex flex-row items-center">
+              <FontAwesomeIcon icon={faCircleH} className="text-indigo-600" />
+              <div className="flex flex-col pl-2">
+                <p className="font-semibold">Historia Clinica</p>{" "}
+                <p className="font-medium text-gray-400">
+                  {appointmentSelected.patient.clinicalHistory}
+                </p>
+              </div>
+            </div>
+          </div>
           </div>
         </div>
 
@@ -152,16 +167,22 @@ const PreviewAppointmentModal = () => {
                 <p className="font-semibold text-center">Doctor</p>{" "}
               </div>
               <p className="font-medium text-gray-400">
-                {appointmentSelected.doctor.name + " " + appointmentSelected.doctor.lastName}
+                {appointmentSelected.doctor.name +
+                  " " +
+                  appointmentSelected.doctor.lastName}
               </p>
             </div>
           </div>
         </div>
-        {user && (user.role === ROLE.RECEPTIONIST || user.role === ROLE.SUPERADMIN) ? (
-          <button onClick={() => setAppointmentIdForDelete(appointmentSelected.id)} className="mt-6 w-full py-2 bg-red-600 text-white rounded-md hover:bg-red-500">
-          Eliminar Cita
-        </button>) : null
-        }
+        {user &&
+        (user.role === ROLE.RECEPTIONIST || user.role === ROLE.SUPERADMIN) ? (
+          <button
+            onClick={() => setAppointmentIdForDelete(appointmentSelected.id!)}
+            className="mt-6 w-full py-2 bg-red-600 text-white rounded-md hover:bg-red-500"
+          >
+            Eliminar Cita
+          </button>
+        ) : null}
 
         <button
           onClick={() => setAppointmentSelected(null)}
