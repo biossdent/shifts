@@ -10,6 +10,7 @@ generator client {
 
 enum ROLE {
     SUPERADMIN
+    ADMIN
     DOCTOR
     RECEPTIONIST
 }
@@ -23,6 +24,7 @@ model User {
   role      ROLE
   createdAt DateTime @default(now())
   appointments Appointment[]
+  reminders Reminder[]
 }
 
 model Specialty {
@@ -53,4 +55,14 @@ model Appointment {
   patient     Patient @relation(fields: [patientId], references: [id])
   doctorId    Int
   doctor      User @relation(fields: [doctorId], references: [id])
+}
+
+model Reminder {
+  id          Int @id @default(autoincrement())
+  title       String
+  reminder    String
+  date        DateTime
+  createdAt   DateTime @default(now())
+  userId      Int
+  user        User @relation(fields: [userId], references: [id])
 }

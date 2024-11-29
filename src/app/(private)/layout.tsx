@@ -103,7 +103,7 @@ export default function RootLayout({
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      <header className="bg-gray-800 p-4 shadow-md">
+      <header className="bg-gray-800 p-4 shadow-md sticky-title !z-30">
         <div className="container mx-auto flex justify-between items-center">
           <Link href={PAGES.calendar} className="flex flex-row h-auto">
             <Image

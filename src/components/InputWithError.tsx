@@ -36,7 +36,7 @@ export const InputWithError = (props: IInputWithErrorProps) => {
   };
 
   return (
-    <div className="mb-4">
+    <div className="mb-4 w-full">
       <label className="block mb-1 font-medium text-gray-700">{label}</label>
       <input
         value={value}

@@ -1,0 +1,4 @@
+export enum EVENTS_TYPE {
+    APPOINTMENT = "APPOINTMENT",
+    REMINDER = "REMINDER",
+}

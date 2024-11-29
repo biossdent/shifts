@@ -1,6 +1,6 @@
 import {
-  create,
-  get,
+  createAppointment,
+  getAllAppointments,
   getAppointmentsByDoctorId,
 } from "@/services/appointment.service";
 import { createPatient, getPatientById, updatePatient } from "@/services/patient.service";
@@ -15,7 +15,7 @@ export async function POST(req: Request) {
   const data = await req.json();
   const token = req.headers.get("Authorization")?.split(" ")[1];
   if (!token) {
-    return NextResponse.json({ error: "Token no validoaaaa" }, { status: 401 });
+    return NextResponse.json({ error: "Token no valido" }, { status: 401 });
   }
 
   try {
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
       if (!isEqual(oldPatient, patient)) updatePatient(patient);
       appointment.patientId = patient.id;
     }
-    const appointmentCreated = await create(appointment);
+    const appointmentCreated = await createAppointment(appointment);
     return NextResponse.json(appointmentCreated);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 400 });
@@ -53,7 +53,7 @@ export async function GET(req: Request) {
     let appointments = [];
     if (user.role === ROLE.DOCTOR)
       appointments = await getAppointmentsByDoctorId(user.id);
-    else appointments = await get();
+    else appointments = await getAllAppointments();
     return NextResponse.json(appointments);
   } catch (error) {
     return NextResponse.json({ error: "Token no valido" }, { status: 401 });

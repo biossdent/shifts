@@ -1,3 +1,4 @@
+import { EVENTS_TYPE } from "@/enums/events.enum";
 import { IAppointment } from "@/interfaces/appointment.interface";
 import { PrismaClient } from "@prisma/client";
 import { getById as getDoctorById } from "./user.service";
@@ -6,17 +7,21 @@ import moment from "moment";
 
 const prisma = new PrismaClient();
 
-export const get = async () => {
-  return await prisma.appointment.findMany({
+export const getAllAppointments = async () => {
+  const appointments = await prisma.appointment.findMany({
     include: {
       patient: true,
       doctor: true,
       specialty: true,
     },
   });
+  return appointments.map((appointment) => ({
+    ...appointment,
+    type: EVENTS_TYPE.APPOINTMENT,
+  }));
 };
 
-export const create = async (appointment: IAppointment) => {
+export const createAppointment = async (appointment: IAppointment) => {
   const existPatient = await getPatientById(appointment.patientId);
   if (!existPatient) throw new Error("El paciente no existe");
 
@@ -33,10 +38,14 @@ export const create = async (appointment: IAppointment) => {
       throw new Error("La fecha de inicio no puede ser después a la de fin");
     }
     if (startDate.isBefore(now)) {
-      throw new Error("La fecha de inicio no puede ser anterior a la fecha actual");
+      throw new Error(
+        "La fecha de inicio no puede ser anterior a la fecha actual"
+      );
     }
     if (endDate.isBefore(now)) {
-      throw new Error("La fecha de fin no puede ser anterior a la fecha actual");
+      throw new Error(
+        "La fecha de fin no puede ser anterior a la fecha actual"
+      );
     }
 
     const appointmentByDoctor = await getAppointmentsByRangeAndDoctorId(
@@ -44,12 +53,15 @@ export const create = async (appointment: IAppointment) => {
       appointment.endDate,
       appointment.doctorId
     );
+
     if (appointmentByDoctor.length > 0) {
       throw new Error("Ya existe una cita entre las fechas introducidas");
     }
 
-    return await prisma.appointment.create({
-      data: appointment,
+    if (!appointment.specialtyId) throw new Error("La especialidad no existe");
+
+    const appointmentCreated = await prisma.appointment.create({
+      data: appointment as Required<IAppointment>,
       select: {
         id: true,
         patientId: true,
@@ -80,16 +92,16 @@ export const create = async (appointment: IAppointment) => {
         },
       },
     });
-    
+    return {...appointmentCreated, type: EVENTS_TYPE.APPOINTMENT};
   } else {
     throw new Error("La fecha no es válida");
   }
 };
 
 export const getAppointmentsByDoctorId = async (doctorId: number) => {
-  return await prisma.appointment.findMany({
+  const appointments = await prisma.appointment.findMany({
     where: {
-      doctorId: doctorId, 
+      doctorId: doctorId,
     },
     include: {
       patient: true,
@@ -97,12 +109,20 @@ export const getAppointmentsByDoctorId = async (doctorId: number) => {
       specialty: true,
     },
   });
+  return appointments.map((appointment) => ({
+    ...appointment,
+    type: EVENTS_TYPE.APPOINTMENT,
+  }));
 };
 
-export const getAppointmentsByRangeAndDoctorId = async (startDate: string, endDate: string, doctorId: number) => {
-  return await prisma.appointment.findMany({
+export const getAppointmentsByRangeAndDoctorId = async (
+  startDate: string,
+  endDate: string,
+  doctorId: number
+) => {
+  const appointments = await prisma.appointment.findMany({
     where: {
-      doctorId: doctorId, 
+      doctorId: doctorId,
       startDate: {
         lte: endDate,
         gte: startDate,
@@ -114,13 +134,17 @@ export const getAppointmentsByRangeAndDoctorId = async (startDate: string, endDa
       specialty: true,
     },
   });
+  return appointments.map((appointment) => ({
+    ...appointment,
+    type: EVENTS_TYPE.APPOINTMENT,
+  }));
 };
 
 export const deleteAppointment = async (appointmentId: number) => {
   try {
     return await prisma.appointment.delete({
       where: {
-        id: appointmentId, 
+        id: appointmentId,
       },
     });
   } catch (error) {
