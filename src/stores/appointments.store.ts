@@ -2,7 +2,7 @@ import { IAppointmentCreated } from "@/interfaces/appointment.interface";
 import { create } from "zustand";
 import { getAppointments } from "@/api/appointment.api";
 
-interface AppointmentStore {
+interface IAppointmentStore {
     appointments: IAppointmentCreated[];
     myAppointments: IAppointmentCreated[];
     filteredAppointments: IAppointmentCreated[];
@@ -17,7 +17,7 @@ interface AppointmentStore {
     getAppointments: () => Promise<void>;
 }
 
-export const appointmentsStore = create<AppointmentStore>((set) => ({
+export const appointmentsStore = create<IAppointmentStore>((set) => ({
   appointments: [],
   myAppointments: [],
   filteredAppointments: [],

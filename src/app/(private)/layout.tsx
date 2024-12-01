@@ -10,6 +10,7 @@ import Image from "next/image";
 import { LifeLine } from "react-loading-indicators";
 import Link from "next/link";
 import Modal from "react-modal";
+import { ROLE } from "@/enums/role.enum";
 import { ToastContainer } from "react-toastify";
 import { UiStore } from "@/stores/ui.store";
 import { sessionStore } from "@/stores/session.store";
@@ -39,6 +40,11 @@ export default function RootLayout({
     {
       label: "Usuarios",
       action: () => router.push(PAGES.usuarios),
+    },
+    {
+      label: "Bloquear Citas",
+      action: () => router.push(PAGES.blocDoctorAppointments),
+      unauthorized: [ROLE.DOCTOR],
     },
     {
       label: "Cerrar Sesión",
@@ -101,6 +107,11 @@ export default function RootLayout({
     );
   }
 
+  const isUnauthorized = (opt: typeof menuOptions[number]) => {
+    if (!user) return false;
+    return opt.unauthorized?.includes(user.role);
+  }
+
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <header className="bg-gray-800 p-4 shadow-md sticky-title !z-30">
@@ -140,7 +151,9 @@ export default function RootLayout({
                 </button>
                 {isMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-gray-700 rounded-md shadow-lg z-50">
-                    {menuOptions.map((opt, index) => (
+                    {menuOptions.map((opt, index) => {
+                      if (isUnauthorized(opt)) return null;
+                      return (
                       <button
                         key={index}
                         onClick={opt.action}
@@ -148,7 +161,7 @@ export default function RootLayout({
                       >
                         {opt.label}
                       </button>
-                    ))}
+                    )})}
                   </div>
                 )}
               </div>

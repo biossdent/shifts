@@ -25,6 +25,7 @@ model User {
   createdAt DateTime @default(now())
   appointments Appointment[]
   reminders Reminder[]
+  blockAppointments BlockAppointment[]
 }
 
 model Specialty {
@@ -65,4 +66,14 @@ model Reminder {
   createdAt   DateTime @default(now())
   userId      Int
   user        User @relation(fields: [userId], references: [id])
+}
+
+model BlockAppointment {
+  id          Int @id @default(autoincrement())
+  doctorId    Int
+  doctor      User @relation(fields: [doctorId], references: [id])
+  startDate    DateTime
+  endDate     DateTime
+  reason      String?
+  createdAt   DateTime @default(now())
 }

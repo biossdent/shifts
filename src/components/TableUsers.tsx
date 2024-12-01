@@ -71,7 +71,7 @@ const TableUsers = () => {
                   </td>
                   <td className="px-4 py-2 border-b">
                     <FontAwesomeIcon
-                      data-tooltip-id="edit"
+                      data-tooltip-id="tooltip"
                       data-tooltip-content="Editar"
                       className={`mr-4 ml-4 cursor-pointer outline-none ${
                         isUserSelected(user.id)
@@ -86,7 +86,7 @@ const TableUsers = () => {
                       }
                     />
                     <FontAwesomeIcon
-                      data-tooltip-id="delete"
+                      data-tooltip-id="tooltip"
                       data-tooltip-content="Eliminar"
                       className="text-red-500 cursor-pointer outline-none"
                       icon={faTrash}
@@ -105,8 +105,7 @@ const TableUsers = () => {
           </tbody>
         </table>
       </div>
-      <Tooltip id="edit" place="top" />
-      <Tooltip id="delete" place="top" />
+      <Tooltip id="tooltip" place="top" />
     </div>
   );
 };
