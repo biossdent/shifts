@@ -17,7 +17,7 @@ import AsideCalendar from "@/components/AsideCalendar";
 import { EVENTS_TYPE } from "@/enums/events.enum";
 import { IAppointmentCreated } from "@/interfaces/appointment.interface";
 import { IReminder } from "@/interfaces/reminder.interface";
-import { MESSAGES_CALENDAR } from "@/consts/calendar";
+import { MESSAGES_CALENDAR } from "@/consts/calendar.consts";
 import { ModalDeleteAppointmentConfirmation } from "@/components/ModalDeleteAppointmentConfirmation";
 import PreviewAppointmentModal from "@/components/ModalAppointmentPreview";
 import { ROLE } from "@/enums/role.enum";
