@@ -3,7 +3,7 @@
 import "../globals.css";
 import "react-toastify/dist/ReactToastify.css";
 
-import { PAGES, PUBLIC_PAGES } from "@/consts/pages";
+import { PAGES, PUBLIC_PAGES } from "@/consts/pages.const";
 import { useEffect, useRef, useState } from "react";
 
 import Image from "next/image";

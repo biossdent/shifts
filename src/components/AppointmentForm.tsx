@@ -2,6 +2,7 @@
 
 import * as Yup from "yup";
 
+import { INITIAL_APPOINTMENT, INITIAL_PATIENT } from "@/consts/appointment.const";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { ciRegex, phoneRegex } from "@/regex/validate.reg";
 
@@ -19,22 +20,6 @@ interface IAppointmentFormProps {
   date: string;
   setShowModal: Dispatch<SetStateAction<boolean>>;
 }
-
-const INITIAL_PATIENT = {
-  id: undefined,
-  fullName: "",
-  clinicalHistory: "",
-  ci: "",
-  phone: "",
-};
-
-const INITIAL_APPOINTMENT = {
-  diagnostic: "",
-  specialtyId: undefined,
-  startDate: "",
-  endDate: "",
-  doctorId: undefined,
-};
 
 const validationSchema = Yup.object({
   patient: Yup.object({
@@ -56,9 +41,7 @@ const validationSchema = Yup.object({
   }),
 });
 
-export default function AppointmentForm(
-  props: IAppointmentFormProps
-) {
+export default function AppointmentForm(props: IAppointmentFormProps) {
   const { date, setShowModal } = props;
   const [doctors, setDoctors] = useState<IUserCreated[] | null>(null);
   const { appointments, setAppointments } = appointmentsStore();
@@ -180,15 +163,10 @@ export default function AppointmentForm(
               {...formik.getFieldProps("appointment.diagnostic")}
               {...formik.getFieldMeta("appointment.diagnostic")}
             />
-            <div className="mb-4">
-              <label className="block mb-1 font-medium text-gray-700">
-                Especialidad
-              </label>
-              <SpecialtySelect
-                {...formik.getFieldProps("appointment.specialtyId")}
-                {...formik.getFieldMeta("appointment.specialtyId")}
-              />
-            </div>
+            <SpecialtySelect
+              {...formik.getFieldProps("appointment.specialtyId")}
+              {...formik.getFieldMeta("appointment.specialtyId")}
+            />
             <InputWithError
               label="Fecha de Inicio"
               {...formik.getFieldProps("appointment.startDate")}
@@ -203,7 +181,6 @@ export default function AppointmentForm(
             />
           </div>
         </div>
-
         <div className="mb-6">
           <h2 className="text-xl font-bold mb-4 text-gray-700">
             Seleccionar Doctor
@@ -235,7 +212,6 @@ export default function AppointmentForm(
             ) : null}
           </div>
         </div>
-
         <button
           type="submit"
           className="w-full py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-500"

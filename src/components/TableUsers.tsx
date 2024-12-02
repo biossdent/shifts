@@ -3,8 +3,8 @@ import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ROLE } from "@/enums/role.enum";
-import { ROLES } from "@/consts/role";
-import { TableHeadUsers } from "@/consts/table";
+import { ROLES } from "@/consts/role.conts";
+import { TableHeadUsers } from "@/consts/table.conts";
 import { Tooltip } from "react-tooltip";
 import { getUsers } from "@/api/users.api";
 import { userStore } from "@/stores/user.store";

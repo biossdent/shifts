@@ -5,7 +5,7 @@ import { Tooltip } from "react-tooltip";
 import { blockAppointmentStoreStore } from "@/stores/blockAppoitment.store";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { formatDate } from "@/utils/date.util";
-import { tableHeadBlockDoctorAppointments } from "@/consts/table";
+import { tableHeadBlockDoctorAppointments } from "@/consts/table.conts";
 
 const TableBlockDoctorAppointments = () => {
   const {
