@@ -107,10 +107,10 @@ export default function RootLayout({
     );
   }
 
-  const isUnauthorized = (opt: typeof menuOptions[number]) => {
+  const isUnauthorized = (opt: (typeof menuOptions)[number]) => {
     if (!user) return false;
     return opt.unauthorized?.includes(user.role);
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
@@ -154,14 +154,15 @@ export default function RootLayout({
                     {menuOptions.map((opt, index) => {
                       if (isUnauthorized(opt)) return null;
                       return (
-                      <button
-                        key={index}
-                        onClick={opt.action}
-                        className="block w-full text-left px-4 py-2 text-white hover:bg-gray-600 focus:outline-none"
-                      >
-                        {opt.label}
-                      </button>
-                    )})}
+                        <button
+                          key={index}
+                          onClick={opt.action}
+                          className="block w-full text-left px-4 py-2 text-white hover:bg-gray-600 focus:outline-none"
+                        >
+                          {opt.label}
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
               </div>

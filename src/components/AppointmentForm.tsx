@@ -13,6 +13,7 @@ import { appointmentsStore } from "@/stores/appointments.store";
 import { createAppointment } from "@/api/appointment.api";
 import { getDoctors } from "@/api/doctors.api";
 import { getPatientByValue } from "@/api/patient.api";
+import moment from "moment";
 import { toast } from "react-toastify";
 import { useFormik } from "formik";
 
@@ -65,6 +66,10 @@ export default function AppointmentForm(props: IAppointmentFormProps) {
 
   useEffect(() => {
     formik.setFieldValue("appointment.startDate", date);
+    const startDate = moment(date);
+    const endDate = startDate.clone().add(30, "minutes");
+    const formatEndDate = endDate.format("YYYY-MM-DDTHH:mm");
+    formik.setFieldValue("appointment.endDate", formatEndDate);
   }, [date]);
 
   const formik = useFormik({
