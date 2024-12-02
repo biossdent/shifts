@@ -1,5 +1,6 @@
 import { ChangeEvent, FocusEventHandler, HTMLInputTypeAttribute } from "react";
 
+import { doctorsStore } from "@/stores/doctors.store";
 import moment from "moment";
 
 interface IInputWithErrorProps {
@@ -16,6 +17,7 @@ interface IInputWithErrorProps {
 
 export const InputWithError = (props: IInputWithErrorProps) => {
   const { label, name, value, touched, error, type, placeholder, onChange, onBlur } = props;
+  const { getAvailableDoctors } = doctorsStore();
   
   const _onChange = (e: ChangeEvent<HTMLInputElement>) => {
     onChange(e);
@@ -33,6 +35,7 @@ export const InputWithError = (props: IInputWithErrorProps) => {
         value: formatEndDate,
       },
     });
+    getAvailableDoctors(startDate.format("YYYY-MM-DD"), endDate.format("YYYY-MM-DD"));
   };
 
   return (

@@ -50,7 +50,7 @@ const BlockDoctorAppointmentsForm = () => {
     let endDateError = "";
 
     if (!blockAppointmentSelected.doctorId) {
-      doctorIdError = "Debe seeleccionar un doctor.";
+      doctorIdError = "Debe seleccionar un doctor.";
     }
 
     if (!blockAppointmentSelected.startDate) {

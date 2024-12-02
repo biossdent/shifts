@@ -90,6 +90,7 @@ const TableUsers = () => {
                       data-tooltip-content="Eliminar"
                       className="text-red-500 cursor-pointer outline-none"
                       icon={faTrash}
+                      // TODO: Mostar un modal indicando que se eliminara toda la data realacionada al usuario
                       onClick={() => setUserForDelete(user)}
                     />
                   </td>

@@ -2,7 +2,7 @@ import { IReminder } from "@/interfaces/reminder.interface";
 import { create } from "zustand";
 import { getReminders } from "@/api/reminder.api";
 
-interface ReminderStore {
+interface IReminderStore {
   reminders: IReminder[];
   reminderSelected: IReminder | null;
   reminderIdForDelete: number | null;
@@ -13,7 +13,7 @@ interface ReminderStore {
   getReminders: () => Promise<void>;
 }
 
-export const reminderStore = create<ReminderStore>((set) => ({
+export const reminderStore = create<IReminderStore>((set) => ({
   reminders: [],
   reminderSelected: null,
   reminderIdForDelete: null,

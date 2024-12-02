@@ -2,16 +2,19 @@
 
 import * as Yup from "yup";
 
-import { INITIAL_APPOINTMENT, INITIAL_PATIENT } from "@/consts/appointment.const";
+import {
+  INITIAL_APPOINTMENT,
+  INITIAL_PATIENT,
+} from "@/consts/appointment.const";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { ciRegex, phoneRegex } from "@/regex/validate.reg";
 
-import { IUserCreated } from "@/interfaces/user.interface";
+import { IDoctor } from "@/interfaces/user.interface";
 import { InputWithError } from "./InputWithError";
 import SpecialtySelect from "./SpecialtySelect";
 import { appointmentsStore } from "@/stores/appointments.store";
 import { createAppointment } from "@/api/appointment.api";
-import { getDoctors } from "@/api/doctors.api";
+import { doctorsStore } from "@/stores/doctors.store";
 import { getPatientByValue } from "@/api/patient.api";
 import moment from "moment";
 import { toast } from "react-toastify";
@@ -44,25 +47,8 @@ const validationSchema = Yup.object({
 
 export default function AppointmentForm(props: IAppointmentFormProps) {
   const { date, setShowModal } = props;
-  const [doctors, setDoctors] = useState<IUserCreated[] | null>(null);
   const { appointments, setAppointments } = appointmentsStore();
-
-  useEffect(() => {
-    const _getDoctors = async () => {
-      try {
-        const _doctors = await getDoctors();
-        setDoctors(_doctors);
-      } catch (error) {
-        toast.error(
-          "Error al cargar doctores, la página se recargará en unos instantes"
-        );
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
-      }
-    };
-    _getDoctors();
-  }, []);
+  const { isLoadingDoctor, availableDoctors, getAvailableDoctors } = doctorsStore();
 
   useEffect(() => {
     formik.setFieldValue("appointment.startDate", date);
@@ -70,6 +56,7 @@ export default function AppointmentForm(props: IAppointmentFormProps) {
     const endDate = startDate.clone().add(30, "minutes");
     const formatEndDate = endDate.format("YYYY-MM-DDTHH:mm");
     formik.setFieldValue("appointment.endDate", formatEndDate);
+    getAvailableDoctors(startDate.format("YYYY-MM-DD"), endDate.format("YYYY-MM-DD"));
   }, [date]);
 
   const formik = useFormik({
@@ -201,10 +188,11 @@ export default function AppointmentForm(props: IAppointmentFormProps) {
                 formik.setFieldValue("appointment.doctorId", +e.target.value)
               }
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-700"
+              disabled={isLoadingDoctor}
             >
-              <option>Selecciona un doctor</option>
-              {doctors?.map((doctor: IUserCreated) => (
-                <option key={doctor.id} value={doctor.id}>
+              <option>{isLoadingDoctor ? 'Cargando doctores...' : 'Selecciona un doctor'}</option>
+              {availableDoctors?.map((doctor: IDoctor) => (
+                <option key={doctor.id} value={doctor.id} disabled={!doctor.available}>
                   Dr. {doctor.name} {doctor.lastName}
                 </option>
               )) || <option disabled>Cargando doctores...</option>}
