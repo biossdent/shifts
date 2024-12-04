@@ -6,12 +6,12 @@ import {
   INITIAL_APPOINTMENT,
   INITIAL_PATIENT,
 } from "@/consts/appointment.const";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { ciRegex, phoneRegex } from "@/regex/validate.reg";
 
 import { IDoctor } from "@/interfaces/user.interface";
-import { InputWithError } from "./InputWithError";
-import SpecialtySelect from "./SpecialtySelect";
+import { InputWithError } from "../InputWithError";
+import SpecialtySelect from "../SpecialtySelect";
 import { appointmentsStore } from "@/stores/appointments.store";
 import { createAppointment } from "@/api/appointment.api";
 import { doctorsStore } from "@/stores/doctors.store";

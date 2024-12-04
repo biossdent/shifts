@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Tooltip } from "react-tooltip";
-import { blockAppointmentStoreStore } from "@/stores/blockAppoitment.store";
+import { blockAppointmentStoreStore } from "@/stores/blockAppointment.store";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { formatDate } from "@/utils/date.util";
 import { tableHeadBlockDoctorAppointments } from "@/consts/table.conts";

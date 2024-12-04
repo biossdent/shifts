@@ -56,6 +56,8 @@ model Appointment {
   patient     Patient @relation(fields: [patientId], references: [id])
   doctorId    Int
   doctor      User @relation(fields: [doctorId], references: [id])
+  eventId     Int?
+  event       Event? @relation(fields: [eventId], references: [id])
 }
 
 model Reminder {
@@ -76,4 +78,11 @@ model BlockAppointment {
   endDate     DateTime
   reason      String?
   createdAt   DateTime @default(now())
+}
+
+model Event {
+  id          Int @id @default(autoincrement())
+  title       String
+  color       String
+  appointments Appointment[]
 }

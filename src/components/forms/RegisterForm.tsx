@@ -4,7 +4,7 @@ import { ChangeEvent, useState } from "react";
 import { registerUser, updateUser } from "@/api/users.api";
 
 import { IUserCreated } from "@/interfaces/user.interface";
-import PasswordInput from "./InputPassword";
+import PasswordInput from "../InputPassword";
 import { ROLES } from "@/consts/role.conts";
 import { toast } from "react-toastify";
 import { userStore } from "@/stores/user.store";

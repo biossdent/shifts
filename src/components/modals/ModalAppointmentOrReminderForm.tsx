@@ -1,9 +1,9 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-import AppointmentForm from "./AppointmentForm";
+import AppointmentForm from "../forms/AppointmentForm";
 import { FORM_TYPE } from "@/enums/formType.enum";
 import Modal from "react-modal";
-import ReminderForm from "./ReminderForm";
+import ReminderForm from "../forms/ReminderForm";
 
 interface IAppointmentOrReminderFormProps {
   showModal: boolean;

@@ -12,7 +12,7 @@ export const ModalDeleteReminderConfirmation = () => {
     const _delete = await deleteReminder(reminderIdForDelete!);
     if (_delete.error) return toast.error("Error al eliminar el Recordatorio");
     setConfirmationDeleteId(reminderIdForDelete!);
-    toast.success("Recordatorio eliminada con éxito");
+    toast.success("Recordatorio eliminado con éxito");
     setReminderSelected(null);
   };
   

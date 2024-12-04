@@ -4,6 +4,7 @@ export const PAGES = {
     calendar: "/calendario",
     perfil: "/perfil",
     usuarios: "/usuarios",
+    eventos: "/eventos",
     forgotPassword: "/olvide-contrasena",
     resetPassword: "/restablecer-contrasena",
     blocDoctorAppointments: "/bloquear-doctor-citas",

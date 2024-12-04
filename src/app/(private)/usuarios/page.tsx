@@ -1,8 +1,8 @@
 "use client";
 
-import { ModalDeleteUserConfirmation } from "@/components/ModalDeleteUserConfirmation";
-import RegisterForm from "@/components/RegisterForm";
-import TableUsers from "@/components/TableUsers";
+import { ModalDeleteUserConfirmation } from "@/components/modals/ModalDeleteUserConfirmation";
+import RegisterForm from "@/components/forms/RegisterForm";
+import TableUsers from "@/components/tables/TableUsers";
 
 export default function UsersPage() {
 

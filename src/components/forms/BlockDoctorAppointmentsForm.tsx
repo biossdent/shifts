@@ -3,9 +3,7 @@
 import { ChangeEvent, useEffect, useState } from "react";
 
 import { IUserCreated } from "@/interfaces/user.interface";
-import PasswordInput from "./InputPassword";
-import { ROLES } from "@/consts/role.conts";
-import { blockAppointmentStoreStore } from "@/stores/blockAppoitment.store";
+import { blockAppointmentStoreStore } from "@/stores/blockAppointment.store";
 import { createBlockAppointment } from "@/api/blockAppointment.api";
 import { getDoctors } from "@/api/doctors.api";
 import { toast } from "react-toastify";

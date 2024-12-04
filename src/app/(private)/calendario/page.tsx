@@ -12,14 +12,14 @@ import {
   getEventTitle,
 } from "@/utils/calendar.util";
 
-import AppointmentOrReminderForm from "@/components/ModalAppointmentOrReminderForm";
+import AppointmentOrReminderForm from "@/components/modals/ModalAppointmentOrReminderForm";
 import AsideCalendar from "@/components/AsideCalendar";
 import { EVENTS_TYPE } from "@/enums/events.enum";
 import { IAppointmentCreated } from "@/interfaces/appointment.interface";
 import { IReminder } from "@/interfaces/reminder.interface";
 import { MESSAGES_CALENDAR } from "@/consts/calendar.consts";
-import { ModalDeleteAppointmentConfirmation } from "@/components/ModalDeleteAppointmentConfirmation";
-import PreviewAppointmentModal from "@/components/ModalAppointmentPreview";
+import { ModalDeleteAppointmentConfirmation } from "@/components/modals/ModalDeleteAppointmentConfirmation";
+import PreviewAppointmentModal from "@/components/modals/ModalAppointmentPreview";
 import { ROLE } from "@/enums/role.enum";
 import { UiStore } from "@/stores/ui.store";
 import { appointmentsStore } from "@/stores/appointments.store";
@@ -29,7 +29,7 @@ import { sessionStore } from "@/stores/session.store";
 
 const localizer = momentLocalizer(moment);
 
-export type IEvent = IAppointmentCreated | IReminder;
+export type IEventCalendar = IAppointmentCreated | IReminder;
 
 export default function CalendarPage() {
   const {
@@ -41,7 +41,7 @@ export default function CalendarPage() {
   const { getReminders, reminders, setReminderSelected } = reminderStore();
   const { user } = sessionStore();
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [events, setEvents] = useState<IEvent[]>([]);
+  const [events, setEvents] = useState<IEventCalendar[]>([]);
   useState(appointments);
   const [showModal, setShowModal] = useState(false);
   const [view, setView] = useState<View>(Views.MONTH);
@@ -71,7 +71,7 @@ export default function CalendarPage() {
     }
   };
 
-  const handleEventClick = (event: IEvent) => {
+  const handleEventClick = (event: IEventCalendar) => {
     if (event.type === EVENTS_TYPE.APPOINTMENT)
       setAppointmentSelected(event as IAppointmentCreated);
     else setReminderSelected(event as IReminder);

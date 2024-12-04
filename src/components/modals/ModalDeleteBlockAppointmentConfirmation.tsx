@@ -1,6 +1,6 @@
 import Modal from "react-modal";
 import React from "react";
-import { blockAppointmentStoreStore } from "@/stores/blockAppoitment.store";
+import { blockAppointmentStoreStore } from "@/stores/blockAppointment.store";
 import { deleteBlockAppointment } from "@/api/blockAppointment.api";
 import { toast } from "react-toastify";
 

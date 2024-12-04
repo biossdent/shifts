@@ -1,7 +1,6 @@
 import { IBlockAppointment } from "@/interfaces/blockAppointment.interface";
 import { create } from "zustand";
 import { getAllBlockAppointments } from "@/api/blockAppointment.api";
-import { getReminders } from "@/api/reminder.api";
 
 interface IBlockAppointmentStore {
   blockAppointments: IBlockAppointment[];

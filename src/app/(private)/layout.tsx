@@ -42,6 +42,11 @@ export default function RootLayout({
       action: () => router.push(PAGES.usuarios),
     },
     {
+      label: "Eventos",
+      action: () => router.push(PAGES.eventos),
+      unauthorized: [ROLE.DOCTOR],
+    },
+    {
       label: "Bloquear Citas",
       action: () => router.push(PAGES.blocDoctorAppointments),
       unauthorized: [ROLE.DOCTOR],

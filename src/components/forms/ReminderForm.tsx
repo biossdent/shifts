@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import React, { Dispatch, SetStateAction, useEffect } from "react";
 
 import { IReminder } from "@/interfaces/reminder.interface";
-import { InputWithError } from "./InputWithError";
+import { InputWithError } from "../InputWithError";
 import { createReminder } from "@/api/reminder.api";
 import moment from "moment";
 import { reminderStore } from "@/stores/reminder.store";
