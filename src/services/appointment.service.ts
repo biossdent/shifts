@@ -13,6 +13,7 @@ export const getAllAppointments = async () => {
       patient: true,
       doctor: true,
       specialty: true,
+      event: true,
     },
   });
   return appointments.map((appointment) => ({
@@ -90,6 +91,13 @@ export const createAppointment = async (appointment: IAppointment) => {
             label: true,
           },
         },
+        event: {
+          select: {
+            id: true,
+            title: true,
+            color: true,
+          },
+        },
       },
     });
     return {...appointmentCreated, type: EVENTS_TYPE.APPOINTMENT};
@@ -107,6 +115,7 @@ export const getAppointmentsByDoctorId = async (doctorId: number) => {
       patient: true,
       doctor: true,
       specialty: true,
+      event: true,
     },
   });
   return appointments.map((appointment) => ({
@@ -138,6 +147,24 @@ export const getAppointmentsByRangeAndDoctorId = async (
     ...appointment,
     type: EVENTS_TYPE.APPOINTMENT,
   }));
+};
+
+export const updateEventInAppointment = async (
+  appointmentId: number,
+  eventId: number
+) => {
+  try {
+    return await prisma.appointment.update({
+      where: {
+        id: appointmentId,
+      },
+      data: {
+        eventId: eventId,
+      },
+    });
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const deleteAppointment = async (appointmentId: number) => {

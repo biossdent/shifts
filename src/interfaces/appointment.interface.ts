@@ -1,4 +1,5 @@
 import { EVENTS_TYPE } from "@/enums/events.enum"
+import { IEvent } from "./event.interface"
 import { IPatient } from "./patient.interface"
 import { ISpecialty } from "./specialty.interface"
 import { IUserCreated } from "./user.interface"
@@ -23,5 +24,7 @@ export interface IAppointmentCreated extends IAppointment {
     patient: IPatient,
     doctor: IUserCreated
     specialty: ISpecialty
+    event?: IEvent
+    eventId?: number
     type: EVENTS_TYPE
 }

@@ -1,3 +1,5 @@
+import { getTextColorForBackground, hexToRgb } from "@/utils/color.util";
+
 import { EVENTS_TYPE } from "@/enums/events.enum";
 import { IAppointmentCreated } from "@/interfaces/appointment.interface";
 import { IEventCalendar } from "@/app/(private)/calendario/page";
@@ -16,28 +18,36 @@ export const getEventStartAccessor = (event: IEventCalendar) => {
 };
 
 export const getEventEndAccessor = (event: IEventCalendar) => {
-    let date;
+  let date;
   if (event.type === EVENTS_TYPE.REMINDER) date = (event as IReminder).date;
   else date = (event as IAppointmentCreated).endDate;
   return new Date(date);
 };
 
-export const eventStyleGetter = (event: IEventCalendar) => {
+export const eventStyleGetter = (calendarEvent: IEventCalendar) => {
   let backgroundColor = "";
   let color = "";
 
-  switch (event.type) {
+  switch (calendarEvent.type) {
     case EVENTS_TYPE.APPOINTMENT:
-      backgroundColor = "#ff7f50"; // color para eventos médicos
-      color = "#fff";
+      const appointmentEvent = calendarEvent as IAppointmentCreated;
+      if (appointmentEvent.event) {
+        backgroundColor = appointmentEvent.event.color;
+        color = getTextColorForBackground(
+          hexToRgb(appointmentEvent.event.color)
+        );
+      } else {
+        backgroundColor = "#265985";
+        color = getTextColorForBackground(hexToRgb(backgroundColor));
+      }
       break;
     case EVENTS_TYPE.REMINDER:
-      backgroundColor = "#4caf50"; // color para reuniones
-      color = "#fff";
+      backgroundColor = "#4caf50";
+      color = getTextColorForBackground(hexToRgb(backgroundColor));
       break;
     default:
-      backgroundColor = "#2196f3"; // color por defecto
-      color = "#fff";
+      backgroundColor = "#2196f3";
+      color = getTextColorForBackground(hexToRgb(backgroundColor));
       break;
   }
 

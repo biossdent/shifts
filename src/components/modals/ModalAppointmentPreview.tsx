@@ -9,6 +9,7 @@ import {
   faUserDoctor,
 } from "@fortawesome/free-solid-svg-icons";
 
+import EventSelect from "../EventSelect";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "react-modal";
 import { ROLE } from "@/enums/role.enum";
@@ -79,16 +80,16 @@ const PreviewAppointmentModal = () => {
               </div>
             </div>
             <div className="basis-1/2">
-            <div className="flex flex-row items-center">
-              <FontAwesomeIcon icon={faCircleH} className="text-indigo-600" />
-              <div className="flex flex-col pl-2">
-                <p className="font-semibold">Historia Clinica</p>{" "}
-                <p className="font-medium text-gray-400">
-                  {appointmentSelected.patient.clinicalHistory}
-                </p>
+              <div className="flex flex-row items-center">
+                <FontAwesomeIcon icon={faCircleH} className="text-indigo-600" />
+                <div className="flex flex-col pl-2">
+                  <p className="font-semibold">Historia Clinica</p>{" "}
+                  <p className="font-medium text-gray-400">
+                    {appointmentSelected.patient.clinicalHistory}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
           </div>
         </div>
 
@@ -174,8 +175,11 @@ const PreviewAppointmentModal = () => {
             </div>
           </div>
         </div>
+        <EventSelect />
         {user &&
-        (user.role === ROLE.RECEPTIONIST || user.role === ROLE.SUPERADMIN || user.role === ROLE.ADMIN) ? (
+        (user.role === ROLE.RECEPTIONIST ||
+          user.role === ROLE.SUPERADMIN ||
+          user.role === ROLE.ADMIN) ? (
           <button
             onClick={() => setAppointmentIdForDelete(appointmentSelected.id!)}
             className="mt-6 w-full py-2 bg-red-600 text-white rounded-md hover:bg-red-500"

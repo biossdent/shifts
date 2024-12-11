@@ -20,6 +20,8 @@ import moment from "moment";
 import { toast } from "react-toastify";
 import { useFormik } from "formik";
 
+// TODO: fix block appointments
+
 interface IAppointmentFormProps {
   date: string;
   setShowModal: Dispatch<SetStateAction<boolean>>;
