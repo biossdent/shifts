@@ -126,16 +126,23 @@ const AsideCalendar = (props: IAsideCalendarProps) => {
           <h2 className="text-2xl font-bold sticky-title">
             Recordatorios del día
           </h2>
-          {reminders && reminders.length > 0 ? (
-            reminders.map((reminder) => (
-              <div
-                onClick={() => handleReminderClick(reminder)}
-                key={reminder.id}
-                className="p-3 bg-gray-700 rounded-lg shadow-md cursor-pointer"
-              >
-                <h3 className="font-semibold">{reminder.reminder}</h3>
-              </div>
-            ))
+          {reminders &&
+          reminders.filter((reminder) =>
+            moment(reminder.date).isSame(new Date(), "day")
+          ).length > 0 ? (
+            reminders
+              .filter((reminder) =>
+                moment(reminder.date).isSame(new Date(), "day")
+              )
+              .map((reminder) => (
+                <div
+                  onClick={() => handleReminderClick(reminder)}
+                  key={reminder.id}
+                  className="p-3 bg-gray-700 rounded-lg shadow-md cursor-pointer"
+                >
+                  <h3 className="font-semibold">{reminder.title}</h3>
+                </div>
+              ))
           ) : (
             <p>No hay recordatorios para hoy.</p>
           )}

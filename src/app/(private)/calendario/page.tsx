@@ -19,6 +19,7 @@ import { IAppointmentCreated } from "@/interfaces/appointment.interface";
 import { IReminder } from "@/interfaces/reminder.interface";
 import { MESSAGES_CALENDAR } from "@/consts/calendar.consts";
 import { ModalDeleteAppointmentConfirmation } from "@/components/modals/ModalDeleteAppointmentConfirmation";
+import ModalWeekReminders from "@/components/modals/ModalWeekReminders";
 import PreviewAppointmentModal from "@/components/modals/ModalAppointmentPreview";
 import { ROLE } from "@/enums/role.enum";
 import { UiStore } from "@/stores/ui.store";
@@ -114,6 +115,7 @@ export default function CalendarPage() {
       />
       <ModalDeleteAppointmentConfirmation />
       <PreviewAppointmentModal />
+      <ModalWeekReminders />
     </div>
   );
 }

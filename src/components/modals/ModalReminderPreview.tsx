@@ -29,6 +29,9 @@ const PreviewReminderModal = () => {
           &times;
         </button>
         <h2 className="text-xl font-bold mb-4 text-gray-700">Recuerda...</h2>
+        <div className="flex align-center justify-center">
+        <span className="font-semibold text-xl">{reminderSelected.title}</span>
+        </div>
         <div className="flex flex-row rounded-lg bg-gray-100 p-4 mb-4">
           <div className="basis-1/2">
             <div className="flex flex-row items-center mb-2">

@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { PAGES, PUBLIC_PAGES } from "@/consts/pages.const";
 import { useEffect, useRef, useState } from "react";
 
+import { DAY_OF_SUMMARY } from "@/consts/reminders.const";
 import Image from "next/image";
 import { LifeLine } from "react-loading-indicators";
 import Link from "next/link";
@@ -13,6 +14,8 @@ import Modal from "react-modal";
 import { ROLE } from "@/enums/role.enum";
 import { ToastContainer } from "react-toastify";
 import { UiStore } from "@/stores/ui.store";
+import moment from "moment";
+import { reminderStore } from "@/stores/reminder.store";
 import { sessionStore } from "@/stores/session.store";
 import { useRouter } from "next/navigation";
 
@@ -23,6 +26,7 @@ export default function RootLayout({
 }) {
   const [loading, setLoading] = useState(true);
   const { user, setUser } = sessionStore();
+  const { getReminderWeeks } = reminderStore();
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement | null>(null);
   const { isMenuOpen, setIsMenuOpen } = UiStore();
@@ -56,6 +60,10 @@ export default function RootLayout({
       action: handleLogout,
     },
   ];
+
+  useEffect(() => {
+    if (moment().day() === DAY_OF_SUMMARY) getReminderWeeks();
+  }, []);
 
   useEffect(() => {
     const checkAuth = async () => {

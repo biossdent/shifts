@@ -1,3 +1,4 @@
+import { DAY_OF_SUMMARY } from "@/consts/reminders.const";
 import { EVENTS_TYPE } from "@/enums/events.enum";
 import { IReminder } from "@/interfaces/reminder.interface";
 import { PrismaClient } from "@prisma/client";
@@ -14,7 +15,7 @@ export const createReminder = async (reminder: INewReminder) => {
   if (!reminder.date)
     throw new Error("La fecha del recordatorio no puede estar vacía");
   const date = moment(reminder.date);
-  if (date.isBefore(moment()))
+  if (date.isBefore(moment().startOf('day')))
     throw new Error(
       "La fecha del recordatorio no puede ser anterior a la fecha actual"
     );
@@ -24,16 +25,11 @@ export const createReminder = async (reminder: INewReminder) => {
   return { ...reminderCreated, type: EVENTS_TYPE.REMINDER };
 };
 
-export const getRemindersByDateAndUserId = async (
-  date: string,
+export const getRemindersByUserId = async (
   userId: number
 ) => {
   const reminders = await prisma.reminder.findMany({
     where: {
-      date: {
-        lte: date,
-        gte: moment().subtract(1, "day").toISOString(),
-      },
       userId: userId,
     },
     orderBy: {
@@ -49,7 +45,24 @@ export const getRemindersByDateAndUserId = async (
 export const deleteReminder = async (id: number) => {
   return await prisma.reminder.delete({
     where: {
-      id: id,
+      id,
     },
   });
+};
+
+export const getWeekReminders = async (userId: number, date: string) => {
+  const momentDate = moment(date);
+  const day = momentDate.day();
+  if (day !== DAY_OF_SUMMARY) return new Error("La fecha no es Lunes");
+  const lastWeekDay = momentDate.add(6, 'days').endOf('day');
+  const reminders = await prisma.reminder.findMany({
+    where: {
+      userId,
+      date: {
+        lte: lastWeekDay.toDate(),
+        gte: date
+      }
+    },
+  });
+  return reminders;
 };
