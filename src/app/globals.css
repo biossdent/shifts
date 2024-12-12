@@ -26,3 +26,34 @@ body {
     text-wrap: balance;
   }
 }
+
+body {
+  scrollbar-width: thin;
+  scrollbar-color: #4b5563 #111827;
+}
+
+*::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #111827;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #4b5563;
+  border-radius: 10px;
+}
+
+*::-webkit-scrollbar-button {
+  display: none;
+}
+
+.sticky-title {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: #1f2937;
+  padding: 8px 0;
+}

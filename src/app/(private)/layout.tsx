@@ -3,15 +3,19 @@
 import "../globals.css";
 import "react-toastify/dist/ReactToastify.css";
 
-import { PAGES, PUBLIC_PAGES } from "@/consts/pages";
+import { PAGES, PUBLIC_PAGES } from "@/consts/pages.const";
 import { useEffect, useRef, useState } from "react";
 
+import { DAY_OF_SUMMARY } from "@/consts/reminders.const";
 import Image from "next/image";
 import { LifeLine } from "react-loading-indicators";
 import Link from "next/link";
 import Modal from "react-modal";
+import { ROLE } from "@/enums/role.enum";
 import { ToastContainer } from "react-toastify";
 import { UiStore } from "@/stores/ui.store";
+import moment from "moment";
+import { reminderStore } from "@/stores/reminder.store";
 import { sessionStore } from "@/stores/session.store";
 import { useRouter } from "next/navigation";
 
@@ -22,6 +26,7 @@ export default function RootLayout({
 }) {
   const [loading, setLoading] = useState(true);
   const { user, setUser } = sessionStore();
+  const { getReminderWeeks } = reminderStore();
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement | null>(null);
   const { isMenuOpen, setIsMenuOpen } = UiStore();
@@ -41,10 +46,24 @@ export default function RootLayout({
       action: () => router.push(PAGES.usuarios),
     },
     {
+      label: "Eventos",
+      action: () => router.push(PAGES.eventos),
+      unauthorized: [ROLE.DOCTOR],
+    },
+    {
+      label: "Bloquear Citas",
+      action: () => router.push(PAGES.blocDoctorAppointments),
+      unauthorized: [ROLE.DOCTOR],
+    },
+    {
       label: "Cerrar Sesión",
       action: handleLogout,
     },
   ];
+
+  useEffect(() => {
+    if (moment().day() === DAY_OF_SUMMARY) getReminderWeeks();
+  }, []);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -101,9 +120,14 @@ export default function RootLayout({
     );
   }
 
+  const isUnauthorized = (opt: (typeof menuOptions)[number]) => {
+    if (!user) return false;
+    return opt.unauthorized?.includes(user.role);
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      <header className="bg-gray-800 p-4 shadow-md">
+      <header className="bg-gray-800 p-4 shadow-md sticky-title !z-30">
         <div className="container mx-auto flex justify-between items-center">
           <Link href={PAGES.calendar} className="flex flex-row h-auto">
             <Image
@@ -140,15 +164,18 @@ export default function RootLayout({
                 </button>
                 {isMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-gray-700 rounded-md shadow-lg z-50">
-                    {menuOptions.map((opt, index) => (
-                      <button
-                        key={index}
-                        onClick={opt.action}
-                        className="block w-full text-left px-4 py-2 text-white hover:bg-gray-600 focus:outline-none"
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
+                    {menuOptions.map((opt, index) => {
+                      if (isUnauthorized(opt)) return null;
+                      return (
+                        <button
+                          key={index}
+                          onClick={opt.action}
+                          className="block w-full text-left px-4 py-2 text-white hover:bg-gray-600 focus:outline-none"
+                        >
+                          {opt.label}
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
               </div>

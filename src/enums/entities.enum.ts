@@ -1,0 +1,6 @@
+export enum ENTITIES {
+    USER = 'USER',
+    PATIENT = 'PATIENT',
+    SPECIALTY = 'SPECIALTY',
+    APPOINTMENT = 'APPOINTMENT'
+}

@@ -16,3 +16,7 @@ export interface IUserCreated extends IUser {
     id: number,
     createdAt: string
 }
+
+export interface IDoctor extends IUserCreated {
+    available: boolean,
+}

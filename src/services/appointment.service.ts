@@ -1,25 +1,32 @@
+import { EVENTS_TYPE } from "@/enums/events.enum";
 import { IAppointment } from "@/interfaces/appointment.interface";
 import { PrismaClient } from "@prisma/client";
-import { getById } from "./patient.service";
 import { getById as getDoctorById } from "./user.service";
-import moment from "moment"; // Importar Moment.js
+import { getPatientById } from "./patient.service";
+import moment from "moment";
 
 const prisma = new PrismaClient();
 
-export const get = async () => {
-  return await prisma.appointment.findMany({
+export const getAllAppointments = async () => {
+  const appointments = await prisma.appointment.findMany({
     include: {
       patient: true,
       doctor: true,
       specialty: true,
+      event: true,
     },
   });
+  return appointments.map((appointment) => ({
+    ...appointment,
+    type: EVENTS_TYPE.APPOINTMENT,
+  }));
 };
 
-export const create = async (appointment: IAppointment) => {
-  const existPatient = await getById(appointment.patientId);
+export const createAppointment = async (appointment: IAppointment) => {
+  const existPatient = await getPatientById(appointment.patientId);
   if (!existPatient) throw new Error("El paciente no existe");
 
+  if (!appointment.doctorId) throw new Error("El doctor no existe");
   const existDoctor = await getDoctorById(appointment.doctorId);
   if (!existDoctor) throw new Error("El doctor no existe");
 
@@ -32,10 +39,14 @@ export const create = async (appointment: IAppointment) => {
       throw new Error("La fecha de inicio no puede ser después a la de fin");
     }
     if (startDate.isBefore(now)) {
-      throw new Error("La fecha de inicio no puede ser anterior a la fecha actual");
+      throw new Error(
+        "La fecha de inicio no puede ser anterior a la fecha actual"
+      );
     }
     if (endDate.isBefore(now)) {
-      throw new Error("La fecha de fin no puede ser anterior a la fecha actual");
+      throw new Error(
+        "La fecha de fin no puede ser anterior a la fecha actual"
+      );
     }
 
     const appointmentByDoctor = await getAppointmentsByRangeAndDoctorId(
@@ -43,12 +54,15 @@ export const create = async (appointment: IAppointment) => {
       appointment.endDate,
       appointment.doctorId
     );
+
     if (appointmentByDoctor.length > 0) {
       throw new Error("Ya existe una cita entre las fechas introducidas");
     }
 
-    return await prisma.appointment.create({
-      data: appointment,
+    if (!appointment.specialtyId) throw new Error("La especialidad no existe");
+
+    const appointmentCreated = await prisma.appointment.create({
+      data: appointment as Required<IAppointment>,
       select: {
         id: true,
         patientId: true,
@@ -77,16 +91,23 @@ export const create = async (appointment: IAppointment) => {
             label: true,
           },
         },
+        event: {
+          select: {
+            id: true,
+            title: true,
+            color: true,
+          },
+        },
       },
     });
-    
+    return { ...appointmentCreated, type: EVENTS_TYPE.APPOINTMENT };
   } else {
     throw new Error("La fecha no es válida");
   }
 };
 
 export const getAppointmentsByDoctorId = async (doctorId: number) => {
-  return await prisma.appointment.findMany({
+  const appointments = await prisma.appointment.findMany({
     where: {
       doctorId: doctorId,
     },
@@ -94,12 +115,21 @@ export const getAppointmentsByDoctorId = async (doctorId: number) => {
       patient: true,
       doctor: true,
       specialty: true,
+      event: true,
     },
   });
+  return appointments.map((appointment) => ({
+    ...appointment,
+    type: EVENTS_TYPE.APPOINTMENT,
+  }));
 };
 
-export const getAppointmentsByRangeAndDoctorId = async (startDate: string, endDate: string, doctorId: number) => {
-  return await prisma.appointment.findMany({
+export const getAppointmentsByRangeAndDoctorId = async (
+  startDate: string,
+  endDate: string,
+  doctorId: number
+) => {
+  const appointments = await prisma.appointment.findMany({
     where: {
       doctorId: doctorId,
       startDate: {
@@ -111,8 +141,37 @@ export const getAppointmentsByRangeAndDoctorId = async (startDate: string, endDa
       patient: true,
       doctor: true,
       specialty: true,
+      event: true,
     },
   });
+  return appointments.map((appointment) => ({
+    ...appointment,
+    type: EVENTS_TYPE.APPOINTMENT,
+  }));
+};
+
+export const updateEventInAppointment = async (
+  appointmentId: number,
+  eventId: number | null
+) => {
+  try {
+    return await prisma.appointment.update({
+      where: {
+        id: appointmentId,
+      },
+      data: {
+        eventId: eventId,
+      },
+      include: {
+        patient: true,
+        doctor: true,
+        specialty: true,
+        event: true,
+      },
+    });
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const deleteAppointment = async (appointmentId: number) => {

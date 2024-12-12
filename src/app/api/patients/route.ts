@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { create } from "@/services/patient.service";
+import { createPatient } from "@/services/patient.service";
 import { verifyToken } from "@/utils/token.util";
 
 export async function POST(request: Request) {
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     const user = await verifyToken(token);
     if (!user)
       return NextResponse.json({ error: "Token no valido" }, { status: 401 });
-    const patientCreated = await create(patient);
+    const patientCreated = await createPatient(patient);
     return NextResponse.json(patientCreated);
   } catch (error) {
     return NextResponse.json({ error: "Token no valido" }, { status: 401 });

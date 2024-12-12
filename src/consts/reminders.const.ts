@@ -1,0 +1,1 @@
+export const DAY_OF_SUMMARY = 1; // Lunes

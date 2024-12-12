@@ -2,7 +2,7 @@
 
 import { KeyboardEvent, useState } from "react";
 
-import { PAGES } from "@/consts/pages";
+import { PAGES } from "@/consts/pages.const";
 import { loginApi } from "@/api/login.api";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
