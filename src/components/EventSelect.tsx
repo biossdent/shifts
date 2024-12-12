@@ -19,11 +19,10 @@ const EventSelect = () => {
   const [selectedOption, setSelectedOption] = useState<IOption | null>(null);
 
   const handleChange = async (selected: SingleValue<IOption | null>) => {
-    let updatedAppointment: any;
     setSelectedOption(selected);
     if (!appointmentSelected) return;
 
-    updatedAppointment = await updateEventInAppointment(
+    const updatedAppointment = await updateEventInAppointment(
       appointmentSelected.id!,
       selected?.value ?? null
     );
