@@ -20,8 +20,6 @@ import moment from "moment";
 import { toast } from "react-toastify";
 import { useFormik } from "formik";
 
-// TODO: fix block appointments
-
 interface IAppointmentFormProps {
   date: string;
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -58,7 +56,7 @@ export default function AppointmentForm(props: IAppointmentFormProps) {
     const endDate = startDate.clone().add(30, "minutes");
     const formatEndDate = endDate.format("YYYY-MM-DDTHH:mm");
     formik.setFieldValue("appointment.endDate", formatEndDate);
-    getAvailableDoctors(startDate.format("YYYY-MM-DD"), endDate.format("YYYY-MM-DD"));
+    getAvailableDoctors(startDate.toISOString(), endDate.toISOString());
   }, [date]);
 
   const formik = useFormik({

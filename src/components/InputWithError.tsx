@@ -35,7 +35,7 @@ export const InputWithError = (props: IInputWithErrorProps) => {
         value: formatEndDate,
       },
     });
-    getAvailableDoctors(startDate.format("YYYY-MM-DD"), endDate.format("YYYY-MM-DD"));
+    getAvailableDoctors(startDate.toISOString(), endDate.toISOString());
   };
 
   return (
