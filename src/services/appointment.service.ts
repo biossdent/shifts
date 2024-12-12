@@ -100,7 +100,7 @@ export const createAppointment = async (appointment: IAppointment) => {
         },
       },
     });
-    return {...appointmentCreated, type: EVENTS_TYPE.APPOINTMENT};
+    return { ...appointmentCreated, type: EVENTS_TYPE.APPOINTMENT };
   } else {
     throw new Error("La fecha no es válida");
   }
@@ -141,6 +141,7 @@ export const getAppointmentsByRangeAndDoctorId = async (
       patient: true,
       doctor: true,
       specialty: true,
+      event: true,
     },
   });
   return appointments.map((appointment) => ({
@@ -160,6 +161,12 @@ export const updateEventInAppointment = async (
       },
       data: {
         eventId: eventId,
+      },
+      include: {
+        patient: true,
+        doctor: true,
+        specialty: true,
+        event: true,
       },
     });
   } catch (error) {

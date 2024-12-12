@@ -29,6 +29,7 @@ const EventSelect = () => {
     appointments.map((appointment) => {
       if (appointment.id === updatedAppointment.id) {
         appointment.eventId = updatedAppointment.eventId;
+        appointment.event = updatedAppointment.event;
       }
     });
     setAppointments(appointments);
@@ -47,7 +48,6 @@ const EventSelect = () => {
   }, [events]);
 
   useEffect(() => {
-    if (appointmentSelected)
       setSelectedOption(
         options.find((option) => option.value === appointmentSelected!.eventId)!
       );

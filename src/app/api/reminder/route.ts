@@ -22,7 +22,6 @@ export async function POST(req: Request) {
 
 export async function GET(req: Request) {
   const token = req.headers.get("Authorization")?.split(" ")[1];
-  const date = req.headers.get("date")?.split(" ")[1]!;
   if (!token)
     return NextResponse.json({ error: "Token no válido" }, { status: 401 });
 
