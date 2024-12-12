@@ -1,6 +1,6 @@
 import { IPatient } from "@/interfaces/patient.interface";
 
-export const getPatientByCI = async (ci: string) => {
+export const getPatientByValue = async (ci: string) => {
     const token = localStorage.getItem("authToken");
     if (!token) throw new Error("Token no valido");
 

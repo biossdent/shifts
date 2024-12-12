@@ -2,7 +2,7 @@
 
 import "react-toastify/dist/ReactToastify.css";
 
-import { PAGES, PUBLIC_PAGES } from "@/consts/pages";
+import { PAGES, PUBLIC_PAGES } from "@/consts/pages.const";
 import { useEffect, useState } from "react";
 
 import { LifeLine } from "react-loading-indicators";

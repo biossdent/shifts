@@ -1,4 +1,4 @@
-import { PAGES } from "@/consts/pages";
+import { PAGES } from "@/consts/pages.const";
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
