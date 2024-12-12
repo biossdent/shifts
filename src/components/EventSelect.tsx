@@ -14,20 +14,22 @@ interface IOption {
 const EventSelect = () => {
   const { appointmentSelected, setAppointments, appointments } =
     appointmentsStore();
-  if (!appointmentSelected) return;
   const [options, setOptions] = useState<IOption[]>([]);
   const { events, getEvents } = eventStore();
   const [selectedOption, setSelectedOption] = useState<IOption | null>(null);
 
   const handleChange = async (selected: SingleValue<IOption | null>) => {
+    let updatedAppointment: any;
     setSelectedOption(selected);
-    if (!selected || !appointmentSelected) return;
-    const updatedAppointment = await updateEventInAppointment(
+    if (!appointmentSelected) return;
+
+    updatedAppointment = await updateEventInAppointment(
       appointmentSelected.id!,
-      selected.value
+      selected?.value ?? null
     );
+
     appointments.map((appointment) => {
-      if (appointment.id === updatedAppointment.id) {
+      if (appointment.id === appointmentSelected.id) {
         appointment.eventId = updatedAppointment.eventId;
         appointment.event = updatedAppointment.event;
       }
@@ -48,10 +50,12 @@ const EventSelect = () => {
   }, [events]);
 
   useEffect(() => {
-      setSelectedOption(
-        options.find((option) => option.value === appointmentSelected!.eventId)!
-      );
+    setSelectedOption(
+      options.find((option) => option.value === appointmentSelected!.eventId)!
+    );
   }, [appointmentSelected, options]);
+
+  if (!appointmentSelected) return;
 
   return (
     <Select

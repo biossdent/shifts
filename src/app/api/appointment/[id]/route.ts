@@ -36,7 +36,7 @@ export async function PUT(req: Request, { params }: { params: IParams }) {
     const user = await verifyToken(token);
     if (!user)
       return NextResponse.json({ error: "Token no válido" }, { status: 401 });
-    const appointmentUpdated = await updateEventInAppointment(Number(id), Number(eventId));
+    const appointmentUpdated = await updateEventInAppointment(Number(id), eventId);
     return NextResponse.json(appointmentUpdated);
   } catch (error) {
     return NextResponse.json({ error: error }, { status: 401 });

@@ -59,7 +59,7 @@ export const getAppointments = async () => {
   });
 };
 
-export const updateEventInAppointment = async (id: number, eventId: number) => {
+export const updateEventInAppointment = async (id: number, eventId: number | null) => {
   const token = localStorage.getItem("authToken");
   if (!token) throw new Error("Token no válido");
 

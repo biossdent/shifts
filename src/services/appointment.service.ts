@@ -152,7 +152,7 @@ export const getAppointmentsByRangeAndDoctorId = async (
 
 export const updateEventInAppointment = async (
   appointmentId: number,
-  eventId: number
+  eventId: number | null
 ) => {
   try {
     return await prisma.appointment.update({
