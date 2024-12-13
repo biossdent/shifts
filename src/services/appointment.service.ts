@@ -185,3 +185,26 @@ export const deleteAppointment = async (appointmentId: number) => {
     throw error;
   }
 };
+
+export const getAppointmentIdByDoctorId = async (doctorId: number) => {
+  const appointments = await prisma.appointment.findMany({
+    where: {
+      doctorId: doctorId,
+    },
+    select: {
+      id: true,
+    },
+  });
+  return appointments.map((appointment) => appointment.id);
+};
+
+
+export const deleteAppointmentForIds = async (ids: number[]) => {
+  return await prisma.appointment.deleteMany({
+    where: {
+      id: {
+        in: ids,
+      },
+    }
+  });
+};
