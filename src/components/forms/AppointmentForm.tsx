@@ -28,7 +28,10 @@ interface IAppointmentFormProps {
 const validationSchema = Yup.object({
   patient: Yup.object({
     fullName: Yup.string().required("Nombre completo obligatorio"),
-    clinicalHistory: Yup.string().required("Historia Clinica obligatoria"),
+    clinicalHistory: Yup.number().max(
+      9999,
+      "La historia clinica debe tener como máximo 4 dígitos"
+    ),
     ci: Yup.string()
       .required("Número de cédula obligatorio")
       .matches(ciRegex, "Número de cédula inválido"),
@@ -48,7 +51,8 @@ const validationSchema = Yup.object({
 export default function AppointmentForm(props: IAppointmentFormProps) {
   const { date, setShowModal } = props;
   const { appointments, setAppointments } = appointmentsStore();
-  const { isLoadingDoctor, availableDoctors, getAvailableDoctors } = doctorsStore();
+  const { isLoadingDoctor, availableDoctors, getAvailableDoctors } =
+    doctorsStore();
 
   useEffect(() => {
     formik.setFieldValue("appointment.startDate", date);
@@ -66,6 +70,8 @@ export default function AppointmentForm(props: IAppointmentFormProps) {
     },
     validationSchema,
     onSubmit: async (appointment) => {
+      appointment.patient.clinicalHistory =
+        appointment.patient.clinicalHistory.toString();
       const appointmentCreated = await createAppointment(appointment);
       if (appointmentCreated.error)
         return toast.error(appointmentCreated.error);
@@ -80,7 +86,6 @@ export default function AppointmentForm(props: IAppointmentFormProps) {
     e: React.ChangeEvent<HTMLInputElement>,
     type: "CH" | "CI"
   ) => {
-    cleanPatientFields(type);
     formik.handleChange(e);
     if (
       (type === "CI" && e.target.value.length === 10) ||
@@ -101,14 +106,6 @@ export default function AppointmentForm(props: IAppointmentFormProps) {
     }
   };
 
-  const cleanPatientFields = (type: "CH" | "CI") => {
-    if (type === "CI") formik.setFieldValue("patient.clinicalHistory", "");
-    else formik.setFieldValue("patient.ci", "");
-    formik.setFieldValue("patient.id", undefined);
-    formik.setFieldValue("patient.fullName", "");
-    formik.setFieldValue("patient.phone", "");
-  };
-
   return (
     <div>
       <form onSubmit={formik.handleSubmit}>
@@ -118,18 +115,19 @@ export default function AppointmentForm(props: IAppointmentFormProps) {
               Información del Paciente
             </h2>
             <InputWithError
-              label="Número de Historica Clinica"
-              placeholder="Ingresa la Historica Clinica"
-              {...formik.getFieldProps("patient.clinicalHistory")}
-              {...formik.getFieldMeta("patient.clinicalHistory")}
-              onChange={(e) => handleFieldForSearchPatientChange(e, "CH")}
-            />
-            <InputWithError
               label="Número de Cédula"
               placeholder="Ingresa el número de cédula"
               {...formik.getFieldProps("patient.ci")}
               {...formik.getFieldMeta("patient.ci")}
               onChange={(e) => handleFieldForSearchPatientChange(e, "CI")}
+            />
+            <InputWithError
+              label="Número de Historica Clinica"
+              placeholder="Ingresa la Historica Clinica"
+              {...formik.getFieldProps("patient.clinicalHistory")}
+              {...formik.getFieldMeta("patient.clinicalHistory")}
+              onChange={(e) => handleFieldForSearchPatientChange(e, "CH")}
+              type="number"
             />
             <InputWithError
               label="Nombre Completo"
@@ -144,7 +142,6 @@ export default function AppointmentForm(props: IAppointmentFormProps) {
               {...formik.getFieldMeta("patient.phone")}
             />
           </div>
-
           <div className="w-full md:w-1/2">
             <h2 className="text-xl font-bold mb-4 text-gray-700">
               Información de la Cita
@@ -190,9 +187,17 @@ export default function AppointmentForm(props: IAppointmentFormProps) {
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-700"
               disabled={isLoadingDoctor}
             >
-              <option>{isLoadingDoctor ? 'Cargando doctores...' : 'Selecciona un doctor'}</option>
+              <option>
+                {isLoadingDoctor
+                  ? "Cargando doctores..."
+                  : "Selecciona un doctor"}
+              </option>
               {availableDoctors?.map((doctor: IDoctor) => (
-                <option key={doctor.id} value={doctor.id} disabled={!doctor.available}>
+                <option
+                  key={doctor.id}
+                  value={doctor.id}
+                  disabled={!doctor.available}
+                >
                   Dr. {doctor.name} {doctor.lastName}
                 </option>
               )) || <option disabled>Cargando doctores...</option>}

@@ -134,6 +134,5 @@ export const getAvailableDoctors = async (startDate: string, endDate: string) =>
       available: blockAppointment ? false : true,
     };
   });
-  console.log('availableDoctors', availableDoctors);
   return availableDoctors;
 };
