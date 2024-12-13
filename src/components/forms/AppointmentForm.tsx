@@ -50,7 +50,7 @@ const validationSchema = Yup.object({
 
 export default function AppointmentForm(props: IAppointmentFormProps) {
   const { date, setShowModal } = props;
-  const { appointments, setAppointments } = appointmentsStore();
+  const { filteredAppointments, setFilteredAppointments } = appointmentsStore();
   const { isLoadingDoctor, availableDoctors, getAvailableDoctors } =
     doctorsStore();
 
@@ -75,8 +75,8 @@ export default function AppointmentForm(props: IAppointmentFormProps) {
       const appointmentCreated = await createAppointment(appointment);
       if (appointmentCreated.error)
         return toast.error(appointmentCreated.error);
+      setFilteredAppointments([...filteredAppointments, appointmentCreated]);
       toast.success("Cita creada con éxito");
-      setAppointments([...appointments, appointmentCreated]);
       formik.resetForm();
       setShowModal(false);
     },
