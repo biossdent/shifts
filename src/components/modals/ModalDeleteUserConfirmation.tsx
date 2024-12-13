@@ -37,18 +37,20 @@ export const ModalDeleteUserConfirmation = () => {
         >
           &times;
         </button>
-
         <h2 className="text-xl font-bold mb-4 text-gray-700">
           Confirmación de Eliminación
         </h2>
-
-        <p className="text-gray-700 mb-6">
-          ¿Estás seguro de que deseas eliminar el usuario:{" "}
-          <span className="font-semibold">
-            {userForDelete.name} {userForDelete?.lastName}
-          </span>{" "}
-        </p>
-
+        <div className="mb-6">
+          <p className="text-gray-700 mb-2">
+            ¿Estás seguro de que deseas eliminar el usuario:{" "}
+            <span className="font-semibold">
+              {userForDelete.name} {userForDelete?.lastName}
+            </span>{" "}
+          </p>
+          <p>
+            Al eliminarlo se eliminaran todas sus <b>citas</b>, <b>recordatorios</b> y <b>bloqueos de citas</b> creados 
+          </p>
+        </div>
         <div className="flex gap-4">
           <button
             onClick={handleDelete}

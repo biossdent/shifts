@@ -9,12 +9,12 @@ export async function DELETE(req: Request, { params }: { params: IDeleteParams }
     const token = req.headers.get("Authorization")?.split(" ")[1];
     const { id } = params;
   if (!token) {
-    return NextResponse.json({ error: "Token no valido" }, { status: 401 });
+    return NextResponse.json({ error: "Token no válido" }, { status: 401 });
   }
 
 try {
     const user = await verifyToken(token);
-    if (!user) return NextResponse.json({ error: "Token no valido" }, { status: 401 });
+    if (!user) return NextResponse.json({ error: "Token no válido" }, { status: 401 });
     const userDeleted = await deleteUser(Number(id));
     return NextResponse.json(userDeleted);
   } catch (error) {

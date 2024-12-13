@@ -67,3 +67,25 @@ export const deleteBlockAppointment = async (blockAppointmentId: number) => {
     throw error;
   }
 };
+
+export const getBlockAppointmentIdByDoctorId = async (doctorId: number) => {
+  const blockAppointments = await prisma.blockAppointment.findMany({
+    where: {
+      doctorId: doctorId,
+    },
+    select: {
+      id: true,
+    },
+  });
+  return blockAppointments.map((blockAppointment) => blockAppointment.id);
+};
+
+export const deleteBlockAppointmentForIds = async (ids: number[]) => {
+  return await prisma.blockAppointment.deleteMany({
+    where: {
+      id: {
+        in: ids,
+      },
+    }
+  });
+};

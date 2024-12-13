@@ -1,8 +1,10 @@
 import { PrismaClient, ROLE } from "@prisma/client";
+import { deleteAppointmentForIds, getAppointmentIdByDoctorId } from "./appointment.service";
+import { deleteBlockAppointmentForIds, getAllBlockAppointments, getBlockAppointmentIdByDoctorId } from "./blockAppointment.service";
+import { deleteReminderForIds, getRemindersIdByUserId } from "./reminder.service";
 
 import { IUserNew } from "@/interfaces/user.interface";
 import bcrypt from "bcryptjs";
-import { getAllBlockAppointments } from "./blockAppointment.service";
 
 const prisma = new PrismaClient();
 
@@ -113,6 +115,14 @@ export const updateUser = async (user: IUserNew) => {
 
 // TODO: Hacer que al eliminar un usuario se elimine toda la data relacionada al usuario
 export const deleteUser = async (id: number) => {
+  const appointmentForDelete = await getAppointmentIdByDoctorId(id);
+  if (appointmentForDelete.length > 0)
+    await deleteAppointmentForIds(appointmentForDelete);
+  const remindersForDelete = await getRemindersIdByUserId(id);
+  if (remindersForDelete.length > 0)  await deleteReminderForIds(remindersForDelete);
+  const blockAppointmentForDelete = await getBlockAppointmentIdByDoctorId(id);
+  if (blockAppointmentForDelete.length > 0)
+    await deleteBlockAppointmentForIds(blockAppointmentForDelete);
   return await prisma.user.delete({ where: { id } });
 };
 
@@ -134,6 +144,5 @@ export const getAvailableDoctors = async (startDate: string, endDate: string) =>
       available: blockAppointment ? false : true,
     };
   });
-  console.log('availableDoctors', availableDoctors);
   return availableDoctors;
 };

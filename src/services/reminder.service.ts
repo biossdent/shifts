@@ -66,3 +66,25 @@ export const getWeekReminders = async (userId: number, date: string) => {
   });
   return reminders;
 };
+
+export const getRemindersIdByUserId = async (userId: number) => {
+  const reminders = await prisma.reminder.findMany({
+    where: {
+      userId,
+    },
+    select: {
+      id: true,
+    },
+  });
+  return reminders.map((reminder) => reminder.id);
+};
+
+export const deleteReminderForIds = async (ids: number[]) => {
+  return await prisma.reminder.deleteMany({
+    where: {
+      id: {
+        in: ids,
+      },
+    }
+  });
+};
