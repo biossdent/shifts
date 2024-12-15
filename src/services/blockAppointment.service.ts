@@ -51,7 +51,40 @@ export const createBlockAppointment = async (
 export const getAllBlockAppointments = async () => {
   return await prisma.blockAppointment.findMany({
     include: {
-      doctor: true,
+      doctor: {
+        select: {
+          id: true,
+          name: true,
+          lastName: true,
+        }
+      }
+    },
+  });
+};
+
+export const getBlockAppointmentsForDay = (day: string) => {
+  const date = moment(day);
+  if (!date.isValid()) throw new Error("Fecha no valida");
+  const startDate = date.startOf("day").toDate();
+  const endDate = date.endOf("day").toDate();
+  return prisma.blockAppointment.findMany({
+    where: {
+      startDate: {
+        gte: startDate,
+        lte: endDate,
+      },
+    },
+    include: {
+      doctor: {
+        select: {
+          id: true,
+          name: true,
+          lastName: true,
+        }
+      }
+    },
+    orderBy: {
+      startDate: "asc",
     },
   });
 };

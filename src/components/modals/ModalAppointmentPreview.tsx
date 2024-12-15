@@ -12,11 +12,9 @@ import {
 import EventSelect from "../EventSelect";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "react-modal";
-import { ROLE } from "@/enums/role.enum";
 import React from "react";
 import { appointmentsStore } from "@/stores/appointments.store";
 import moment from "moment";
-import { sessionStore } from "@/stores/session.store";
 
 const PreviewAppointmentModal = () => {
   const {
@@ -24,7 +22,6 @@ const PreviewAppointmentModal = () => {
     setAppointmentSelected,
     setAppointmentIdForDelete,
   } = appointmentsStore();
-  const { user } = sessionStore();
 
   if (!appointmentSelected) return null;
 
@@ -176,17 +173,12 @@ const PreviewAppointmentModal = () => {
           </div>
         </div>
         <EventSelect />
-        {user &&
-        (user.role === ROLE.RECEPTIONIST ||
-          user.role === ROLE.SUPERADMIN ||
-          user.role === ROLE.ADMIN) ? (
           <button
             onClick={() => setAppointmentIdForDelete(appointmentSelected.id!)}
             className="mt-6 w-full py-2 bg-red-600 text-white rounded-md hover:bg-red-500"
           >
             Eliminar Cita
           </button>
-        ) : null}
 
         <button
           onClick={() => setAppointmentSelected(null)}

@@ -9,6 +9,7 @@ import {
 import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { ciRegex, phoneRegex } from "@/regex/validate.reg";
 
+import BlockAppointmentsPreview from "../BlockAppointmentsPreview";
 import { IDoctor } from "@/interfaces/user.interface";
 import { InputWithError } from "../InputWithError";
 import SpecialtySelect from "../SpecialtySelect";
@@ -109,8 +110,8 @@ export default function AppointmentForm(props: IAppointmentFormProps) {
   return (
     <div>
       <form onSubmit={formik.handleSubmit}>
-        <div className="mb-6 flex flex-col md:flex-row gap-6">
-          <div className="w-full md:w-1/2">
+          <BlockAppointmentsPreview date={date} />
+        <div className="mb-6 flex flex-col md:flex-row gap-6">          <div className="w-full md:w-1/2">
             <h2 className="text-xl font-bold mb-4 text-gray-700">
               Información del Paciente
             </h2>
