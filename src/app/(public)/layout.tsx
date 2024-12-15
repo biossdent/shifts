@@ -7,8 +7,11 @@ import { useEffect, useState } from "react";
 
 import { LifeLine } from "react-loading-indicators";
 import { ToastContainer } from "react-toastify";
+import moment from 'moment-timezone';
 import { sessionStore } from "@/stores/session.store";
 import { useRouter } from "next/navigation";
+
+moment.tz.setDefault('America/Guayaquil'); 
 
 interface IProps {
   children: React.ReactNode;

@@ -51,7 +51,13 @@ export const createBlockAppointment = async (
 export const getAllBlockAppointments = async () => {
   return await prisma.blockAppointment.findMany({
     include: {
-      doctor: true,
+      doctor: {
+        select: {
+          id: true,
+          name: true,
+          lastName: true,
+        }
+      }
     },
   });
 };
@@ -69,7 +75,13 @@ export const getBlockAppointmentsForDay = (day: string) => {
       },
     },
     include: {
-      doctor: true,
+      doctor: {
+        select: {
+          id: true,
+          name: true,
+          lastName: true,
+        }
+      }
     },
     orderBy: {
       startDate: "asc",
