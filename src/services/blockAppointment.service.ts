@@ -63,6 +63,7 @@ export const getAllBlockAppointments = async () => {
 };
 
 export const getBlockAppointmentsForDay = (day: string) => {
+  console.log('day',day)
   const date = moment(day);
   if (!date.isValid()) throw new Error("Fecha no valida");
   const startDate = date.startOf("day").toDate();
