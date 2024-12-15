@@ -32,8 +32,6 @@ export async function GET(req: Request) {
     const user = await verifyToken(token);
     if (!user)
       return NextResponse.json({ error: "Token no valido" }, { status: 401 });
-    if (user.role === ROLE.DOCTOR) 
-      return NextResponse.json({ error: "No puedes acceder a esta ruta" }, { status: 401 });
     const events = await getEvents();
     return NextResponse.json(events);
   } catch (error) {
