@@ -1,17 +1,21 @@
+import { getAllBlockAppointments, getBlockAppointmentsForDay } from "@/api/blockAppointment.api";
+
 import { IBlockAppointment } from "@/interfaces/blockAppointment.interface";
 import { create } from "zustand";
-import { getAllBlockAppointments } from "@/api/blockAppointment.api";
 
 interface IBlockAppointmentStore {
   blockAppointments: IBlockAppointment[];
   blockAppointmentSelected: IBlockAppointment;
   blockAppointmentIdForDelete: number | null;
-  setBlockAppointments: (reminders: IBlockAppointment[]) => void;
-  setBlockAppointmentsSelected: (reminderSelected: IBlockAppointment) => void;
+  blockAppointmentsDaySelected: IBlockAppointment[];
+  setBlockAppointments: (blockAppointments: IBlockAppointment[]) => void;
+  setBlockAppointmentsSelected: (blockAppointmentSelected: IBlockAppointment) => void;
   setInitialBlockAppointmentSelected: () => void;
   setBlockAppointmentsIdForDelete: (id: number | null) => void;
   setConfirmationDeleteId: (id: number) => void;
+  setBlockAppointmentsDaySelected: (blockAppointmentsDaySelected: IBlockAppointment[]) => void;
   getBlockAppointments: () => Promise<void>;
+  getBlockAppointmentsDaySelected: (day: string) => Promise<void>;
 }
 
 export const INITIAL_BLOCK_APPOINTMENT_SELECTED = {
@@ -25,6 +29,7 @@ export const blockAppointmentStoreStore = create<IBlockAppointmentStore>((set) =
   blockAppointments: [],
   blockAppointmentSelected: INITIAL_BLOCK_APPOINTMENT_SELECTED,
   blockAppointmentIdForDelete: null,
+  blockAppointmentsDaySelected:[],
   setBlockAppointments: (blockAppointments: IBlockAppointment[]) =>
     set({ blockAppointments }),
   setBlockAppointmentsSelected: (blockAppointmentSelected: IBlockAppointment) =>
@@ -39,8 +44,14 @@ export const blockAppointmentStoreStore = create<IBlockAppointmentStore>((set) =
     set({ blockAppointments: newBlockAppointments });
     set({ blockAppointmentIdForDelete: null });
   },
+  setBlockAppointmentsDaySelected: (blockAppointmentsDaySelected: IBlockAppointment[]) =>
+    set({ blockAppointmentsDaySelected }),
   getBlockAppointments: async () => {
     const blockAppointments = await getAllBlockAppointments();
     set({ blockAppointments });
+  },
+  getBlockAppointmentsDaySelected: async (day: string) => {
+    const blockAppointments = await getBlockAppointmentsForDay(day);
+    set({ blockAppointmentsDaySelected: blockAppointments });
   },
 }));

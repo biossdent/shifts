@@ -10,6 +10,16 @@ export const getAllBlockAppointments = async () => {
   return await res.json();
 };
 
+export const getBlockAppointmentsForDay = async (day: string) => {
+  const token = localStorage.getItem("authToken");
+  const res = await fetch(`/api/block-appointment/day/${day}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return await res.json();
+};
+
 export const createBlockAppointment = async (blockAppointment: any) => {
   const token = localStorage.getItem("authToken");
   if (!token) throw new Error("Token no valido");

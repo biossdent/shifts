@@ -39,7 +39,7 @@ const AppointmentOrReminderForm = (props: IAppointmentOrReminderFormProps) => {
         >
           &times;
         </button>
-        <div className="mb-6 flex">
+        <div className="mb-2 flex">
           <button
             className={`flex-1 px-4 py-2 border ${
               formType === FORM_TYPE.APPOINTMENT
@@ -73,15 +73,6 @@ const AppointmentOrReminderForm = (props: IAppointmentOrReminderFormProps) => {
           className={`mt-4 w-full py-2 bg-red-600 text-white rounded-md hover:bg-red-500 md:hidden`}
         >
           Cerrar
-          <div>
-            {/* Aquí puedes agregar el formulario de recordatorio */}
-            <h2 className="text-xl font-bold mb-4 text-gray-700">
-              Formulario de Recordatorio
-            </h2>
-            <p className="text-gray-600">
-              Formulario de recordatorio pendiente de implementar.
-            </p>
-          </div>
         </button>
       </div>
     </Modal>
