@@ -68,6 +68,8 @@ export const getBlockAppointmentsForDay = (day: string) => {
   if (!date.isValid()) throw new Error("Fecha no valida");
   const startDate = date.startOf("day").toDate();
   const endDate = date.endOf("day").toDate();
+  console.log('startDate',startDate)
+  console.log('endDate',endDate)
   return prisma.blockAppointment.findMany({
     where: {
       startDate: {
