@@ -65,7 +65,7 @@ const EventSelect = () => {
       placeholder="Elige un Evento"
       isClearable
       classNames={{
-        container: () => "text-gray-700",
+        container: () => "text-gray-700 mb-6",
         control: () => "border-2 !border-gray-300",
       }}
     />
