@@ -7,6 +7,7 @@ export const INITIAL_PATIENT = {
 };
 
 export const INITIAL_APPOINTMENT = {
+  id: null,
   diagnostic: "",
   specialtyId: undefined,
   startDate: "",

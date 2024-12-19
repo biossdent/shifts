@@ -14,6 +14,7 @@ export interface IAppointment {
 }
 
 export interface IAppointmentNew {
+    id?: number
     appointment: Omit<IAppointment, 'patientId'>
     patient: IPatient
 }

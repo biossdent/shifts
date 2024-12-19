@@ -1,5 +1,9 @@
+import {
+  IAppointment,
+  IAppointmentCreated,
+} from "@/interfaces/appointment.interface";
+
 import { EVENTS_TYPE } from "@/enums/events.enum";
-import { IAppointment } from "@/interfaces/appointment.interface";
 import { PrismaClient } from "@prisma/client";
 import { getById as getDoctorById } from "./user.service";
 import { getPatientById } from "./patient.service";
@@ -76,6 +80,8 @@ export const createAppointment = async (appointment: IAppointment) => {
             id: true,
             fullName: true,
             phone: true,
+            ci: true,
+            clinicalHistory: true,
           },
         },
         doctor: {
@@ -103,6 +109,101 @@ export const createAppointment = async (appointment: IAppointment) => {
     return { ...appointmentCreated, type: EVENTS_TYPE.APPOINTMENT };
   } else {
     throw new Error("La fecha no es válida");
+  }
+};
+
+export const updateAppointment = async (appointment: IAppointmentCreated) => {
+  try {
+    const existPatient = await getPatientById(appointment.patientId);
+    if (!existPatient) throw new Error("El paciente no existe");
+
+    if (!appointment.doctorId) throw new Error("El doctor no existe");
+    const existDoctor = await getDoctorById(appointment.doctorId);
+    if (!existDoctor) throw new Error("El doctor no existe");
+
+    const startDate = moment(appointment.startDate);
+    const endDate = moment(appointment.endDate);
+    const now = moment();
+
+    if (startDate.isValid() && endDate.isValid()) {
+      if (startDate.isAfter(endDate)) {
+        throw new Error("La fecha de inicio no puede ser después a la de fin");
+      }
+      if (startDate.isBefore(now)) {
+        throw new Error(
+          "La fecha de inicio no puede ser anterior a la fecha actual"
+        );
+      }
+      if (endDate.isBefore(now)) {
+        throw new Error(
+          "La fecha de fin no puede ser anterior a la fecha actual"
+        );
+      }
+
+      let appointmentByDoctor = await getAppointmentsByRangeAndDoctorId(
+        appointment.startDate,
+        appointment.endDate,
+        appointment.doctorId
+      );
+      appointmentByDoctor = appointmentByDoctor.filter((_appointment) => _appointment.id !== appointment.id);
+
+      if (appointmentByDoctor.length > 0) {
+        throw new Error("Ya existe una cita entre las fechas introducidas");
+      }
+
+      if (!appointment.specialtyId)
+        throw new Error("La especialidad no existe");
+
+      const appointmentCreated = await prisma.appointment.update({
+        where: {
+          id: appointment.id,
+        },
+        data: appointment as Required<IAppointment>,
+        select: {
+          id: true,
+          patientId: true,
+          doctorId: true,
+          diagnostic: true,
+          specialtyId: true,
+          startDate: true,
+          endDate: true,
+          patient: {
+            select: {
+              id: true,
+              fullName: true,
+              phone: true,
+              ci: true,
+              clinicalHistory: true,
+            },
+          },
+          doctor: {
+            select: {
+              id: true,
+              name: true,
+              lastName: true,
+            },
+          },
+          specialty: {
+            select: {
+              id: true,
+              label: true,
+            },
+          },
+          event: {
+            select: {
+              id: true,
+              title: true,
+              color: true,
+            },
+          },
+        },
+      });
+      return { ...appointmentCreated, type: EVENTS_TYPE.APPOINTMENT };
+    } else {
+      throw new Error("La fecha no es válida");
+    }
+  } catch (error) {
+    throw error;
   }
 };
 
@@ -198,13 +299,12 @@ export const getAppointmentIdByDoctorId = async (doctorId: number) => {
   return appointments.map((appointment) => appointment.id);
 };
 
-
 export const deleteAppointmentForIds = async (ids: number[]) => {
   return await prisma.appointment.deleteMany({
     where: {
       id: {
         in: ids,
       },
-    }
+    },
   });
 };

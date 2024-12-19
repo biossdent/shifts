@@ -35,8 +35,9 @@ export type IEventCalendar = IAppointmentCreated | IReminder;
 export default function CalendarPage() {
   const {
     appointments,
-    setAppointmentSelected,
     filteredAppointments,
+    setShoModalForNew,
+    setAppointmentSelected,
     getAppointments,
   } = appointmentsStore();
   const { getReminders, reminders, setReminderSelected } = reminderStore();
@@ -44,7 +45,6 @@ export default function CalendarPage() {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [events, setEvents] = useState<IEventCalendar[]>([]);
   useState(appointments);
-  const [showModal, setShowModal] = useState(false);
   const [view, setView] = useState<View>(Views.MONTH);
   const [date, setDate] = useState(new Date());
   const { setIsMenuOpen } = UiStore();
@@ -67,7 +67,7 @@ export default function CalendarPage() {
     ) {
       const _formatDate = moment(date).format("YYYY-MM-DD[T]HH:mm");
       setSelectedDate(_formatDate);
-      setShowModal(true);
+      setShoModalForNew(true);
       setIsMenuOpen(false);
     }
   };
@@ -108,11 +108,7 @@ export default function CalendarPage() {
           />
         </div>
       </div>
-      <AppointmentOrReminderForm
-        showModal={showModal}
-        date={selectedDate!}
-        setShowModal={setShowModal}
-      />
+      <AppointmentOrReminderForm date={selectedDate!} />
       <ModalDeleteAppointmentConfirmation />
       <PreviewAppointmentModal />
       <ModalWeekReminders />

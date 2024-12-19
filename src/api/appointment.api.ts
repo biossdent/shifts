@@ -27,6 +27,28 @@ export const createAppointment = async (data: IAppointmentNew) => {
   return await res.json();
 };
 
+export const updateAppointment = async (data: IAppointmentNew) => {
+  const token = localStorage.getItem("authToken");
+  if (!token) throw new Error("Token no válido");
+
+  const res = await fetch(`/api/appointment/${data.id}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      ...data,
+      appointment: {
+        ...data.appointment,
+        startDate: moment(data.appointment.startDate).toISOString(),
+        endDate: moment(data.appointment.endDate).toISOString(),
+      },
+    }),
+  });
+  return await res.json();
+}
+
 export const deleteAppointment = async (id: number) => {
   const token = localStorage.getItem("authToken");
   if (!token) throw new Error("Token no válido");
@@ -63,7 +85,7 @@ export const updateEventInAppointment = async (id: number, eventId: number | nul
   const token = localStorage.getItem("authToken");
   if (!token) throw new Error("Token no válido");
 
-  const res = await fetch(`/api/appointment/${id}`, {
+  const res = await fetch(`/api/appointment/event/${id}`, {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,
