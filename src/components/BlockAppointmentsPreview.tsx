@@ -13,6 +13,7 @@ const BlockAppointmentsPreview = (props: IProps) => {
     blockAppointmentStoreStore();
 
   useEffect(() => {
+    if (!date) return;
     getBlockAppointmentsDaySelected(date);
     return () => {
       setBlockAppointmentsDaySelected([]);

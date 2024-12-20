@@ -12,16 +12,20 @@ import {
 import EventSelect from "../EventSelect";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "react-modal";
+import { ROLE } from "@/enums/role.enum";
 import React from "react";
 import { appointmentsStore } from "@/stores/appointments.store";
 import moment from "moment";
+import { sessionStore } from "@/stores/session.store";
 
 const PreviewAppointmentModal = () => {
   const {
     appointmentSelected,
     setAppointmentSelected,
     setAppointmentIdForDelete,
+    setAppointmentForEdit,
   } = appointmentsStore();
+  const { user } = sessionStore();
 
   if (!appointmentSelected) return null;
 
@@ -173,19 +177,32 @@ const PreviewAppointmentModal = () => {
           </div>
         </div>
         <EventSelect />
+        <div className="flex flex-col gap-1">
+          {user && user.role === ROLE.DOCTOR ? null : (
+            <>
+              <button
+                onClick={() => setAppointmentForEdit(appointmentSelected)}
+                className="w-full py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-400"
+              >
+                Editar Cita
+              </button>
+              <button
+                onClick={() =>
+                  setAppointmentIdForDelete(appointmentSelected.id!)
+                }
+                className="w-full py-2 bg-red-600 text-white rounded-md hover:bg-red-500"
+              >
+                Eliminar Cita
+              </button>
+            </>
+          )}
           <button
-            onClick={() => setAppointmentIdForDelete(appointmentSelected.id!)}
-            className="mt-6 w-full py-2 bg-red-600 text-white rounded-md hover:bg-red-500"
+            onClick={() => setAppointmentSelected(null)}
+            className="w-full py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-500"
           >
-            Eliminar Cita
+            Cerrar
           </button>
-
-        <button
-          onClick={() => setAppointmentSelected(null)}
-          className="mt-1 w-full py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-500"
-        >
-          Cerrar
-        </button>
+        </div>
       </div>
     </Modal>
   );

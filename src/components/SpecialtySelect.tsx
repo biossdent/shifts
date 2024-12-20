@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 
 interface ISelectProps {
   name: string;
+  value: string;
   touched?: boolean;
   error?: string;
   onChange: (e: any) => void;
@@ -18,14 +19,21 @@ const errorBorder = "!border-red-500";
 const normalBorder = "!border-gray-300";
 
 const SpecialtySelect = (props: ISelectProps) => {
-  const { onChange, onBlur, touched, error, name } = props;
+  const { onChange, onBlur, touched, error, name, value } = props;
   const [specialties, setSpecialties] = useState<ISpecialty[]>([]);
+  const [selected, setSelected] = useState<ISpecialty | null>(null);
 
   useEffect(() => {
     const fetchSpecialties = async () => {
       try {
         const _specialties = await getSpecialties();
         setSpecialties(_specialties);
+        if (value) {
+          const _selected = _specialties.find(
+            (specialty: ISpecialty) => specialty.id === +value
+          );
+          if (_selected) setSelected(_selected);
+        }
       } catch (error) {
         toast.error(
           "Error al cargar las especialidades, la página se recargará en unos instantes"
@@ -48,6 +56,7 @@ const SpecialtySelect = (props: ISelectProps) => {
   };
 
   const handleChange = (selectedOption: SingleValue<ISpecialty>) => {
+    setSelected(selectedOption);
     onChange &&
       onChange({
         target: {
@@ -72,6 +81,7 @@ const SpecialtySelect = (props: ISelectProps) => {
         Especialidad
       </label>
       <CreatableSelect
+        value={selected}
         isClearable
         options={specialties}
         name={name}

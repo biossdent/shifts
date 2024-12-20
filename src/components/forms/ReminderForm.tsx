@@ -2,10 +2,11 @@
 
 import * as Yup from "yup";
 
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import { IReminder } from "@/interfaces/reminder.interface";
 import { InputWithError } from "../InputWithError";
+import { appointmentsStore } from "@/stores/appointments.store";
 import { createReminder } from "@/api/reminder.api";
 import moment from "moment";
 import { reminderStore } from "@/stores/reminder.store";
@@ -14,19 +15,20 @@ import { toast } from "react-toastify";
 import { useFormik } from "formik";
 
 interface IReminderFormProps {
+  isDisabled: boolean;
   date: string;
-  setShowModal: Dispatch<SetStateAction<boolean>>;
 }
 
 const validationSchema = Yup.object({
-  title: Yup.string().min(3, 'El titulo debe tener al menos 3 caracteres').required("Titulo obligatorio"),
+  title: Yup.string().min(3, 'El título debe tener al menos 3 caracteres').required("Título obligatorio"),
   reminder: Yup.string().min(3, 'El recordatorio debe tener al menos 3 caracteres').required("Texto obligatorio"),
   date: Yup.date().required("Fecha obligatoria"),
   userId: Yup.number().required(),
 });
 
 export default function ReminderForm(props: IReminderFormProps) {
-  const { date, setShowModal } = props;
+  const { date, isDisabled } = props;
+  const { setShoModalForNew} = appointmentsStore();
   const { reminders, setReminders } = reminderStore();
   const { user } = sessionStore();
 
@@ -49,9 +51,11 @@ export default function ReminderForm(props: IReminderFormProps) {
       toast.success("Recordatorio creado con éxito");
       setReminders([...reminders, reminderCreated]);
       formik.resetForm();
-      setShowModal(false);
+      setShoModalForNew(false);
     },
   });
+
+  if (isDisabled) return null;
 
   return (
     <div>

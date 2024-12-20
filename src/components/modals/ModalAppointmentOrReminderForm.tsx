@@ -1,31 +1,43 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import AppointmentForm from "../forms/AppointmentForm";
 import { FORM_TYPE } from "@/enums/formType.enum";
 import Modal from "react-modal";
 import ReminderForm from "../forms/ReminderForm";
+import { appointmentsStore } from "@/stores/appointments.store";
 
 interface IAppointmentOrReminderFormProps {
-  showModal: boolean;
-  setShowModal: Dispatch<SetStateAction<boolean>>;
   date: string;
 }
 
 const AppointmentOrReminderForm = (props: IAppointmentOrReminderFormProps) => {
-  const { showModal, setShowModal, date } = props;
+  let { date } = props;
+  const {shoModalForNew, appointmentForEdit, setShoModalForNew, setAppointmentForEdit } = appointmentsStore();
   const [formType, setFormType] = useState<FORM_TYPE>(FORM_TYPE.APPOINTMENT);
+  const isOpen = shoModalForNew || !!appointmentForEdit;
 
   useEffect(() => {
     Modal.setAppElement("body");
   }, []);
 
+  useEffect(() => {
+    if (appointmentForEdit) date = appointmentForEdit.startDate;
+  }, [appointmentForEdit])
+  
+
   const handleClose = () => {
-    setShowModal(false);
+    setShoModalForNew(false);
+    setAppointmentForEdit(null);
+  };
+
+  const handleReminderClick = () => {
+    if (appointmentForEdit) return;
+    setFormType(FORM_TYPE.REMINDER);
   };
 
   return (
     <Modal
-      isOpen={showModal}
+      isOpen={isOpen}
       onRequestClose={handleClose}
       shouldCloseOnOverlayClick={true}
       contentLabel="Añadir Nueva Cita"
@@ -48,24 +60,24 @@ const AppointmentOrReminderForm = (props: IAppointmentOrReminderFormProps) => {
             }`}
             onClick={() => setFormType(FORM_TYPE.APPOINTMENT)}
           >
-            Cita Médica
+            {appointmentForEdit ? "Editar Cita Médica" : "Cita Médica"}
           </button>
           <button
             className={`flex-1 px-4 py-2 border ${
               formType === FORM_TYPE.REMINDER
                 ? "bg-indigo-600 text-white border-indigo-600"
                 : "bg-white text-indigo-600 border-x-indigo-600 border-t-indigo-600 border-b-0 hover:bg-indigo-50"
-            }`}
-            onClick={() => setFormType(FORM_TYPE.REMINDER)}
+            } ${appointmentForEdit ? "cursor-not-allowed opacity-50" : ""}`}
+            onClick={handleReminderClick}
           >
             Recordatorio
           </button>
         </div>
         <div>
           {formType === FORM_TYPE.APPOINTMENT ? (
-            <AppointmentForm date={date} setShowModal={setShowModal} />
+            <AppointmentForm date={date} />
           ) : (
-            <ReminderForm date={date} setShowModal={setShowModal} />
+            <ReminderForm date={date} isDisabled={!!appointmentForEdit} />
           )}
         </div>
         <button
