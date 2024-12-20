@@ -1,11 +1,10 @@
+import { createPatient, getPatientById, updatePatient } from "@/services/patient.service";
 import {
   deleteAppointment,
   updateAppointment,
 } from "@/services/appointment.service";
-import { getPatientById, updatePatient } from "@/services/patient.service";
 
 import { NextResponse } from "next/server";
-import { createPatient } from "@/api/patient.api";
 import isEqual from "lodash/isEqual";
 import isNil from "lodash/isNil";
 import { verifyToken } from "@/utils/token.util";
@@ -31,10 +30,9 @@ export async function DELETE(req: Request, { params }: { params: IParams }) {
   }
 }
 
-export async function PUT(req: Request, { params }: { params: IParams }) {
+export async function PUT(req: Request) {
   const token = req.headers.get("Authorization")?.split(" ")[1];
   const data = await req.json();
-  const { id } = params;
 
   if (!token) {
     return NextResponse.json({ error: "Token no válido" }, { status: 401 });
@@ -61,6 +59,6 @@ export async function PUT(req: Request, { params }: { params: IParams }) {
     const appointmentUpdated = await updateAppointment(appointment);
     return NextResponse.json(appointmentUpdated);
   } catch (error) {
-    return NextResponse.json({ error: error }, { status: 401 });
+    return NextResponse.json({ error }, { status: 401 });
   }
 }

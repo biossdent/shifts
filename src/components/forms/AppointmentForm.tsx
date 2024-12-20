@@ -6,7 +6,7 @@ import {
   INITIAL_APPOINTMENT,
   INITIAL_PATIENT,
 } from "@/consts/appointment.const";
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+import React, { useEffect } from "react";
 import { ciRegex, phoneRegex } from "@/regex/validate.reg";
 import { createAppointment, updateAppointment } from "@/api/appointment.api";
 
@@ -105,7 +105,7 @@ export default function AppointmentForm(props: IAppointmentFormProps) {
       appointment.patient.clinicalHistory =
         appointment.patient.clinicalHistory.toString();
       if (appointment.appointment.id) {
-        const appointmentUpdated = await updateAppointment(appointment);
+        const appointmentUpdated = await updateAppointment(appointment, appointment.appointment.id);
         if (appointmentUpdated.error)
           return toast.error(appointmentUpdated.error);
         toast.success("Cita actualizada con éxito");
@@ -121,6 +121,7 @@ export default function AppointmentForm(props: IAppointmentFormProps) {
         setShoModalForNew(false);
         return;
       }
+      delete appointment.appointment.id;
       const appointmentCreated = await createAppointment(appointment);
       if (appointmentCreated.error)
         return toast.error(appointmentCreated.error);

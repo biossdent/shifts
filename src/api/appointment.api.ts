@@ -27,11 +27,11 @@ export const createAppointment = async (data: IAppointmentNew) => {
   return await res.json();
 };
 
-export const updateAppointment = async (data: IAppointmentNew) => {
+export const updateAppointment = async (data: IAppointmentNew, id: number) => {
   const token = localStorage.getItem("authToken");
   if (!token) throw new Error("Token no válido");
 
-  const res = await fetch(`/api/appointment/${data.id}`, {
+  const res = await fetch(`/api/appointment/${id}`, {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,

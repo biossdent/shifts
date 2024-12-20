@@ -126,14 +126,7 @@ export const updateAppointment = async (appointment: IAppointmentCreated) => {
     const now = moment();
 
     if (startDate.isValid() && endDate.isValid()) {
-      if (startDate.isAfter(endDate)) {
-        throw new Error("La fecha de inicio no puede ser después a la de fin");
-      }
-      if (startDate.isBefore(now)) {
-        throw new Error(
-          "La fecha de inicio no puede ser anterior a la fecha actual"
-        );
-      }
+      
       if (endDate.isBefore(now)) {
         throw new Error(
           "La fecha de fin no puede ser anterior a la fecha actual"
