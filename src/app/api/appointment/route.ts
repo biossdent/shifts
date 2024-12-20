@@ -7,7 +7,7 @@ import { createPatient, getPatientById, updatePatient } from "@/services/patient
 
 import { NextResponse } from "next/server";
 import { ROLE } from "@/enums/role.enum";
-import { isEqual } from "lodash";
+import isEqual from "lodash/isEqual";
 import isNil from "lodash/isNil";
 import { verifyToken } from "@/utils/token.util";
 
