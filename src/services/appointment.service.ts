@@ -223,6 +223,8 @@ export const getAppointmentsByRangeAndDoctorId = async (
   endDate: string,
   doctorId: number
 ) => {
+  endDate = moment(startDate).subtract(1, "minute").toISOString();
+
   const appointments = await prisma.appointment.findMany({
     where: {
       doctorId: doctorId,
