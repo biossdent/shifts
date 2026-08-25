@@ -11,6 +11,19 @@ import moment from "moment";
 
 const prisma = new PrismaClient();
 
+const hideDoctorSensitivePatientData = <T extends { patient?: { ci?: string | null; phone?: string | null } | null }>(appointment: T) => {
+  if (!appointment?.patient) return appointment;
+
+  return {
+    ...appointment,
+    patient: {
+      ...appointment.patient,
+      ci: "",
+      phone: "",
+    },
+  };
+};
+
 export const getAllAppointments = async () => {
   const appointments = await prisma.appointment.findMany({
     include: {
@@ -212,10 +225,13 @@ export const getAppointmentsByDoctorId = async (doctorId: number) => {
       event: true,
     },
   });
-  return appointments.map((appointment) => ({
-    ...appointment,
-    type: EVENTS_TYPE.APPOINTMENT,
-  }));
+
+  return appointments.map((appointment) =>
+    hideDoctorSensitivePatientData({
+      ...appointment,
+      type: EVENTS_TYPE.APPOINTMENT,
+    })
+  );
 };
 
 export const getAppointmentsByRangeAndDoctorId = async (

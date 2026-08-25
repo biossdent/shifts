@@ -29,6 +29,8 @@ const PreviewAppointmentModal = () => {
 
   if (!appointmentSelected) return null;
 
+  const isDoctor = user?.role === ROLE.DOCTOR;
+
   return (
     <Modal
       isOpen={Boolean(appointmentSelected)}
@@ -60,26 +62,30 @@ const PreviewAppointmentModal = () => {
                 </p>
               </div>
             </div>
-            <div className="flex flex-row items-center">
-              <FontAwesomeIcon icon={faIdCard} className="text-indigo-600" />
-              <div className="flex flex-col pl-2">
-                <p className="font-semibold">Número de Cédula</p>{" "}
-                <p className="font-medium text-gray-400">
-                  {appointmentSelected.patient.ci}
-                </p>
+            {!isDoctor && (
+              <div className="flex flex-row items-center">
+                <FontAwesomeIcon icon={faIdCard} className="text-indigo-600" />
+                <div className="flex flex-col pl-2">
+                  <p className="font-semibold">Número de Cédula</p>{" "}
+                  <p className="font-medium text-gray-400">
+                    {appointmentSelected.patient.ci}
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
           </div>
           <div className="basis-1/2">
-            <div className="flex flex-row items-center mb-2">
-              <FontAwesomeIcon icon={faPhone} className="text-indigo-600" />
-              <div className="flex flex-col pl-2">
-                <p className="font-semibold">Teléfono</p>{" "}
-                <p className="font-medium text-gray-400">
-                  {appointmentSelected.patient.phone}
-                </p>
+            {!isDoctor && (
+              <div className="flex flex-row items-center mb-2">
+                <FontAwesomeIcon icon={faPhone} className="text-indigo-600" />
+                <div className="flex flex-col pl-2">
+                  <p className="font-semibold">Teléfono</p>{" "}
+                  <p className="font-medium text-gray-400">
+                    {appointmentSelected.patient.phone}
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
             <div className="basis-1/2">
               <div className="flex flex-row items-center">
                 <FontAwesomeIcon icon={faCircleH} className="text-indigo-600" />
